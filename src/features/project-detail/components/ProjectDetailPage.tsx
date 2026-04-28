@@ -9,7 +9,7 @@ import { TopBand } from './TopBand'
 import { Sidebar, SidebarLogo } from './Sidebar'
 import { AppHeader } from './AppHeader'
 import { DeliverableLegend } from './DeliverableLegend'
-import { DeliverableMatrix } from './DeliverableMatrix'
+import { DeliverableMatrix, StagePipelineHeader } from './DeliverableMatrix'
 import { AiGenerationDrawer } from './AiGenerationDrawer'
 import { UploadDrawer } from './UploadDrawer'
 
@@ -69,8 +69,9 @@ export function ProjectDetailPage() {
       <div className="flex flex-1 overflow-hidden">
         <Sidebar collapsed={sidebarCollapsed} />
         <main className="relative flex flex-1 flex-col overflow-y-auto bg-background">
-          <div className="sticky top-0 z-10">
+          <div className="sticky top-0 z-10 bg-background pt-2">
             <DeliverableLegend deliverables={deliverables} />
+            <StagePipelineHeader />
           </div>
           <DeliverableMatrix deliverables={deliverables} onAction={handleAction} />
         </main>
