@@ -6,9 +6,8 @@ import { MOCK_PROJECT } from '../data/mock-project'
 import { MOCK_DELIVERABLES } from '../data/mock-deliverables'
 import { publishCell, startGenerating, uploadComplete } from '../utils/deliverable-actions'
 import { TopBand } from './TopBand'
-import { Sidebar } from './Sidebar'
+import { Sidebar, SidebarLogo } from './Sidebar'
 import { AppHeader } from './AppHeader'
-import { ProjectBar } from './ProjectBar'
 import { DeliverableLegend } from './DeliverableLegend'
 import { DeliverableMatrix } from './DeliverableMatrix'
 import { AiGenerationDrawer } from './AiGenerationDrawer'
@@ -16,6 +15,7 @@ import { UploadDrawer } from './UploadDrawer'
 
 export function ProjectDetailPage() {
   const [deliverables, setDeliverables] = useState<DeliverableCell[]>(MOCK_DELIVERABLES)
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
 
   // Drawer state
   const [aiDrawerOpen, setAiDrawerOpen] = useState(false)
@@ -58,12 +58,20 @@ export function ProjectDetailPage() {
   return (
     <div className="flex h-screen flex-col overflow-hidden">
       <TopBand />
+
+      {/* Top row — sidebar logo + header */}
+      <div className="flex shrink-0 border-b border-border">
+        <SidebarLogo collapsed={sidebarCollapsed} onToggle={() => setSidebarCollapsed((prev) => !prev)} />
+        <AppHeader project={MOCK_PROJECT} />
+      </div>
+
+      {/* Body — sidebar nav + main content */}
       <div className="flex flex-1 overflow-hidden">
-        <Sidebar />
-        <main className="flex flex-1 flex-col overflow-y-auto bg-background">
-          <AppHeader />
-          <ProjectBar project={MOCK_PROJECT} />
-          <DeliverableLegend deliverables={deliverables} />
+        <Sidebar collapsed={sidebarCollapsed} />
+        <main className="relative flex flex-1 flex-col overflow-y-auto bg-background">
+          <div className="sticky top-0 z-10">
+            <DeliverableLegend deliverables={deliverables} />
+          </div>
           <DeliverableMatrix deliverables={deliverables} onAction={handleAction} />
         </main>
       </div>
