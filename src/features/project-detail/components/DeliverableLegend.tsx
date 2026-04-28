@@ -65,13 +65,13 @@ export function DeliverableLegend({ deliverables }: DeliverableLegendProps) {
     <div className="flex items-center justify-between border-b border-border bg-card px-8 py-2.5">
       {/* Tabs */}
       <div className="flex items-center gap-1">
-        <Button size="sm" className="rounded-md text-xs">
+        <Button variant="dark" size="sm" className="text-xs">
           산출물
         </Button>
         <Button
           variant="ghost"
           size="sm"
-          className="cursor-not-allowed rounded-md text-xs opacity-40"
+          className="cursor-not-allowed text-xs opacity-40"
           disabled
         >
           AI Chat
