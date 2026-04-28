@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Color System — EPC PE AI-Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    /* Brand Primary */
+    --primary-900: #001E3C;
+    --primary-800: #002E5D;
+    --primary-700: #003F7F;
+    --primary-600: #004E9A;
+    --primary-500: #0059A8; /* Brand Base */
+    --primary-400: #1A70BB;
+    --primary-300: #4A95D0;
+    --primary-200: #8DC0E8;
+    --primary-100: #C6E0F4;
+    --primary-50:  #EAF4FB;
+
+    /* Neutral */
+    --gray-900: #0D1117;
+    --gray-800: #1C2230;
+    --gray-700: #2E3A4E;
+    --gray-600: #4A5568;
+    --gray-500: #6B7A8F;
+    --gray-400: #94A3B8;
+    --gray-300: #CBD5E1;
+    --gray-200: #E2E8F0;
+    --gray-100: #F1F5F9;
+    --gray-50:  #F8FAFC;
+
+    /* Semantic */
+    --success: #3A8C6E;
+    --warning: #B07D3A;
+    --error:   #A04545;
+    --info:    #3A6A96;
+
+    /* Accent */
+    --accent-teal:   #00B4D8;
+    --accent-sky:    #38BDF8;
+    --accent-gold:   #D4A017;
+  }
+
+  body {
+    font-family: 'Outfit', sans-serif;
+    background: var(--gray-50);
+    color: var(--gray-900);
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--primary-900);
+    padding: 60px 64px 48px;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    width: 600px; height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(0,89,168,0.45) 0%, transparent 70%);
+    top: -200px; right: -100px;
+  }
+  header::after {
+    content: '';
+    position: absolute;
+    width: 300px; height: 2px;
+    background: linear-gradient(90deg, var(--primary-500), transparent);
+    bottom: 0; left: 64px;
+  }
+  .header-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--primary-300);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  header h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(36px, 5vw, 58px);
+    color: #fff;
+    line-height: 1.1;
+    margin-bottom: 12px;
+  }
+  header h1 span {
+    color: var(--primary-300);
+  }
+  .header-sub {
+    font-size: 15px;
+    color: var(--gray-400);
+    font-weight: 300;
+  }
+  .hero-swatch {
+    position: absolute;
+    right: 64px; top: 50%; transform: translateY(-50%);
+    display: flex; gap: 8px; align-items: flex-end;
+  }
+  .hero-swatch .bar {
+    width: 18px;
+    border-radius: 4px;
+    background: var(--primary-500);
+    opacity: 0.9;
+  }
+
+  /* ── LAYOUT ── */
+  main { max-width: 1100px; margin: 0 auto; padding: 56px 32px; }
+  section { margin-bottom: 64px; }
+  .section-title {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gray-500);
+    margin-bottom: 24px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .section-title::after {
+    content: ''; flex: 1; height: 1px; background: var(--gray-200);
+  }
+
+  /* ── SWATCH GRID ── */
+  .swatch-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.08); }
+  .swatch {
+    aspect-ratio: 3/4;
+    display: flex; flex-direction: column; justify-content: flex-end;
+    padding: 12px;
+    position: relative;
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+  .swatch:hover { z-index: 2; transform: scaleY(1.04); }
+  .swatch.base-mark::after {
+    content: '★ Brand';
+    position: absolute;
+    top: 10px; left: 10px;
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    background: rgba(255,255,255,0.2);
+    color: #fff;
+    border-radius: 4px;
+    padding: 2px 6px;
+  }
+  .swatch-name { font-size: 11px; font-weight: 600; margin-bottom: 2px; }
+  .swatch-hex  { font-family: 'DM Mono', monospace; font-size: 10px; opacity: 0.75; }
+
+  /* neutral swatches */
+  .neutral-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+  .neutral-swatch {
+    border-radius: 10px;
+    padding: 16px 12px 12px;
+    border: 1px solid var(--gray-200);
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .neutral-preview { width: 100%; height: 40px; border-radius: 6px; }
+  .neutral-label { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--gray-600); }
+  .neutral-hex   { font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 500; color: var(--gray-900); }
+
+  /* ── SEMANTIC ── */
+  .semantic-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .semantic-card {
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--gray-200);
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  }
+  .semantic-swatch { height: 72px; }
+  .semantic-body { padding: 14px 14px 16px; }
+  .semantic-role {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gray-400);
+    margin-bottom: 4px;
+  }
+  .semantic-hex {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--gray-900);
+    margin-bottom: 6px;
+  }
+  .semantic-desc { font-size: 11px; color: var(--gray-500); line-height: 1.5; }
+
+  /* ── ACCENT ── */
+  .accent-row { display: flex; gap: 16px; }
+  .accent-card {
+    flex: 1;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--gray-200);
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  }
+  .accent-top { height: 80px; display: flex; align-items: center; justify-content: center; }
+  .accent-dot { width: 40px; height: 40px; border-radius: 50%; background: #fff; opacity: 0.3; }
+  .accent-body { padding: 14px 16px; }
+  .accent-name { font-weight: 600; font-size: 13px; margin-bottom: 2px; }
+  .accent-hex  { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--gray-500); }
+  .accent-use  { font-size: 11px; color: var(--gray-400); margin-top: 4px; }
+
+  /* ── USAGE GUIDELINES ── */
+  .usage-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .usage-card {
+    border-radius: 12px;
+    border: 1px solid var(--gray-200);
+    padding: 20px;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  }
+  .usage-card h4 { font-size: 14px; font-weight: 600; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+  .usage-demo {
+    border-radius: 8px;
+    padding: 16px;
+    background: var(--gray-50);
+    border: 1px solid var(--gray-200);
+    font-size: 13px;
+  }
+
+  /* ── BUTTONS ── */
+  .btn-row { display: flex; gap: 10px; flex-wrap: wrap; }
+  .btn {
+    padding: 8px 18px; border-radius: 6px; font-size: 13px; font-weight: 500;
+    border: none; cursor: pointer; font-family: 'Outfit', sans-serif;
+  }
+  .btn-primary { background: var(--primary-500); color: #fff; }
+  .btn-secondary { background: transparent; color: var(--primary-500); border: 1.5px solid var(--primary-500); }
+  .btn-ghost { background: var(--primary-50); color: var(--primary-700); }
+  .btn-dark { background: var(--primary-900); color: #fff; }
+
+  /* ── TYPOGRAPHY PAIRS ── */
+  .type-demo {
+    background: #fff;
+    border: 1px solid var(--gray-200);
+    border-radius: 12px;
+    padding: 28px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  }
+  .type-demo-heading { font-family: 'DM Serif Display', serif; font-size: 28px; color: var(--primary-900); margin-bottom: 8px; line-height: 1.2; }
+  .type-demo-body { font-size: 14px; color: var(--gray-600); line-height: 1.7; }
+  .type-demo-accent { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--primary-500); margin-top: 12px; letter-spacing: 0.05em; }
+
+  /* ── DARK PREVIEW ── */
+  .dark-preview {
+    background: var(--primary-900);
+    border-radius: 16px;
+    padding: 32px;
+    display: flex; gap: 24px; align-items: center;
+  }
+  .dark-card-inner {
+    background: var(--primary-800);
+    border-radius: 10px;
+    padding: 20px;
+    flex: 1;
+    border: 1px solid rgba(255,255,255,0.07);
+  }
+  .dark-card-inner h5 { color: #fff; font-size: 14px; font-weight: 600; margin-bottom: 6px; }
+  .dark-card-inner p  { color: var(--primary-200); font-size: 12px; line-height: 1.6; }
+  .dark-badge {
+    display: inline-block;
+    margin-top: 10px;
+    background: var(--primary-500);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+    border-radius: 4px;
+    padding: 3px 8px;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--gray-200);
+    padding: 32px;
+    text-align: center;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--gray-400);
+    letter-spacing: 0.08em;
+  }
+
+  @media (max-width: 700px) {
+    header { padding: 40px 24px 36px; }
+    .hero-swatch { display: none; }
+    main { padding: 36px 16px; }
+    .swatch-grid { grid-template-columns: repeat(5, 1fr); }
+    .neutral-grid { grid-template-columns: repeat(2, 1fr); }
+    .semantic-row { grid-template-columns: repeat(2, 1fr); }
+    .usage-grid { grid-template-columns: 1fr; }
+    .accent-row { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-label">Brand Color System · 2025</div>
+  <h1>Endeavour <span>Blue</span></h1>
+  <p class="header-sub">Primary Brand Color — #0059A8 &nbsp;·&nbsp; Complete Color Guide</p>
+  <div class="hero-swatch">
+    <div class="bar" style="height:40px; opacity:0.3;"></div>
+    <div class="bar" style="height:60px; opacity:0.5;"></div>
+    <div class="bar" style="height:90px; opacity:0.7;"></div>
+    <div class="bar" style="height:120px; opacity:1.0;"></div>
+    <div class="bar" style="height:90px; background:var(--primary-300); opacity:0.8;"></div>
+    <div class="bar" style="height:60px; background:var(--primary-200); opacity:0.8;"></div>
+    <div class="bar" style="height:40px; background:var(--primary-100); opacity:0.8;"></div>
+  </div>
+</header>
+
+<main>
+
+  <!-- PRIMARY SCALE -->
+  <section>
+    <div class="section-title">01 &nbsp; Primary — Endeavour Blue Scale</div>
+
+    <div class="swatch-grid">
+      <div class="swatch" style="background:var(--primary-900); color:#fff;">
+        <div class="swatch-name">900</div><div class="swatch-hex">#001E3C</div>
+      </div>
+      <div class="swatch" style="background:var(--primary-800); color:#fff;">
+        <div class="swatch-name">800</div><div class="swatch-hex">#002E5D</div>
+      </div>
+      <div class="swatch" style="background:var(--primary-700); color:#fff;">
+        <div class="swatch-name">700</div><div class="swatch-hex">#003F7F</div>
+      </div>
+      <div class="swatch" style="background:var(--primary-600); color:#fff;">
+        <div class="swatch-name">600</div><div class="swatch-hex">#004E9A</div>
+      </div>
+      <div class="swatch base-mark" style="background:var(--primary-500); color:#fff;">
+        <div class="swatch-name">500</div><div class="swatch-hex">#0059A8</div>
+      </div>
+      <div class="swatch" style="background:var(--primary-400); color:#fff;">
+        <div class="swatch-name">400</div><div class="swatch-hex">#1A70BB</div>
+      </div>
+      <div class="swatch" style="background:var(--primary-300); color:#fff;">
+        <div class="swatch-name">300</div><div class="swatch-hex">#4A95D0</div>
+      </div>
+      <div class="swatch" style="background:var(--primary-200); color:var(--primary-900);">
+        <div class="swatch-name">200</div><div class="swatch-hex">#8DC0E8</div>
+      </div>
+      <div class="swatch" style="background:var(--primary-100); color:var(--primary-800);">
+        <div class="swatch-name">100</div><div class="swatch-hex">#C6E0F4</div>
+      </div>
+      <div class="swatch" style="background:var(--primary-50); color:var(--primary-800);">
+        <div class="swatch-name">50</div><div class="swatch-hex">#EAF4FB</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- NEUTRAL SCALE -->
+  <section>
+    <div class="section-title">02 &nbsp; Neutral — Gray Scale</div>
+    <div class="neutral-grid">
+      <div class="neutral-swatch">
+        <div class="neutral-preview" style="background:var(--gray-900);"></div>
+        <div class="neutral-label">Gray 900</div>
+        <div class="neutral-hex">#0D1117</div>
+      </div>
+      <div class="neutral-swatch">
+        <div class="neutral-preview" style="background:var(--gray-700);"></div>
+        <div class="neutral-label">Gray 700</div>
+        <div class="neutral-hex">#2E3A4E</div>
+      </div>
+      <div class="neutral-swatch">
+        <div class="neutral-preview" style="background:var(--gray-500);"></div>
+        <div class="neutral-label">Gray 500</div>
+        <div class="neutral-hex">#6B7A8F</div>
+      </div>
+      <div class="neutral-swatch">
+        <div class="neutral-preview" style="background:var(--gray-300);"></div>
+        <div class="neutral-label">Gray 300</div>
+        <div class="neutral-hex">#CBD5E1</div>
+      </div>
+      <div class="neutral-swatch">
+        <div class="neutral-preview" style="background:var(--gray-100); border:1px solid var(--gray-200);"></div>
+        <div class="neutral-label">Gray 100</div>
+        <div class="neutral-hex">#F1F5F9</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SEMANTIC COLORS -->
+  <section>
+    <div class="section-title">03 &nbsp; Semantic Colors</div>
+    <div class="semantic-row">
+      <div class="semantic-card">
+        <div class="semantic-swatch" style="background:#3A8C6E;"></div>
+        <div class="semantic-body">
+          <div class="semantic-role">Success</div>
+          <div class="semantic-hex">#3A8C6E</div>
+          <div class="semantic-desc">확인, 완료, 정상 상태</div>
+        </div>
+      </div>
+      <div class="semantic-card">
+        <div class="semantic-swatch" style="background:#B07D3A;"></div>
+        <div class="semantic-body">
+          <div class="semantic-role">Warning</div>
+          <div class="semantic-hex">#B07D3A</div>
+          <div class="semantic-desc">주의, 경고, 검토 필요</div>
+        </div>
+      </div>
+      <div class="semantic-card">
+        <div class="semantic-swatch" style="background:#A04545;"></div>
+        <div class="semantic-body">
+          <div class="semantic-role">Error</div>
+          <div class="semantic-hex">#A04545</div>
+          <div class="semantic-desc">오류, 실패, 위험 상태</div>
+        </div>
+      </div>
+      <div class="semantic-card">
+        <div class="semantic-swatch" style="background:#3A6A96;"></div>
+        <div class="semantic-body">
+          <div class="semantic-role">Info</div>
+          <div class="semantic-hex">#3A6A96</div>
+          <div class="semantic-desc">정보, 안내, 브랜드 메시지</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ACCENT COLORS -->
+  <section>
+    <div class="section-title">04 &nbsp; Accent Colors</div>
+    <div class="accent-row">
+      <div class="accent-card">
+        <div class="accent-top" style="background:linear-gradient(135deg,#007EA7,#00B4D8);">
+          <div class="accent-dot"></div>
+        </div>
+        <div class="accent-body">
+          <div class="accent-name">Ocean Teal</div>
+          <div class="accent-hex">#00B4D8</div>
+          <div class="accent-use">데이터 시각화, 하이라이트</div>
+        </div>
+      </div>
+      <div class="accent-card">
+        <div class="accent-top" style="background:linear-gradient(135deg,#0284C7,#38BDF8);">
+          <div class="accent-dot"></div>
+        </div>
+        <div class="accent-body">
+          <div class="accent-name">Sky</div>
+          <div class="accent-hex">#38BDF8</div>
+          <div class="accent-use">배경 그라데이션, 배너</div>
+        </div>
+      </div>
+      <div class="accent-card">
+        <div class="accent-top" style="background:linear-gradient(135deg,#92660A,#D4A017);">
+          <div class="accent-dot"></div>
+        </div>
+        <div class="accent-body">
+          <div class="accent-name">Gold</div>
+          <div class="accent-hex">#D4A017</div>
+          <div class="accent-use">Premium 배지, CTA 강조</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- USAGE GUIDELINES -->
+  <section>
+    <div class="section-title">05 &nbsp; Usage Guidelines</div>
+    <div class="usage-grid">
+      <!-- Buttons -->
+      <div class="usage-card">
+        <h4>Button Variants</h4>
+        <div class="usage-demo">
+          <div class="btn-row">
+            <button class="btn btn-primary">Primary</button>
+            <button class="btn btn-secondary">Secondary</button>
+            <button class="btn btn-ghost">Ghost</button>
+            <button class="btn btn-dark">Dark</button>
+          </div>
+        </div>
+      </div>
+      <!-- Text on BG -->
+      <div class="usage-card">
+        <h4>텍스트 사용 원칙</h4>
+        <div class="usage-demo" style="display:flex;flex-direction:column;gap:6px;">
+          <div style="color:var(--primary-900);font-weight:600;font-size:13px;">■ 900 — 헤딩, 본문 강조</div>
+          <div style="color:var(--primary-600);font-size:13px;">■ 600 — 링크, 클릭 가능 텍스트</div>
+          <div style="color:var(--primary-400);font-size:13px;">■ 400 — 서브 레이블</div>
+          <div style="background:var(--primary-500);color:#fff;border-radius:4px;padding:2px 8px;font-size:12px;display:inline-block;">White on 500+ ✓</div>
+        </div>
+      </div>
+      <!-- Typography -->
+      <div class="usage-card" style="grid-column:1/-1;">
+        <h4>Typography in Context</h4>
+        <div class="type-demo">
+          <div class="type-demo-heading">신뢰와 혁신으로 함께하는 파트너</div>
+          <div class="type-demo-body">Endeavour Blue는 안정감과 전문성을 상징합니다. 깊고 진한 파란색 계열은 글로벌 기업들이 선택하는 신뢰의 색으로, 모든 커뮤니케이션에 일관된 브랜드 경험을 제공합니다.</div>
+          <div class="type-demo-accent">BRAND COLOR SYSTEM · ENDEAVOUR BLUE #0059A8</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DARK MODE PREVIEW -->
+  <section>
+    <div class="section-title">06 &nbsp; Dark Background Preview</div>
+    <div class="dark-preview">
+      <div class="dark-card-inner">
+        <h5>Enterprise Dashboard</h5>
+        <p>브랜드 컬러는 어두운 배경에서도 명확한 계층 구조를 유지합니다.</p>
+        <span class="dark-badge">Active</span>
+      </div>
+      <div class="dark-card-inner">
+        <h5>Global Analytics</h5>
+        <p>Primary 200–300 계열은 Dark 배경의 보조 텍스트에 최적화되어 있습니다.</p>
+        <span class="dark-badge">Live</span>
+      </div>
+      <div style="flex:1; text-align:center;">
+        <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--primary-300);letter-spacing:0.12em;margin-bottom:8px;">BRAND BASE</div>
+        <div style="width:80px;height:80px;border-radius:50%;background:var(--primary-500);margin:0 auto;box-shadow:0 0 40px rgba(0,89,168,0.6);"></div>
+        <div style="font-family:'DM Serif Display',serif;font-size:22px;color:#fff;margin-top:12px;">#0059A8</div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  Endeavour Blue Color System &nbsp;·&nbsp; Primary #0059A8 &nbsp;·&nbsp; Generated 2025
+</footer>
+
+</body>
+</html>

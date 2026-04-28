@@ -1,0 +1,3543 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Deliverable Matrix — Hi-Fi Prototype</title>
+  <style>
+    /* IBM Plex Mono - Regular 400 */
+    @font-face {
+      font-family: 'IBM Plex Mono';
+      font-style: normal;
+      font-weight: 400;
+      font-display: swap;
+      src: url('https://fonts.gstatic.com/s/ibmplexmono/v19/-F6qfjptAgt5VM-kVkqdyU8n3kwq0n1hj-sNFQ.woff2') format('woff2');
+    }
+
+    /* IBM Plex Mono - Medium 500 */
+    @font-face {
+      font-family: 'IBM Plex Mono';
+      font-style: normal;
+      font-weight: 500;
+      font-display: swap;
+      src: url('https://fonts.gstatic.com/s/ibmplexmono/v19/-F6qfjptAgt5VM-kVkqdyU8n3oQp0n1hj-sNFQ.woff2') format('woff2');
+    }
+
+    /* IBM Plex Sans KR - Light 300 */
+    @font-face {
+      font-family: 'IBM Plex Sans KR';
+      font-style: normal;
+      font-weight: 300;
+      font-display: swap;
+      src: url('https://fonts.gstatic.com/s/ibmplexsanskr/v9/vEFM2-VJISZe3O_rc3ZVYh4aTwNOyra_X5zCpMrMfA.woff2') format('woff2');
+    }
+
+    /* IBM Plex Sans KR - Regular 400 */
+    @font-face {
+      font-family: 'IBM Plex Sans KR';
+      font-style: normal;
+      font-weight: 400;
+      font-display: swap;
+      src: url('https://fonts.gstatic.com/s/ibmplexsanskr/v9/vEFM2-VJISZe3O_rc3ZVYh4aTwNO4ra_X5zCpMrMfA.woff2') format('woff2');
+    }
+
+    /* IBM Plex Sans KR - Medium 500 */
+    @font-face {
+      font-family: 'IBM Plex Sans KR';
+      font-style: normal;
+      font-weight: 500;
+      font-display: swap;
+      src: url('https://fonts.gstatic.com/s/ibmplexsanskr/v9/vEFM2-VJISZe3O_rc3ZVYh4aTwNOtra_X5zCpMrMfA.woff2') format('woff2');
+    }
+
+    /* IBM Plex Sans KR - SemiBold 600 */
+    @font-face {
+      font-family: 'IBM Plex Sans KR';
+      font-style: normal;
+      font-weight: 600;
+      font-display: swap;
+      src: url('https://fonts.gstatic.com/s/ibmplexsanskr/v9/vEFM2-VJISZe3O_rc3ZVYh4aTwNOqrG_X5zCpMrMfA.woff2') format('woff2');
+    }
+
+    :root {
+      /* Brand Primary - Endeavour Blue */
+      --primary-900: #001E3C;
+      --primary-800: #002E5D;
+      --primary-700: #003F7F;
+      --primary-600: #004E9A;
+      --primary-500: #0059A8;
+      --primary-400: #1A70BB;
+      --primary-300: #4A95D0;
+      --primary-200: #8DC0E8;
+      --primary-100: #C6E0F4;
+      --primary-50: #EAF4FB;
+
+      /* Neutral */
+      --gray-900: #0D1117;
+      --gray-800: #1C2230;
+      --gray-700: #2E3A4E;
+      --gray-600: #4A5568;
+      --gray-500: #6B7A8F;
+      --gray-400: #94A3B8;
+      --gray-300: #CBD5E1;
+      --gray-200: #E2E8F0;
+      --gray-100: #F1F5F9;
+      --gray-50: #F8FAFC;
+
+      /* Semantic — from color-system.html */
+      --success: #3A8C6E;
+      --success-bg: #EAF5EF;
+      --warning: #B07D3A;
+      --warning-bg: #FBF2E4;
+      --error: #A04545;
+      --error-bg: #F9ECEC;
+      --info: #3A6A96;
+      --info-bg: #ECF2F8;
+
+      /* Accent */
+      --accent-gold: #D4A017;
+      --accent-gold-soft: rgba(212, 160, 23, 0.15);
+      --accent-teal: #00B4D8;
+
+      /* Matrix colors — aligned with color-system tokens */
+      --matrix-bg: var(--gray-100);
+      --matrix-border: var(--gray-200);
+      --matrix-cell-bg: #fff;
+      --matrix-header-bg: var(--gray-50);
+
+      /* Layout heights — keep in sync with actual element sizes */
+      --h-top-band: 5px;
+      --h-header: 52px;
+      --h-proj-bar: 85px;
+      --h-legend: 45px;
+      --h-wrap-padding: 72px;
+      /* ai-chat-wrap padding top+bottom */
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'IBM Plex Sans KR', sans-serif;
+      background: var(--matrix-bg);
+      color: var(--gray-900);
+      min-height: 100vh;
+    }
+
+    /* ── TOP BAND ── */
+    .top-band {
+      height: 5px;
+      background: linear-gradient(90deg,
+          var(--primary-900) 0%,
+          var(--primary-500) 50%,
+          var(--primary-300) 100%);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: var(--matrix-cell-bg);
+      border-bottom: 1px solid var(--matrix-border);
+      padding: 0 32px;
+      height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: var(--h-top-band);
+      z-index: 200;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: .01em;
+      color: var(--gray-900);
+    }
+
+    .logo-mark {
+      flex-shrink: 0;
+    }
+
+    .logo-text {
+      font-weight: 600;
+      color: var(--gray-900);
+    }
+
+    .logo-sep {
+      color: var(--gray-300);
+      font-weight: 300;
+    }
+
+    .logo-sub {
+      font-family: 'IBM Plex Sans KR', sans-serif;
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--gray-500);
+      letter-spacing: .03em;
+    }
+
+    /* ── PROJECT SEARCH ── */
+    .proj-search {
+      position: relative;
+      flex: 0 1 380px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+    }
+
+    .proj-search-icon {
+      position: absolute;
+      left: 10px;
+      width: 14px;
+      height: 14px;
+      color: var(--gray-400);
+      pointer-events: none;
+    }
+
+    .proj-search-input {
+      width: 100%;
+      height: 36px;
+      padding: 0 12px 0 34px;
+      font-family: 'IBM Plex Sans KR', sans-serif;
+      font-size: 13px;
+      color: var(--gray-900);
+      background: var(--gray-50);
+      border: 1px solid var(--gray-200);
+      border-radius: 6px;
+      transition: border-color 0.15s;
+    }
+
+    .proj-search-input::placeholder {
+      color: var(--gray-400);
+    }
+
+    .proj-search-input:focus {
+      outline: none;
+      background: #fff;
+      border-color: var(--primary-500);
+    }
+
+    .proj-search-kbd {
+      position: absolute;
+      right: 10px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      color: var(--gray-400);
+      background: #fff;
+      border: 1px solid var(--gray-200);
+      border-radius: 3px;
+      padding: 1px 5px;
+      pointer-events: none;
+    }
+
+    .proj-search-dropdown {
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 0;
+      right: 0;
+      background: #fff;
+      border: 1px solid var(--matrix-border);
+      border-radius: 8px;
+      box-shadow: 0 8px 24px rgba(0, 30, 60, 0.12);
+      padding: 6px 0;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-4px);
+      transition: all 0.15s;
+      z-index: 150;
+      max-height: 360px;
+      overflow-y: auto;
+    }
+
+    .proj-search.open .proj-search-dropdown {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+
+    .proj-search-section-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 9px;
+      color: var(--gray-400);
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      padding: 6px 14px 4px;
+    }
+
+    .proj-search-item {
+      padding: 8px 14px;
+      cursor: pointer;
+      transition: background 0.12s;
+    }
+
+    .proj-search-item:hover,
+    .proj-search-item.active {
+      background: var(--primary-50);
+    }
+
+    .proj-search-item-name {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--gray-900);
+      margin-bottom: 2px;
+    }
+
+    .proj-search-item-meta {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      color: var(--gray-500);
+    }
+
+    .proj-search-divider {
+      height: 1px;
+      background: var(--matrix-border);
+      margin: 4px 0;
+    }
+
+    .proj-search-footer {
+      padding: 8px 14px;
+      font-family: 'IBM Plex Sans KR', sans-serif;
+      font-size: 12px;
+      color: var(--primary-600);
+      cursor: pointer;
+      transition: background 0.12s;
+    }
+
+    .proj-search-footer:hover {
+      background: var(--gray-50);
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      color: var(--gray-500);
+    }
+
+    .header-tag {
+      border: 1px solid var(--matrix-border);
+      padding: 3px 10px;
+      font-size: 11px;
+      color: var(--gray-600);
+      border-radius: 4px;
+    }
+
+    /* ── PROJECT BAR ── */
+    .proj-bar {
+      background: var(--matrix-cell-bg);
+      border-bottom: 1px solid var(--matrix-border);
+      padding: 16px 32px;
+      height: var(--h-proj-bar);
+      box-sizing: border-box;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      position: sticky;
+      top: calc(var(--h-top-band) + var(--h-header));
+      z-index: 100;
+    }
+
+    .proj-name {
+      font-family: 'IBM Plex Sans KR', sans-serif;
+      font-size: 22px;
+      font-weight: 600;
+      letter-spacing: -.01em;
+      margin-bottom: 6px;
+      color: var(--gray-900);
+    }
+
+    .proj-meta {
+      font-family: 'IBM Plex Sans KR', sans-serif;
+      font-size: 13px;
+      color: var(--gray-500);
+      letter-spacing: .02em;
+      line-height: 1.2;
+      word-spacing: 0.2em;
+    }
+
+    .proj-stats {
+      display: flex;
+      gap: 32px;
+    }
+
+    .stat {
+      text-align: right;
+    }
+
+    .stat-n {
+      font-family: 'IBM Plex Sans KR', sans-serif;
+      font-size: 26px;
+      font-weight: 500;
+      color: var(--gray-900);
+      line-height: 1;
+      margin-bottom: 3px;
+    }
+
+    .stat-l {
+      font-family: 'IBM Plex Sans KR', sans-serif;
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--gray-500);
+      letter-spacing: .02em;
+      line-height: 1.6;
+    }
+
+    /* ── LEGEND ── */
+    .legend {
+      background: var(--matrix-cell-bg);
+      border-bottom: 1px solid var(--matrix-border);
+      padding: 10px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      position: sticky;
+      top: calc(var(--h-top-band) + var(--h-header) + var(--h-proj-bar));
+      z-index: 10;
+    }
+
+    .leg-title {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      color: var(--gray-400);
+      letter-spacing: .08em;
+      margin-right: 8px;
+    }
+
+    .badge {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 9px;
+      letter-spacing: .06em;
+      padding: 2px 7px;
+      border: 1px solid var(--matrix-border);
+      color: var(--gray-600);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      border-radius: 3px;
+    }
+
+    /* Option C palette — Missing/Generating/Needs Review/Ready */
+    .badge.uploaded {
+      border-color: var(--success);
+      color: var(--success);
+      background: var(--success-bg);
+    }
+
+    .badge.review {
+      border-color: var(--warning);
+      color: var(--warning);
+      background: var(--warning-bg);
+    }
+
+    .badge.missing {
+      border-color: var(--gray-300);
+      color: var(--gray-500);
+    }
+
+    .badge.na {
+      border-style: dashed;
+      color: var(--gray-300);
+    }
+
+    .badge.ai {
+      border-color: var(--primary-500);
+      color: var(--primary-700);
+      background: var(--primary-50);
+    }
+
+    .badge.dday-warn {
+      border-color: var(--warning);
+      color: var(--warning);
+      background: var(--warning-bg);
+    }
+
+    .badge.dday-over {
+      border-color: var(--error);
+      color: #fff;
+      background: var(--error);
+    }
+
+    .leg-sep {
+      width: 1px;
+      height: 14px;
+      background: var(--gray-200);
+      margin: 0 8px;
+    }
+
+    /* ── MATRIX ── */
+    .matrix-wrap {
+      padding: 24px 32px 48px;
+      overflow-x: auto;
+    }
+
+    .matrix {
+      min-width: 1000px;
+      background: var(--matrix-cell-bg);
+      border: 1px solid var(--matrix-border);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+    }
+
+    /* Header row */
+    .m-header-row {
+      display: grid;
+      grid-template-columns: 160px repeat(6, 1fr);
+      border-bottom: 1px solid var(--matrix-border);
+    }
+
+    .m-corner {
+      border-right: 1px solid var(--matrix-border);
+      padding: 12px 14px;
+      background: var(--matrix-header-bg);
+    }
+
+    .m-stage-hdr {
+      border-right: 1px solid var(--matrix-border);
+      padding: 10px 12px;
+      background: var(--matrix-header-bg);
+    }
+
+    .m-stage-hdr:last-child {
+      border-right: none;
+    }
+
+    .stage-idx {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      color: var(--gray-400);
+      letter-spacing: .12em;
+      margin-bottom: 2px;
+    }
+
+    .stage-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--gray-900);
+      margin-bottom: 2px;
+    }
+
+    /* WS rows */
+    .m-ws-row {
+      display: grid;
+      grid-template-columns: 160px repeat(6, 1fr);
+      border-bottom: 1px solid var(--gray-100);
+    }
+
+    .m-ws-row:last-child {
+      border-bottom: none;
+    }
+
+    .m-ws-label {
+      border-right: 1px solid var(--matrix-border);
+      padding: 8px 14px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      background: var(--matrix-header-bg);
+    }
+
+    .ws-code {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      color: var(--gray-400);
+      letter-spacing: .12em;
+      margin-bottom: 1px;
+    }
+
+    .ws-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--gray-900);
+    }
+
+    /* Cell — Option C: status-driven left border, 8px padding.
+   align-self:stretch keeps row alignment; content stays top-flushed. */
+    .m-cell {
+      border-right: 1px solid var(--gray-100);
+      border-left: 3px solid transparent;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      align-content: flex-start;
+      position: relative;
+      background: var(--matrix-cell-bg);
+      transition: background 0.15s;
+      font-size: 12px;
+    }
+
+    .m-cell:hover {
+      background: var(--gray-50);
+    }
+
+    .m-cell.cell-flash {
+      animation: cell-flash 0.6s ease;
+    }
+
+    @keyframes cell-flash {
+      0% {
+        background: var(--success-bg);
+        box-shadow: inset 0 0 0 2px var(--success);
+      }
+
+      100% {
+        background: var(--matrix-cell-bg);
+        box-shadow: none;
+      }
+    }
+
+    .m-cell:last-child {
+      border-right: none;
+    }
+
+    /* Status-driven left border (Option C) */
+    .m-cell.status-ready {
+      border-left-color: var(--success);
+    }
+
+    .m-cell.status-review {
+      border-left-color: var(--warning);
+      background: var(--warning-bg);
+    }
+
+    .m-cell.status-generating {
+      border-left-color: var(--primary-500);
+      background: var(--primary-50);
+    }
+
+    .m-cell.status-missing {
+      border-left-color: var(--gray-300);
+    }
+
+    .m-cell.status-overdue {
+      border-left-color: var(--error);
+    }
+
+    .m-cell.status-ai-failed {
+      border-left-color: var(--error);
+      background: var(--error-bg);
+    }
+
+    /* Hover: 상태별 배경의 한 단계 진한 톤으로 통일 */
+    .m-cell.status-ready:hover {
+      background: var(--success-bg);
+    }
+
+    .m-cell.status-review:hover {
+      background: #f6e8cd;
+    }
+
+    .m-cell.status-generating:hover {
+      background: var(--primary-100);
+    }
+
+    .m-cell.status-missing:hover {
+      background: var(--gray-50);
+    }
+
+    .m-cell.status-ai-failed:hover {
+      background: #f4dcdc;
+    }
+
+    /* N/A cell */
+    .m-cell.na {
+      background: repeating-linear-gradient(135deg,
+          transparent,
+          transparent 8px,
+          var(--gray-50) 8px,
+          var(--gray-50) 9px);
+    }
+
+    .m-cell.na .cell-na-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      color: var(--gray-300);
+      letter-spacing: .1em;
+      text-align: center;
+      margin: auto;
+    }
+
+    /* Urgent cell — needs review (Option C: warning left border, light tint) */
+    .m-cell.urgent {
+      border-left-color: var(--warning);
+      background: var(--warning-bg);
+    }
+
+    /* AI-generatable cell (Option C: generating = brand blue) */
+    .m-cell.ai-ready {
+      border-left-color: var(--primary-500);
+      background: var(--primary-50);
+      cursor: pointer;
+    }
+
+    .m-cell.ai-ready:hover {
+      background: var(--primary-100);
+    }
+
+    /* Utility */
+    .mono {
+      font-family: 'IBM Plex Mono', monospace;
+      letter-spacing: .04em;
+    }
+
+    /* Option C card spec — title + right-aligned REV on same line */
+    .cell-doc-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--gray-900);
+      line-height: 1.35;
+      margin-bottom: 4px;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 6px;
+    }
+
+    .cell-doc-title .rev {
+      font-family: 'IBM Plex Sans KR', sans-serif;
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--gray-500);
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+
+    /* Origin hint — text-only info, neutral color.
+   상태 시그널은 cell border + background가 전담. */
+    .cell-meta .origin-hint {
+      font-weight: 500;
+      color: var(--gray-600);
+    }
+
+    /* Meta line — segments auto-joined by middle-dot via CSS */
+    .cell-meta {
+      font-family: 'IBM Plex Sans KR', sans-serif;
+      font-size: 11px;
+      color: var(--gray-500);
+      line-height: 1.4;
+    }
+
+    .cell-meta>span+span::before {
+      content: '·';
+      color: var(--gray-300);
+      margin: 0 3px;
+    }
+
+    /* Legacy <span class="sep">·</span> — hide since dot is now drawn by CSS */
+    .cell-meta .sep {
+      display: none;
+    }
+
+
+    /* Origin chip — inline, no background (Option C is plain text) */
+    .origin {
+      font-weight: 500;
+    }
+
+    .origin.ai {
+      color: var(--primary-700);
+    }
+
+    .origin.upload {
+      color: var(--gray-700);
+    }
+
+    /* Status line — 9px, 4px gap above */
+    .cell-status-line {
+      font-family: 'IBM Plex Sans KR', sans-serif;
+      font-size: 11px;
+      font-weight: 500;
+      line-height: 1.4;
+      margin-top: 4px;
+    }
+
+    .status-ready .cell-status-line {
+      color: var(--success);
+      font-weight: 600;
+    }
+
+    .status-review .cell-status-line {
+      color: var(--warning);
+      font-weight: 600;
+    }
+
+    .status-generating .cell-status-line {
+      color: var(--primary-500);
+      font-weight: 600;
+    }
+
+    .status-overdue .cell-status-line {
+      color: var(--error);
+      font-weight: 600;
+    }
+
+    .status-ai-failed .cell-status-line {
+      color: var(--error);
+      font-weight: 600;
+    }
+
+    .cell-blocked .cell-status-line {
+      color: var(--gray-400);
+      font-weight: 400;
+    }
+
+    .cell-blocked .cell-doc-title {
+      color: var(--gray-400);
+      font-weight: 500;
+    }
+
+    .cell-blocked .cell-meta {
+      color: var(--gray-300);
+    }
+
+    /* Generating — mini progress bar (Option C style) */
+    .cell-progress-mini {
+      height: 3px;
+      background: var(--gray-200);
+      overflow: hidden;
+      border-radius: 2px;
+      width: 100%;
+      margin-bottom: 18px;
+    }
+
+    .cell-progress-mini-fill {
+      height: 100%;
+      background: var(--primary-500);
+      transition: width 0.3s;
+    }
+
+    /* cell-cta-row containing progress bar */
+    .status-generating .cell-cta-row {
+      display: flex;
+      align-items: flex-end;
+      padding-bottom: 0;
+    }
+
+    /* Absence-state CTAs (Missing/Overdue) — compact Option C-style buttons */
+    .cell-cta-row {
+      display: grid;
+      grid-auto-flow: column;
+      grid-auto-columns: 1fr;
+      gap: 3px;
+      margin-top: auto;
+      padding-top: 6px;
+    }
+
+    .cell-cta {
+      padding: 4px 6px;
+      font-family: 'IBM Plex Sans KR', sans-serif;
+      font-size: 11px;
+      font-weight: 500;
+      border-radius: 3px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      line-height: 1;
+      transition: all 0.12s;
+      white-space: nowrap;
+    }
+
+    /* Two CTA roles — Primary (권장 경로) / Secondary (대안) */
+    .cell-cta.primary {
+      background: var(--gray-600);
+      color: #fff;
+      border-color: var(--gray-600);
+    }
+
+    .cell-cta.primary:hover {
+      background: var(--gray-700);
+      border-color: var(--gray-700);
+    }
+
+    .cell-cta.secondary {
+      background: #fff;
+      color: var(--gray-700);
+      border-color: var(--gray-300);
+    }
+
+    .cell-cta.secondary:hover {
+      background: var(--gray-50);
+      border-color: var(--gray-500);
+      color: var(--gray-900);
+    }
+
+    /* Legend status — dot + label in matching color */
+    .cell-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'IBM Plex Sans KR', sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+      padding: 2px 0;
+      white-space: nowrap;
+    }
+
+    .cell-tag::before {
+      width: 9px;
+      height: 9px;
+    }
+
+    .cell-tag-count {
+      font-weight: 600;
+      margin-left: 2px;
+    }
+
+    .legend-items {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .cell-tag::before {
+      content: '';
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: currentColor;
+      flex-shrink: 0;
+    }
+
+    .cell-tag.ready {
+      color: var(--success);
+    }
+
+    .cell-tag.review {
+      color: var(--warning);
+    }
+
+    .cell-tag.generating {
+      color: var(--primary-500);
+    }
+
+    .cell-tag.ai-failed {
+      color: var(--error);
+    }
+
+    .cell-tag.missing {
+      color: var(--gray-300);
+    }
+
+    /* Legacy — kept for backwards compat (being phased out) */
+    .cell-doc-name {
+      font-size: 11px;
+      color: var(--gray-900);
+      line-height: 1.35;
+      flex: 1;
+      margin-bottom: 6px;
+      font-weight: 500;
+    }
+
+    .cell-footer {
+      display: none;
+    }
+
+    .cell-badges,
+    .cell-count {
+      display: none;
+    }
+
+    /* Progress strip at bottom of cell — hidden (was visually similar to divider) */
+    .cell-progress {
+      display: none;
+    }
+
+    /* BLOCKED cell — diagonal stripes */
+    .cell-blocked {
+      background: repeating-linear-gradient(135deg,
+          transparent,
+          transparent 8px,
+          var(--gray-50) 8px,
+          var(--gray-50) 9px);
+      pointer-events: none;
+    }
+
+    /* ── BREADCRUMB ── */
+    .breadcrumb {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      color: var(--gray-500);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .breadcrumb a {
+      color: var(--primary-500);
+      cursor: pointer;
+      text-decoration: underline;
+      text-decoration-color: var(--primary-200);
+      text-underline-offset: 3px;
+      text-decoration-thickness: 1px;
+    }
+
+    .breadcrumb a:hover {
+      text-decoration-color: var(--primary-500);
+    }
+
+    .breadcrumb .sep {
+      color: var(--gray-300);
+    }
+
+    .breadcrumb .current {
+      color: var(--gray-700);
+      font-weight: 500;
+    }
+
+    /* ── NOTIFICATION BELL ── */
+    .notif-bell {
+      position: relative;
+      width: 36px;
+      height: 36px;
+      border: 1px solid var(--matrix-border);
+      background: var(--matrix-cell-bg);
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+    }
+
+    .notif-bell:hover {
+      background: var(--primary-50);
+      border-color: var(--primary-300);
+    }
+
+    .notif-bell svg {
+      width: 16px;
+      height: 16px;
+      color: var(--gray-700);
+    }
+
+    .notif-badge {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      background: var(--primary-500);
+      color: #fff;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      font-weight: 500;
+      min-width: 18px;
+      height: 18px;
+      padding: 0 5px;
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid #fff;
+    }
+
+    .notif-badge.pulse::after {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      border-radius: 50%;
+      background: var(--primary-500);
+      opacity: 0.3;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+        opacity: 0.4;
+      }
+
+      100% {
+        transform: scale(1.6);
+        opacity: 0;
+      }
+    }
+
+    /* ── ACTIVITY FEED DRAWER ── */
+    .drawer-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 30, 60, 0.3);
+      z-index: 998;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s;
+    }
+
+    .drawer-backdrop.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .activity-drawer {
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: 420px;
+      max-width: 90vw;
+      background: #fff;
+      box-shadow: -4px 0 24px rgba(0, 30, 60, 0.15);
+      z-index: 999;
+      display: flex;
+      flex-direction: column;
+      transform: translateX(100%);
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .activity-drawer.open {
+      transform: translateX(0);
+    }
+
+    .drawer-header {
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--matrix-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #fff;
+    }
+
+    .drawer-title {
+      font-family: 'IBM Plex Sans KR', sans-serif;
+      font-size: 18px;
+      color: var(--gray-900);
+      font-weight: 600;
+      letter-spacing: -.01em;
+    }
+
+    .drawer-actions {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .drawer-mark {
+      font-family: 'IBM Plex Sans KR', sans-serif;
+      font-size: 12px;
+      color: var(--primary-500);
+      cursor: pointer;
+      padding: 6px 12px;
+      border-radius: 6px;
+      transition: background 0.15s;
+    }
+
+    .drawer-mark:hover {
+      background: var(--primary-50);
+    }
+
+    .drawer-close {
+      width: 32px;
+      height: 32px;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--gray-700);
+      font-size: 20px;
+      border-radius: 6px;
+      transition: all 0.15s;
+    }
+
+    .drawer-close:hover {
+      background: var(--gray-100);
+      color: var(--gray-900);
+    }
+
+    .drawer-tabs {
+      display: flex;
+      border-bottom: 1px solid var(--matrix-border);
+      background: #fff;
+      padding: 0 24px;
+    }
+
+    .drawer-tab {
+      flex: 1;
+      padding: 12px 0;
+      text-align: center;
+      font-family: 'IBM Plex Sans KR', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--gray-500);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all 0.15s;
+      position: relative;
+    }
+
+    .drawer-tab:hover {
+      color: var(--gray-900);
+    }
+
+    .drawer-tab.active {
+      color: var(--primary-600);
+      border-bottom-color: var(--primary-500);
+    }
+
+    .drawer-tab-count {
+      display: inline-block;
+      margin-left: 6px;
+      padding: 2px 8px;
+      background: var(--gray-100);
+      color: var(--gray-600);
+      border-radius: 10px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .drawer-tab.active .drawer-tab-count {
+      background: var(--primary-500);
+      color: #fff;
+    }
+
+    .drawer-body {
+      flex: 1;
+      overflow-y: auto;
+      background: #fff;
+    }
+
+    .notif-item {
+      padding: 16px 24px;
+      border-bottom: 1px solid var(--gray-100);
+      border-left: 3px solid transparent;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .notif-item:hover {
+      background: var(--gray-50);
+    }
+
+    .notif-item.done {
+      border-left-color: var(--success);
+      background: var(--success-bg);
+    }
+
+    .notif-item.ai-review {
+      border-left-color: var(--warning);
+      background: var(--warning-bg);
+    }
+
+    .notif-item.run {
+      border-left-color: var(--info);
+      background: var(--info-bg);
+    }
+
+    .notif-item.ai-run {
+      border-left-color: var(--primary-500);
+      background: var(--primary-50);
+    }
+
+    .notif-item.warn {
+      border-left-color: var(--warning);
+      background: var(--warning-bg);
+    }
+
+    .notif-item.over {
+      border-left-color: var(--error);
+      background: var(--error-bg);
+    }
+
+    .notif-item.read {
+      opacity: 0.6;
+      background: #fff;
+      border-left-color: var(--gray-200);
+    }
+
+    .notif-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 4px;
+      gap: 12px;
+    }
+
+    .notif-title {
+      font-family: 'IBM Plex Sans KR', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--gray-900);
+      line-height: 1.4;
+    }
+
+    .notif-title.muted {
+      font-weight: 400;
+      color: var(--gray-600);
+    }
+
+    .notif-time {
+      font-family: 'IBM Plex Sans KR', sans-serif;
+      font-size: 11px;
+      color: var(--gray-400);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .notif-meta {
+      font-family: 'IBM Plex Sans KR', sans-serif;
+      font-size: 12px;
+      color: var(--gray-600);
+      line-height: 1.5;
+      margin-bottom: 8px;
+    }
+
+    .notif-meta .tag {
+      font-family: 'IBM Plex Sans KR', sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--primary-600);
+    }
+
+    .notif-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .notif-btn {
+      background: var(--gray-600);
+      color: #fff;
+      font-family: 'IBM Plex Sans KR', sans-serif;
+      font-size: 11px;
+      font-weight: 500;
+      padding: 5px 10px;
+      border: 1px solid var(--gray-600);
+      cursor: pointer;
+      border-radius: 4px;
+      transition: all 0.12s;
+    }
+
+    .notif-btn:hover {
+      background: var(--gray-700);
+      border-color: var(--gray-700);
+    }
+
+    .notif-btn.ghost {
+      background: #fff;
+      color: var(--gray-700);
+      border: 1px solid var(--gray-300);
+    }
+
+    .notif-btn.ghost:hover {
+      background: var(--gray-50);
+      border-color: var(--gray-500);
+      color: var(--gray-900);
+    }
+
+    .notif-progress {
+      margin-top: 8px;
+      height: 4px;
+      background: var(--gray-100);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .notif-progress-fill {
+      height: 100%;
+      background: var(--primary-500);
+      transition: width 0.3s;
+    }
+
+    /* ── VIEW TABS (Legend 좌측) ── */
+    .view-tabs {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+
+    .view-tab {
+      position: relative;
+      padding: 4px 0;
+      border: none;
+      background: transparent;
+      font-family: 'IBM Plex Sans KR', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--gray-500);
+      cursor: pointer;
+      transition: color 0.12s;
+    }
+
+    .view-tab::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -11px;
+      /* align with legend border-bottom */
+      height: 3px;
+      background: transparent;
+      transition: background 0.15s;
+    }
+
+    .view-tab.active {
+      color: var(--gray-900);
+      font-weight: 600;
+    }
+
+    .view-tab.active::after {
+      background: var(--primary-500);
+    }
+
+    .view-tab:not(.active):hover {
+      color: var(--gray-700);
+    }
+
+    body.view-chat .legend-items {
+      display: none;
+    }
+
+    body.view-chat .matrix-wrap {
+      display: none;
+    }
+
+    body.view-matrix .ai-chat-wrap {
+      display: none;
+    }
+
+    /* ── AI CHAT VIEW (full page, matches matrix card style) ── */
+    .ai-chat-wrap {
+      padding: 24px 32px 48px;
+    }
+
+    .ai-chat-view {
+      display: flex;
+      flex-direction: column;
+      height: calc(100vh - var(--h-header) - var(--h-proj-bar) - var(--h-legend) - var(--h-wrap-padding));
+      min-height: 520px;
+      background: var(--matrix-cell-bg);
+      border: 1px solid var(--matrix-border);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+    }
+
+    .ai-chat-context {
+      padding: 12px 20px;
+      background: var(--matrix-header-bg);
+      border-bottom: 1px solid var(--matrix-border);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .ai-chat-context-label {
+      font-family: 'IBM Plex Sans KR', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--gray-700);
+      margin-right: 4px;
+    }
+
+    .ai-chat-context-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 3px 10px;
+      background: #fff;
+      border: 1px solid var(--gray-200);
+      border-radius: 12px;
+      font-size: 12px;
+      color: var(--gray-700);
+    }
+
+    .ai-chat-context-chip::before {
+      content: '';
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--success);
+    }
+
+    .ai-chat-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      background: var(--matrix-cell-bg);
+      align-items: center;
+    }
+
+    .ai-chat-body>* {
+      width: 100%;
+      max-width: 780px;
+    }
+
+    .ai-chat-body>.chat-msg {
+      width: auto;
+    }
+
+    .chat-day-divider {
+      align-self: center;
+      width: auto !important;
+      max-width: none !important;
+      font-family: 'IBM Plex Sans KR', sans-serif;
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--gray-500);
+      padding: 3px 12px;
+      background: var(--gray-50);
+      border: 1px solid var(--gray-200);
+      border-radius: 12px;
+      white-space: nowrap;
+    }
+
+    .chat-msg {
+      display: flex;
+      gap: 10px;
+      max-width: 100%;
+    }
+
+    .chat-msg.user {
+      align-self: flex-end;
+      max-width: 90%;
+    }
+
+    .chat-msg.ai {
+      align-self: stretch;
+      width: 100%;
+    }
+
+    .chat-msg.ai>div:last-child {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .chat-msg-avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      font-family: 'IBM Plex Sans KR', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      letter-spacing: 0;
+      background: var(--gray-200);
+      color: var(--gray-700);
+    }
+
+    .chat-msg.ai .chat-msg-avatar {
+      background: var(--primary-500);
+      color: #fff;
+      font-size: 10px;
+      letter-spacing: .02em;
+    }
+
+    /* User 아바타 숨김 (Claude/ChatGPT 스타일) */
+    .chat-msg.user .chat-msg-avatar {
+      display: none;
+    }
+
+    .chat-msg-bubble {
+      font-size: 14px;
+      line-height: 1.65;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    /* User: 브랜드 파랑 말풍선 + 좌상단 각짐 */
+    .chat-msg.user .chat-msg-bubble {
+      background: var(--primary-500);
+      color: #fff;
+      padding: 10px 14px;
+      border-radius: 2px 14px 14px 14px;
+    }
+
+    /* AI: 말풍선 없이 plain text — 넓은 폭으로 흐름 */
+    .chat-msg.ai .chat-msg-bubble {
+      background: transparent;
+      color: var(--gray-900);
+      padding: 2px 0;
+    }
+
+    .chat-msg-bubble strong {
+      font-weight: 600;
+    }
+
+    .chat-msg-sources {
+      margin-top: 6px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+
+    .chat-msg-attachments {
+      margin-top: 6px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+
+    .chat-msg-attachment {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 8px;
+      background: rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      border-radius: 10px;
+      font-size: 11px;
+      color: #fff;
+    }
+
+    .chat-msg-source-link {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      color: var(--primary-600);
+      background: var(--primary-50);
+      border: 1px solid var(--primary-100);
+      border-radius: 3px;
+      padding: 2px 8px;
+      cursor: pointer;
+      transition: all 0.12s;
+    }
+
+    .chat-msg-source-link:hover {
+      background: var(--primary-100);
+      color: var(--primary-700);
+    }
+
+    .chat-typing {
+      display: inline-flex;
+      gap: 3px;
+      padding: 2px 0;
+    }
+
+    .chat-typing span {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--gray-400);
+      animation: chat-dot 1.2s infinite;
+    }
+
+    .chat-typing span:nth-child(2) {
+      animation-delay: 0.15s;
+    }
+
+    .chat-typing span:nth-child(3) {
+      animation-delay: 0.3s;
+    }
+
+    @keyframes chat-dot {
+
+      0%,
+      60%,
+      100% {
+        opacity: 0.3;
+        transform: translateY(0);
+      }
+
+      30% {
+        opacity: 1;
+        transform: translateY(-3px);
+      }
+    }
+
+    .ai-chat-suggestions {
+      padding: 8px 24px 14px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      justify-content: center;
+      background: var(--matrix-cell-bg);
+    }
+
+    .ai-chat-suggestion {
+      padding: 5px 10px;
+      font-family: 'IBM Plex Sans KR', sans-serif;
+      font-size: 11px;
+      color: var(--gray-700);
+      background: #fff;
+      border: 1px solid var(--gray-300);
+      border-radius: 14px;
+      cursor: pointer;
+      transition: all 0.12s;
+    }
+
+    .ai-chat-suggestion:hover {
+      background: var(--gray-50);
+      border-color: var(--gray-500);
+      color: var(--gray-900);
+    }
+
+    .ai-chat-input-wrap {
+      padding: 12px 24px 16px;
+      border-top: 1px solid var(--matrix-border);
+      background: var(--matrix-cell-bg);
+      display: flex;
+      gap: 8px;
+      align-items: flex-end;
+    }
+
+    .ai-chat-input {
+      flex: 1;
+      height: 36px;
+      min-height: 36px;
+      max-height: 120px;
+      padding: 7px 12px;
+      font-family: 'IBM Plex Sans KR', sans-serif;
+      font-size: 14px;
+      color: var(--gray-900);
+      background: #fff;
+      border: 1px solid var(--gray-300);
+      border-radius: 6px;
+      resize: none;
+      line-height: 20px;
+      transition: border-color 0.15s;
+    }
+
+    .ai-chat-input::placeholder {
+      color: var(--gray-400);
+    }
+
+    .ai-chat-input:focus {
+      outline: none;
+      border-color: var(--primary-500);
+    }
+
+    .ai-chat-send {
+      width: 36px;
+      height: 36px;
+      border: 1px solid var(--primary-500);
+      background: var(--primary-500);
+      color: #fff;
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: all 0.15s;
+    }
+
+    .ai-chat-send:hover:not(:disabled) {
+      background: var(--primary-600);
+      border-color: var(--primary-600);
+    }
+
+    .ai-chat-send:disabled {
+      background: var(--gray-300);
+      border-color: var(--gray-300);
+      cursor: not-allowed;
+    }
+
+    .ai-chat-send svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    /* Attach button (문서 추가) — Secondary 뉴트럴 스타일 */
+    .ai-chat-attach {
+      width: 36px;
+      height: 36px;
+      border: 1px solid var(--gray-300);
+      background: #fff;
+      color: var(--gray-700);
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: all 0.15s;
+    }
+
+    .ai-chat-attach:hover {
+      background: var(--gray-50);
+      border-color: var(--gray-500);
+      color: var(--gray-900);
+    }
+
+    .ai-chat-attach svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    /* 첨부된 파일 목록 — input 위쪽 섹션 */
+    .ai-chat-attachments {
+      padding: 0 24px 8px;
+      background: var(--matrix-cell-bg);
+      display: none;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .ai-chat-attachments.has-files {
+      display: flex;
+    }
+
+    .ai-chat-attach-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 8px 4px 10px;
+      background: var(--gray-50);
+      border: 1px solid var(--gray-200);
+      border-radius: 14px;
+      font-size: 12px;
+      color: var(--gray-700);
+      max-width: 240px;
+    }
+
+    .ai-chat-attach-item .file-name {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .ai-chat-attach-item .file-remove {
+      border: none;
+      background: transparent;
+      color: var(--gray-400);
+      cursor: pointer;
+      font-size: 14px;
+      line-height: 1;
+      padding: 0 2px;
+    }
+
+    .ai-chat-attach-item .file-remove:hover {
+      color: var(--error);
+    }
+
+    /* ── AI GENERATION MODAL ── */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 30, 60, 0.45);
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-backdrop.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal {
+      background: #fff;
+      border-radius: 10px;
+      width: 480px;
+      max-width: 92vw;
+      max-height: 90vh;
+      overflow: hidden;
+      box-shadow: 0 16px 48px rgba(0, 30, 60, 0.3);
+      transform: translateY(10px);
+      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .modal-backdrop.open .modal {
+      transform: translateY(0);
+    }
+
+    .modal-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--matrix-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--gray-900);
+      letter-spacing: -0.01em;
+    }
+
+    .modal-close {
+      width: 28px;
+      height: 28px;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      color: var(--gray-500);
+      font-size: 18px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-close:hover {
+      background: var(--gray-100);
+      color: var(--gray-900);
+    }
+
+    .modal-body {
+      padding: 18px 20px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .modal-context {
+      background: var(--gray-50);
+      border: 1px solid var(--gray-200);
+      border-radius: 6px;
+      padding: 10px 12px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      color: var(--gray-700);
+      line-height: 1.5;
+    }
+
+    .modal-context strong {
+      color: var(--gray-900);
+      font-weight: 600;
+    }
+
+    .modal-field-label {
+      display: block;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--gray-700);
+      margin-bottom: 6px;
+    }
+
+    .modal-field-label .optional {
+      font-weight: 400;
+      color: var(--gray-400);
+      margin-left: 4px;
+    }
+
+    .modal-textarea {
+      width: 100%;
+      min-height: 80px;
+      padding: 10px 12px;
+      border: 1px solid var(--gray-300);
+      border-radius: 6px;
+      font-family: 'IBM Plex Sans KR', sans-serif;
+      font-size: 12px;
+      color: var(--gray-900);
+      resize: vertical;
+      line-height: 1.5;
+    }
+
+    .modal-textarea:focus {
+      outline: none;
+      border-color: var(--primary-500);
+    }
+
+    .modal-dropzone {
+      border: 1px dashed var(--gray-300);
+      border-radius: 6px;
+      padding: 18px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.15s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .modal-dropzone:hover {
+      border-color: var(--primary-500);
+      background: var(--primary-50);
+    }
+
+    .modal-dropzone-icon {
+      font-size: 18px;
+      color: var(--gray-400);
+    }
+
+    .modal-dropzone-text {
+      font-size: 12px;
+      color: var(--gray-700);
+    }
+
+    .modal-dropzone-hint {
+      font-size: 10px;
+      color: var(--gray-500);
+      font-family: 'IBM Plex Mono', monospace;
+    }
+
+    .modal-dropzone input[type=file] {
+      display: none;
+    }
+
+    .modal-file-list {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-top: 8px;
+    }
+
+    .modal-file-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 6px 10px;
+      background: var(--gray-50);
+      border: 1px solid var(--gray-200);
+      border-radius: 4px;
+      font-size: 11px;
+      color: var(--gray-700);
+    }
+
+    .modal-file-item .file-name {
+      font-family: 'IBM Plex Mono', monospace;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      flex: 1;
+    }
+
+    .modal-file-item .file-remove {
+      border: none;
+      background: transparent;
+      color: var(--gray-400);
+      cursor: pointer;
+      font-size: 14px;
+      padding: 0 4px;
+    }
+
+    .modal-file-item .file-remove:hover {
+      color: var(--error);
+    }
+
+    .modal-footer {
+      padding: 14px 20px;
+      border-top: 1px solid var(--matrix-border);
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    .modal-btn {
+      padding: 8px 18px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 500;
+      border: 1px solid transparent;
+      cursor: pointer;
+      font-family: 'IBM Plex Sans KR', sans-serif;
+    }
+
+    .modal-btn.cancel {
+      background: #fff;
+      color: var(--gray-700);
+      border-color: var(--gray-300);
+    }
+
+    .modal-btn.cancel:hover {
+      background: var(--gray-50);
+      border-color: var(--gray-500);
+    }
+
+    .modal-btn.primary {
+      background: var(--gray-600);
+      color: #fff;
+      border-color: var(--gray-600);
+    }
+
+    .modal-btn.primary:hover {
+      background: var(--gray-700);
+      border-color: var(--gray-700);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      header {
+        padding: 0 16px;
+        height: 48px;
+      }
+
+      .proj-bar {
+        padding: 12px 16px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+      }
+
+      .matrix-wrap {
+        padding: 16px;
+      }
+
+      .matrix {
+        min-width: 800px;
+      }
+
+      .activity-drawer {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body class="view-matrix">
+
+  <div class="top-band"></div>
+
+  <header>
+    <div class="logo">
+      <svg class="logo-mark" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+        <rect x="2" y="2" width="9" height="9" rx="1.5" fill="var(--primary-500)" />
+        <rect x="13" y="2" width="9" height="9" rx="1.5" fill="var(--primary-300)" />
+        <rect x="2" y="13" width="9" height="9" rx="1.5" fill="var(--primary-700)" />
+        <rect x="13" y="13" width="9" height="9" rx="1.5" fill="var(--primary-100)" stroke="var(--primary-300)"
+          stroke-width="0.5" />
+      </svg>
+      <span class="logo-text">EPC Company</span>
+    </div>
+
+    <div class="proj-search" id="projSearch">
+      <svg class="proj-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8" />
+        <line x1="21" y1="21" x2="16.65" y2="16.65" />
+      </svg>
+      <input type="text" class="proj-search-input" placeholder="프로젝트 검색..." onfocus="openProjSearch()"
+        oninput="filterProjSearch(this.value)">
+
+      <div class="proj-search-dropdown" id="projSearchDropdown">
+        <div class="proj-search-section-label">최근 접근</div>
+        <div class="proj-search-item active" onclick="selectProj('사우디 주바일 복합화력 플랜트 건설')">
+          <div class="proj-search-item-name">사우디 주바일 복합화력 플랜트 건설</div>
+          <div class="proj-search-item-meta">계약번호 KSA-JIC-2026-0312 · 2026.04 – 2028.12</div>
+        </div>
+        <div class="proj-search-item" onclick="selectProj('말레이시아 코타키나발루 정유 플랜트')">
+          <div class="proj-search-item-name">말레이시아 코타키나발루 정유 플랜트</div>
+          <div class="proj-search-item-meta">계약번호 MYS-KKB-2025-0087 · 2025.09 – 2027.12</div>
+        </div>
+        <div class="proj-search-item" onclick="selectProj('베트남 하이퐁 LNG 발전 프로젝트')">
+          <div class="proj-search-item-name">베트남 하이퐁 LNG 발전 프로젝트</div>
+          <div class="proj-search-item-meta">계약번호 VNM-HPG-2026-0041 · 2026.02 – 2028.06</div>
+        </div>
+
+        <div class="proj-search-divider"></div>
+
+        <div class="proj-search-footer" onclick="selectProj('전체 목록')">
+          전체 프로젝트 목록 보기 →
+        </div>
+      </div>
+    </div>
+
+    <div class="header-right">
+      <button class="notif-bell" onclick="toggleDrawer()" aria-label="알림">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round">
+          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+          <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+        </svg>
+        <span class="notif-badge pulse">3</span>
+      </button>
+    </div>
+  </header>
+
+  <div class="proj-bar">
+    <div>
+      <div class="proj-name">사우디 주바일 복합화력 플랜트 건설</div>
+      <div class="proj-meta">계약번호 KSA-JIC-2026-0312 · 계약기간 2026.04 – 2028.12</div>
+    </div>
+  </div>
+
+  <div class="legend">
+    <div class="view-tabs" role="tablist">
+      <button class="view-tab active" data-view="matrix" onclick="switchView('matrix')">산출물</button>
+      <button class="view-tab" data-view="chat" onclick="switchView('chat')">AI Chat</button>
+    </div>
+    <div class="legend-items">
+      <span class="cell-tag ready">완료 <strong class="cell-tag-count">18</strong></span>
+      <span class="cell-tag review">리드 검토 대기 <strong class="cell-tag-count">9</strong></span>
+      <span class="cell-tag generating">AI 처리 중 <strong class="cell-tag-count">3</strong></span>
+      <span class="cell-tag ai-failed">AI 생성 실패 <strong class="cell-tag-count">1</strong></span>
+      <span class="cell-tag missing">미완료 <strong class="cell-tag-count">12</strong></span>
+    </div>
+  </div>
+
+  <div class="matrix-wrap">
+    <div class="matrix">
+
+      <!-- HEADER ROW -->
+      <div class="m-header-row">
+        <div class="m-corner"></div>
+
+        <!-- 01 입찰 -->
+        <div class="m-stage-hdr">
+          <div class="stage-idx">01 / BID</div>
+          <div class="stage-name">입찰</div>
+        </div>
+
+        <!-- 02 견적 -->
+        <div class="m-stage-hdr">
+          <div class="stage-idx">02 / EST</div>
+          <div class="stage-name">견적</div>
+        </div>
+
+        <!-- 03 기본설계 -->
+        <div class="m-stage-hdr">
+          <div class="stage-idx">03 / FEED</div>
+          <div class="stage-name">기본설계</div>
+        </div>
+
+        <!-- 04 상세설계 -->
+        <div class="m-stage-hdr">
+          <div class="stage-idx">04 / DSGN</div>
+          <div class="stage-name">상세설계</div>
+        </div>
+
+        <!-- 05 Vendor 선정 -->
+        <div class="m-stage-hdr">
+          <div class="stage-idx">05 / VEND</div>
+          <div class="stage-name">Vendor 선정</div>
+        </div>
+
+        <!-- 06 대조·평가 -->
+        <div class="m-stage-hdr">
+          <div class="stage-idx">06 / REVW</div>
+          <div class="stage-name">대조·평가</div>
+        </div>
+      </div>
+
+      <!-- ── ROW: 공통 ── -->
+      <div class="m-ws-row">
+        <div class="m-ws-label">
+          <div class="ws-code">CMN</div>
+          <div class="ws-name">공통</div>
+        </div>
+
+        <!-- BID: 발행됨 -->
+        <div class="m-cell status-ready">
+          <div class="cell-doc-title">ITB <span class="rev">REV-01</span></div>
+          <div class="cell-meta"><span class="origin-hint">수기 업로드 완료</span></div>
+          <div class="cell-status-line">발행됨</div>
+        </div>
+
+        <!-- EST: N/A -->
+        <div class="m-cell na">
+          <div class="cell-na-label">N / A</div>
+        </div>
+
+        <!-- FEED: N/A -->
+        <div class="m-cell na">
+          <div class="cell-na-label">N / A</div>
+        </div>
+
+        <!-- DSGN: N/A -->
+        <div class="m-cell na">
+          <div class="cell-na-label">N / A</div>
+        </div>
+
+        <!-- VEND: N/A -->
+        <div class="m-cell na">
+          <div class="cell-na-label">N / A</div>
+        </div>
+
+        <!-- REVW: N/A -->
+        <div class="m-cell na">
+          <div class="cell-na-label">N / A</div>
+        </div>
+      </div>
+
+      <!-- ── ROW: 프로세스 — 수기 업로드 라이프사이클 ── -->
+      <div class="m-ws-row">
+        <div class="m-ws-label">
+          <div class="ws-code">PRC</div>
+          <div class="ws-name">프로세스</div>
+        </div>
+
+        <!-- BID: N/A -->
+        <div class="m-cell na">
+          <div class="cell-na-label">N / A</div>
+        </div>
+
+        <!-- EST: 수기 업로드 필요 (기존 BID 셀) -->
+        <div class="m-cell status-missing">
+          <div class="cell-doc-title">IRS</div>
+          <div class="cell-meta"><span class="origin-hint">수기 업로드 필요</span></div>
+          <div class="cell-cta-row">
+            <button class="cell-cta primary">업로드</button>
+          </div>
+        </div>
+
+        <!-- FEED: 업로드 완료 · 발행 대기 (기존 EST 셀) -->
+        <div class="m-cell status-ready" id="sim-prc-est">
+          <div class="cell-doc-title">MPS</div>
+          <div class="cell-meta"><span class="origin-hint">수기 업로드 완료</span></div>
+          <div class="cell-status-line">업로드 완료</div>
+          <div class="cell-cta-row">
+            <button class="cell-cta primary" onclick="simulatePublish(this)">발행</button>
+            <button class="cell-cta secondary">업로드</button>
+          </div>
+        </div>
+
+        <!-- DSGN: 발행됨 (기존 FEED 셀) -->
+        <div class="m-cell status-ready" id="sim-prc-feed">
+          <div class="cell-doc-title">Design Criteria <span class="rev" data-rev="1">REV-01</span></div>
+          <div class="cell-meta"><span class="origin-hint">수기 업로드 완료</span></div>
+          <div class="cell-status-line">발행됨</div>
+          <div class="cell-cta-row">
+            <button class="cell-cta secondary" onclick="openUploadModal(this)">업로드</button>
+          </div>
+        </div>
+
+        <!-- VEND: Blocked (기존 DSGN 셀) -->
+        <div class="m-cell cell-blocked">
+          <div class="cell-doc-title">Vendor A</div>
+          <div class="cell-status-line">선행 단계 미완료</div>
+        </div>
+
+        <!-- REVW: Blocked (기존 VEND 셀) -->
+        <div class="m-cell cell-blocked">
+          <div class="cell-doc-title">Technical Evaluation</div>
+          <div class="cell-status-line">선행 단계 미완료</div>
+        </div>
+      </div>
+
+      <!-- ── ROW: 주기기 — AI 문서 라이프사이클 타임라인 ── -->
+      <div class="m-ws-row">
+        <div class="m-ws-label">
+          <div class="ws-code">MEQ</div>
+          <div class="ws-name">주기기</div>
+        </div>
+
+        <!-- BID: N/A -->
+        <div class="m-cell na">
+          <div class="cell-na-label">N / A</div>
+        </div>
+
+        <!-- ② AI 생성 가능 (Missing) -->
+        <div class="m-cell status-missing">
+          <div class="cell-doc-title">IRS</div>
+          <div class="cell-meta"><span class="origin-hint">AI 생성 가능</span></div>
+          <div class="cell-cta-row">
+            <button class="cell-cta primary" onclick="openAiModal(this)">AI 생성</button>
+          </div>
+        </div>
+
+        <!-- ③ AI 처리 중 (Generating) -->
+        <div class="m-cell status-generating ai-ready">
+          <div class="cell-doc-title">MPS</div>
+          <div class="cell-meta"><span class="origin-hint">AI 생성 가능</span></div>
+          <div class="cell-status-line">AI 처리 중...</div>
+          <div class="cell-cta-row">
+            <div class="cell-progress-mini">
+              <div class="cell-progress-mini-fill" style="width:60%"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ④ AI 생성 완료 · 리드 검토 대기 (Review) -->
+        <div class="m-cell status-review">
+          <div class="cell-doc-title">Design Criteria</div>
+          <div class="cell-meta"><span class="origin-hint">AI 생성 완료</span></div>
+          <div class="cell-status-line">리드 검토 대기 중</div>
+          <div class="cell-cta-row"><button class="cell-cta primary">발행</button><button class="cell-cta secondary">AI
+              생성</button></div>
+        </div>
+
+        <!-- ⑤ 발행 후 (Ready + AI) -->
+        <div class="m-cell status-ready">
+          <div class="cell-doc-title">Vendor B <span class="rev">REV-01</span></div>
+          <div class="cell-meta"><span class="origin-hint">AI 생성 완료</span></div>
+          <div class="cell-status-line">발행됨</div>
+          <div class="cell-cta-row"><button class="cell-cta secondary" onclick="openAiModal(this)">AI 생성</button></div>
+        </div>
+
+        <div class="m-cell cell-blocked">
+          <div class="cell-doc-title">Technical Evaluation</div>
+          <div class="cell-status-line">선행 단계 미완료</div>
+        </div>
+      </div>
+
+      <!-- ── ROW: 전기 — AI 문서 라이프사이클 + Missing APPR ── -->
+      <div class="m-ws-row">
+        <div class="m-ws-label">
+          <div class="ws-code">ELE</div>
+          <div class="ws-name">전기</div>
+        </div>
+
+        <!-- BID: N/A -->
+        <div class="m-cell na">
+          <div class="cell-na-label">N / A</div>
+        </div>
+
+        <!-- EST: IRS -->
+        <div class="m-cell status-ready">
+          <div class="cell-doc-title">IRS <span class="rev">REV-01</span></div>
+          <div class="cell-meta"><span class="origin-hint">수기 업로드 완료</span></div>
+          <div class="cell-status-line">발행됨</div>
+          <div class="cell-cta-row"><button class="cell-cta secondary">업로드</button></div>
+        </div>
+
+        <!-- FEED: AI 생성 가능 (전기 사양서) — AI 생성 클릭 → 모달 → 제출 시 ③로 전환 -->
+        <div class="m-cell status-missing" id="sim-ele-feed">
+          <div class="cell-doc-title">MPS</div>
+          <div class="cell-meta"><span class="origin-hint">AI 생성 가능</span></div>
+          <div class="cell-cta-row">
+            <button class="cell-cta primary" onclick="openAiModal(this)">AI 생성</button>
+          </div>
+        </div>
+
+        <!-- DSGN: AI 처리 중 (기존 FEED 셀) -->
+        <div class="m-cell status-generating ai-ready">
+          <div class="cell-doc-title">Design Criteria</div>
+          <div class="cell-meta"><span class="origin-hint">AI 생성 가능</span></div>
+          <div class="cell-status-line">AI 처리 중...</div>
+          <div class="cell-cta-row">
+            <div class="cell-progress-mini">
+              <div class="cell-progress-mini-fill" style="width:60%"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- VEND: AI 생성 완료 · 리드 검토 대기 (기존 DSGN 셀) -->
+        <div class="m-cell status-review">
+          <div class="cell-doc-title">Vendor C</div>
+          <div class="cell-meta"><span class="origin-hint">AI 생성 완료</span></div>
+          <div class="cell-status-line">리드 검토 대기 중</div>
+          <div class="cell-cta-row"><button class="cell-cta primary">발행</button><button class="cell-cta secondary"
+              onclick="openAiModal(this)">AI 생성</button></div>
+        </div>
+
+        <!-- REVW: AI 처리 중 (기존 VEND 셀) -->
+        <div class="m-cell status-generating ai-ready">
+          <div class="cell-doc-title">Technical Evaluation</div>
+          <div class="cell-meta"><span class="origin-hint">AI 생성 가능</span></div>
+          <div class="cell-status-line">AI 처리 중...</div>
+          <div class="cell-cta-row">
+            <div class="cell-progress-mini">
+              <div class="cell-progress-mini-fill" style="width:35%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── ROW: 계장 — AI 생성 실패 케이스 포함 라이프사이클 ── -->
+      <div class="m-ws-row">
+        <div class="m-ws-label">
+          <div class="ws-code">INS</div>
+          <div class="ws-name">계장</div>
+        </div>
+
+        <!-- BID: N/A -->
+        <div class="m-cell na">
+          <div class="cell-na-label">N / A</div>
+        </div>
+
+        <!-- EST: IRS -->
+        <div class="m-cell status-missing">
+          <div class="cell-doc-title">IRS</div>
+          <div class="cell-meta"><span class="origin-hint">AI 생성 가능</span></div>
+          <div class="cell-cta-row">
+            <button class="cell-cta primary" onclick="openAiModal(this)">AI 생성</button>
+          </div>
+        </div>
+
+        <!-- FEED: MPS -->
+        <div class="m-cell status-ai-failed">
+          <div class="cell-doc-title">MPS</div>
+          <div class="cell-meta"><span class="origin-hint">AI 생성 실패</span></div>
+          <div class="cell-status-line">AI 처리 중단 · 3분 전</div>
+          <div class="cell-cta-row">
+            <button class="cell-cta primary" onclick="openAiModal(this)">AI 생성</button>
+            <button class="cell-cta secondary">업로드</button>
+          </div>
+        </div>
+
+        <!-- DSGN: Design Criteria -->
+        <div class="m-cell status-review">
+          <div class="cell-doc-title">Design Criteria</div>
+          <div class="cell-meta"><span class="origin-hint">AI 생성 완료</span></div>
+          <div class="cell-status-line">리드 검토 대기 중</div>
+          <div class="cell-cta-row"><button class="cell-cta primary">발행</button><button class="cell-cta secondary"
+              onclick="openAiModal(this)">AI 생성</button></div>
+        </div>
+
+        <!-- VEND: Vendor A -->
+        <div class="m-cell status-ready">
+          <div class="cell-doc-title">Vendor A <span class="rev">REV-01</span></div>
+          <div class="cell-meta"><span class="origin-hint">AI 생성 완료</span></div>
+          <div class="cell-status-line">발행됨</div>
+          <div class="cell-cta-row"><button class="cell-cta secondary" onclick="openAiModal(this)">AI 생성</button></div>
+        </div>
+
+        <!-- REVW: Technical Evaluation -->
+        <div class="m-cell cell-blocked">
+          <div class="cell-doc-title">Technical Evaluation</div>
+          <div class="cell-status-line">선행 단계 미완료</div>
+        </div>
+      </div>
+
+      <!-- ── ROW: 기계 ── -->
+      <div class="m-ws-row">
+        <div class="m-ws-label">
+          <div class="ws-code">MEC</div>
+          <div class="ws-name">기계</div>
+        </div>
+
+        <!-- BID: N/A -->
+        <div class="m-cell na">
+          <div class="cell-na-label">N / A</div>
+        </div>
+
+        <!-- EST: 리드 검토 대기 -->
+        <div class="m-cell status-review">
+          <div class="cell-doc-title">IRS <span class="rev">REV-01</span></div>
+          <div class="cell-meta"><span class="origin-hint">AI 생성 완료</span></div>
+          <div class="cell-status-line">리드 검토 대기 중</div>
+          <div class="cell-cta-row"><button class="cell-cta primary">발행</button><button class="cell-cta secondary">AI
+              생성</button></div>
+        </div>
+
+        <!-- FEED: AI 생성 가능 -->
+        <div class="m-cell status-missing">
+          <div class="cell-doc-title">MPS</div>
+          <div class="cell-meta"><span class="origin-hint">AI 생성 가능</span></div>
+          <div class="cell-cta-row">
+            <button class="cell-cta primary" onclick="openAiModal(this)">AI 생성</button>
+          </div>
+        </div>
+
+        <!-- DSGN: Blocked -->
+        <div class="m-cell cell-blocked">
+          <div class="cell-doc-title">Design Criteria</div>
+          <div class="cell-status-line">선행 단계 미완료</div>
+        </div>
+
+        <!-- VEND: Blocked -->
+        <div class="m-cell cell-blocked">
+          <div class="cell-doc-title">Vendor A</div>
+          <div class="cell-status-line">선행 단계 미완료</div>
+        </div>
+
+        <!-- REVW: Blocked -->
+        <div class="m-cell cell-blocked">
+          <div class="cell-doc-title">Technical Evaluation</div>
+          <div class="cell-status-line">선행 단계 미완료</div>
+        </div>
+      </div>
+
+      <!-- ── ROW: 수처리 ── -->
+      <div class="m-ws-row">
+        <div class="m-ws-label">
+          <div class="ws-code">WTR</div>
+          <div class="ws-name">수처리</div>
+        </div>
+
+        <!-- BID: N/A -->
+        <div class="m-cell na">
+          <div class="cell-na-label">N / A</div>
+        </div>
+
+        <!-- EST: AI 처리 중 -->
+        <div class="m-cell status-generating ai-ready">
+          <div class="cell-doc-title">IRS</div>
+          <div class="cell-meta"><span class="origin-hint">AI 생성 가능</span></div>
+          <div class="cell-status-line">AI 처리 중...</div>
+          <div class="cell-cta-row">
+            <div class="cell-progress-mini">
+              <div class="cell-progress-mini-fill" style="width:45%"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- FEED: Blocked -->
+        <div class="m-cell cell-blocked">
+          <div class="cell-doc-title">MPS</div>
+          <div class="cell-status-line">선행 단계 미완료</div>
+        </div>
+
+        <!-- DSGN: Blocked -->
+        <div class="m-cell cell-blocked">
+          <div class="cell-doc-title">Design Criteria</div>
+          <div class="cell-status-line">선행 단계 미완료</div>
+        </div>
+
+        <!-- VEND: Blocked -->
+        <div class="m-cell cell-blocked">
+          <div class="cell-doc-title">Vendor A</div>
+          <div class="cell-status-line">선행 단계 미완료</div>
+        </div>
+
+        <!-- REVW: Blocked -->
+        <div class="m-cell cell-blocked">
+          <div class="cell-doc-title">Technical Evaluation</div>
+          <div class="cell-status-line">선행 단계 미완료</div>
+        </div>
+      </div>
+
+      <!-- ── ROW: 토목 ── -->
+      <div class="m-ws-row">
+        <div class="m-ws-label">
+          <div class="ws-code">CIV</div>
+          <div class="ws-name">토목</div>
+        </div>
+
+        <!-- BID: N/A -->
+        <div class="m-cell na">
+          <div class="cell-na-label">N / A</div>
+        </div>
+
+        <!-- EST: 발행됨 -->
+        <div class="m-cell status-ready">
+          <div class="cell-doc-title">IRS <span class="rev">REV-02</span></div>
+          <div class="cell-meta"><span class="origin-hint">AI 생성 완료</span></div>
+          <div class="cell-status-line">발행됨</div>
+        </div>
+
+        <!-- FEED: 리드 검토 대기 -->
+        <div class="m-cell status-review urgent">
+          <div class="cell-doc-title">MPS</div>
+          <div class="cell-meta"><span class="origin-hint">AI 생성 완료</span></div>
+          <div class="cell-status-line">리드 검토 대기 중</div>
+          <div class="cell-cta-row"><button class="cell-cta primary">발행</button><button class="cell-cta secondary">AI
+              생성</button></div>
+        </div>
+
+        <!-- DSGN: N/A -->
+        <div class="m-cell na">
+          <div class="cell-na-label">N / A</div>
+        </div>
+
+        <!-- VEND: Blocked -->
+        <div class="m-cell cell-blocked">
+          <div class="cell-doc-title">Vendor A</div>
+          <div class="cell-status-line">선행 단계 미완료</div>
+        </div>
+
+        <!-- REVW: Blocked -->
+        <div class="m-cell cell-blocked">
+          <div class="cell-doc-title">Technical Evaluation</div>
+          <div class="cell-status-line">선행 단계 미완료</div>
+        </div>
+      </div>
+
+      <!-- ── ROW: 건축 ── -->
+      <div class="m-ws-row">
+        <div class="m-ws-label">
+          <div class="ws-code">ARC</div>
+          <div class="ws-name">건축</div>
+        </div>
+
+        <!-- BID: N/A -->
+        <div class="m-cell na">
+          <div class="cell-na-label">N / A</div>
+        </div>
+
+        <!-- EST: 리드 검토 대기 -->
+        <div class="m-cell status-review">
+          <div class="cell-doc-title">IRS</div>
+          <div class="cell-meta"><span class="origin-hint">AI 생성 완료</span></div>
+          <div class="cell-status-line">리드 검토 대기 중</div>
+          <div class="cell-cta-row"><button class="cell-cta primary">발행</button><button class="cell-cta secondary">AI
+              생성</button></div>
+        </div>
+
+        <!-- FEED: AI 생성 가능 -->
+        <div class="m-cell status-missing">
+          <div class="cell-doc-title">MPS</div>
+          <div class="cell-meta"><span class="origin-hint">AI 생성 가능</span></div>
+          <div class="cell-cta-row">
+            <button class="cell-cta primary" onclick="openAiModal(this)">AI 생성</button>
+          </div>
+        </div>
+
+        <!-- DSGN: N/A -->
+        <div class="m-cell na">
+          <div class="cell-na-label">N / A</div>
+        </div>
+
+        <!-- VEND: Blocked -->
+        <div class="m-cell cell-blocked">
+          <div class="cell-doc-title">Vendor A</div>
+          <div class="cell-status-line">선행 단계 미완료</div>
+        </div>
+
+        <!-- REVW: Blocked -->
+        <div class="m-cell cell-blocked">
+          <div class="cell-doc-title">Technical Evaluation</div>
+          <div class="cell-status-line">선행 단계 미완료</div>
+        </div>
+      </div>
+
+      <!-- ── ROW: 배관 ── -->
+      <div class="m-ws-row">
+        <div class="m-ws-label">
+          <div class="ws-code">PIP</div>
+          <div class="ws-name">배관</div>
+        </div>
+
+        <!-- BID: N/A -->
+        <div class="m-cell na">
+          <div class="cell-na-label">N / A</div>
+        </div>
+
+        <!-- EST: 리드 검토 대기 (urgent) -->
+        <div class="m-cell status-review urgent">
+          <div class="cell-doc-title">IRS <span class="rev">REV-02</span></div>
+          <div class="cell-meta"><span class="origin-hint">AI 생성 완료</span></div>
+          <div class="cell-status-line">리드 검토 대기 중</div>
+          <div class="cell-cta-row"><button class="cell-cta primary">발행</button><button class="cell-cta secondary">AI
+              생성</button></div>
+        </div>
+
+        <!-- FEED: AI 처리 중 -->
+        <div class="m-cell status-generating ai-ready">
+          <div class="cell-doc-title">MPS</div>
+          <div class="cell-meta"><span class="origin-hint">AI 생성 가능</span></div>
+          <div class="cell-status-line">AI 처리 중...</div>
+          <div class="cell-progress-mini">
+            <div class="cell-progress-mini-fill" style="width:70%"></div>
+          </div>
+        </div>
+
+        <!-- DSGN: Blocked -->
+        <div class="m-cell cell-blocked">
+          <div class="cell-doc-title">Design Criteria</div>
+          <div class="cell-status-line">선행 단계 미완료</div>
+        </div>
+
+        <!-- VEND: Blocked -->
+        <div class="m-cell cell-blocked">
+          <div class="cell-doc-title">Vendor A</div>
+          <div class="cell-status-line">선행 단계 미완료</div>
+        </div>
+
+        <!-- REVW: Blocked -->
+        <div class="m-cell cell-blocked">
+          <div class="cell-doc-title">Technical Evaluation</div>
+          <div class="cell-status-line">선행 단계 미완료</div>
+        </div>
+      </div>
+
+      <!-- ── ROW: 공간 ── -->
+      <div class="m-ws-row">
+        <div class="m-ws-label">
+          <div class="ws-code">LAY</div>
+          <div class="ws-name">공간</div>
+        </div>
+
+        <!-- BID: N/A -->
+        <div class="m-cell na">
+          <div class="cell-na-label">N / A</div>
+        </div>
+
+        <!-- EST: 리드 검토 대기 -->
+        <div class="m-cell status-review">
+          <div class="cell-doc-title">IRS</div>
+          <div class="cell-meta"><span class="origin-hint">AI 생성 완료</span></div>
+          <div class="cell-status-line">리드 검토 대기 중</div>
+          <div class="cell-cta-row"><button class="cell-cta primary">발행</button><button class="cell-cta secondary">AI
+              생성</button></div>
+        </div>
+
+        <!-- FEED: AI 생성 가능 -->
+        <div class="m-cell status-missing">
+          <div class="cell-doc-title">MPS</div>
+          <div class="cell-meta"><span class="origin-hint">AI 생성 가능</span></div>
+          <div class="cell-cta-row">
+            <button class="cell-cta primary" onclick="openAiModal(this)">AI 생성</button>
+          </div>
+        </div>
+
+        <!-- DSGN: N/A -->
+        <div class="m-cell na">
+          <div class="cell-na-label">N / A</div>
+        </div>
+
+        <!-- VEND: Blocked -->
+        <div class="m-cell cell-blocked">
+          <div class="cell-doc-title">Vendor A</div>
+          <div class="cell-status-line">선행 단계 미완료</div>
+        </div>
+
+        <!-- REVW: Blocked -->
+        <div class="m-cell cell-blocked">
+          <div class="cell-doc-title">Technical Evaluation</div>
+          <div class="cell-status-line">선행 단계 미완료</div>
+        </div>
+      </div>
+
+      <!-- ── ROW: 설비 ── -->
+      <div class="m-ws-row">
+        <div class="m-ws-label">
+          <div class="ws-code">UTL</div>A
+          <div class="ws-name">설비</div>
+        </div>
+
+        <!-- BID: N/A -->
+        <div class="m-cell na">
+          <div class="cell-na-label">N / A</div>
+        </div>
+
+        <!-- EST: 리드 검토 대기 -->
+        <div class="m-cell status-review">
+          <div class="cell-doc-title">IRS</div>
+          <div class="cell-meta"><span class="origin-hint">AI 생성 완료</span></div>
+          <div class="cell-status-line">리드 검토 대기 중</div>
+          <div class="cell-cta-row"><button class="cell-cta primary">발행</button><button class="cell-cta secondary">AI
+              생성</button></div>
+        </div>
+
+        <!-- FEED: AI 생성 가능 -->
+        <div class="m-cell status-missing">
+          <div class="cell-doc-title">IRS</div>
+          <div class="cell-meta"><span class="origin-hint">AI 생성 가능</span></div>
+          <div class="cell-cta-row">
+            <button class="cell-cta primary" onclick="openAiModal(this)">AI 생성</button>
+          </div>
+        </div>
+
+        <!-- DSGN: Blocked -->
+        <div class="m-cell cell-blocked">
+          <div class="cell-doc-title">Design Criteria</div>
+          <div class="cell-status-line">선행 단계 미완료</div>
+        </div>
+
+        <!-- VEND: Blocked -->
+        <div class="m-cell cell-blocked">
+          <div class="cell-doc-title">Design Criteria</div>
+          <div class="cell-status-line">선행 단계 미완료</div>
+        </div>
+
+        <!-- REVW: Blocked -->
+        <div class="m-cell cell-blocked">
+          <div class="cell-doc-title">Technical Evaluation</div>
+          <div class="cell-status-line">선행 단계 미완료</div>
+        </div>
+      </div>
+
+    </div><!-- /matrix -->
+  </div><!-- /matrix-wrap -->
+
+  <!-- ═══════════════════════════════════════════════
+     AI CHAT VIEW (전체 화면)
+══════════════════════════════════════════════════ -->
+  <div class="ai-chat-wrap">
+    <div class="ai-chat-view">
+      <div class="ai-chat-context">
+        <span class="ai-chat-context-label">참조 중</span>
+        <span class="ai-chat-context-chip">프로젝트 문서 18건</span>
+        <span class="ai-chat-context-chip">산출물 현황 · 진행 45%</span>
+      </div>
+
+      <div class="ai-chat-body" id="aiChatBody">
+        <div class="chat-day-divider">오늘 · 2026년 4월 26일</div>
+        <div class="chat-msg ai">
+          <div class="chat-msg-avatar">AI</div>
+          <div>
+            <div class="chat-msg-bubble">안녕하세요. 사우디 주바일 복합화력 플랜트 건설 프로젝트를 바탕으로 답변드립니다. 어떤 걸 도와드릴까요?</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ai-chat-suggestions" id="aiChatSuggestions">
+        <button class="ai-chat-suggestion" onclick="selectSuggestion(this)">AI 생성 실패한 셀은?</button>
+        <button class="ai-chat-suggestion" onclick="selectSuggestion(this)">현재 AI 처리 중인 셀은 몇 개야?</button>
+        <button class="ai-chat-suggestion" onclick="selectSuggestion(this)">리드 검토 대기 중인 문서 알려줘</button>
+        <button class="ai-chat-suggestion" onclick="selectSuggestion(this)">프로젝트 진행률은?</button>
+      </div>
+
+      <div class="ai-chat-attachments" id="aiChatAttachments"></div>
+
+      <div class="ai-chat-input-wrap">
+        <button class="ai-chat-attach" onclick="document.getElementById('aiChatFileInput').click()" aria-label="문서 첨부"
+          title="문서 첨부">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path
+              d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48" />
+          </svg>
+        </button>
+        <input type="file" id="aiChatFileInput" multiple style="display:none" onchange="onChatFilePick(this)">
+        <textarea class="ai-chat-input" id="aiChatInput" placeholder="메시지를 입력하세요..." rows="1"
+          oninput="autoGrowChatInput(this); updateSendButton()" onkeydown="onChatInputKeydown(event)"></textarea>
+        <button class="ai-chat-send" id="aiChatSendBtn" onclick="sendChatMessage()" disabled aria-label="전송">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <line x1="22" y1="2" x2="11" y2="13" />
+            <polygon points="22 2 15 22 11 13 2 9 22 2" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div><!-- /ai-chat-wrap -->
+
+  <!-- ═══════════════════════════════════════════════
+     ACTIVITY FEED DRAWER
+══════════════════════════════════════════════════ -->
+  <div class="drawer-backdrop" id="drawerBackdrop" onclick="toggleDrawer()"></div>
+  <aside class="activity-drawer" id="activityDrawer" aria-label="알림">
+    <div class="drawer-header">
+      <div class="drawer-title">알림</div>
+      <div class="drawer-actions">
+        <span class="drawer-mark" onclick="markAllRead()">모두 읽음</span>
+        <button class="drawer-close" onclick="toggleDrawer()" aria-label="닫기">✕</button>
+      </div>
+    </div>
+
+    <div class="drawer-tabs">
+      <div class="drawer-tab active" onclick="switchNotifTab(this,'all')">전체 <span class="drawer-tab-count">8</span>
+      </div>
+      <div class="drawer-tab" onclick="switchNotifTab(this,'ai')">AI 생성 <span class="drawer-tab-count">6</span></div>
+      <div class="drawer-tab" onclick="switchNotifTab(this,'doc')">문서 업로드 <span class="drawer-tab-count">2</span></div>
+    </div>
+
+    <div class="drawer-body">
+      <!-- AI 생성 완료 - 리드 검토 필요 -->
+      <div class="notif-item ai-review" data-category="ai">
+        <div class="notif-top">
+          <div class="notif-title">배관 · 기본설계 생성 완료</div>
+          <div class="notif-time">방금 전</div>
+        </div>
+        <div class="notif-meta">
+          <span class="tag">배관 · 기본설계 · REV-01</span> AI 생성이 완료되었습니다. 리드 검토가 필요합니다.
+        </div>
+        <div class="notif-actions">
+          <button class="notif-btn" onclick="downloadDocument('MPS', '배관', 'FEED')">검토하기</button>
+        </div>
+      </div>
+
+      <!-- AI 생성 진행 중 -->
+      <div class="notif-item ai-run" data-category="ai">
+        <div class="notif-top">
+          <div class="notif-title">토목 · 견적 생성 중</div>
+          <div class="notif-time">3분 전</div>
+        </div>
+        <div class="notif-meta">
+          <span class="tag">토목 · 견적</span> AI가 문서를 생성하고 있습니다. 완료 시 알림을 보내드립니다.
+        </div>
+        <div class="notif-progress">
+          <div class="notif-progress-fill" style="width:65%"></div>
+        </div>
+      </div>
+
+      <!-- AI 생성 실패 -->
+      <div class="notif-item over" data-category="ai">
+        <div class="notif-top">
+          <div class="notif-title">기계 · 대조평가 생성 실패</div>
+          <div class="notif-time">15분 전</div>
+        </div>
+        <div class="notif-meta">
+          <span class="tag">기계 · 대조평가</span> AI 생성 중 오류가 발생했습니다. 다시 시도해주세요.
+        </div>
+        <div class="notif-actions">
+          <button class="notif-btn" onclick="alert('AI 생성을 재시도합니다.')">재시도</button>
+        </div>
+      </div>
+
+      <!-- Design Criteria 생성 완료 - 리드 검토 필요 -->
+      <div class="notif-item ai-review" data-category="ai">
+        <div class="notif-top">
+          <div class="notif-title">프로세스 · 상세설계 생성 완료</div>
+          <div class="notif-time">25분 전</div>
+        </div>
+        <div class="notif-meta">
+          <span class="tag">프로세스 · 상세설계 · REV-01</span> AI 생성이 완료되었습니다. 리드 검토가 필요합니다.
+        </div>
+        <div class="notif-actions">
+          <button class="notif-btn" onclick="downloadDocument('Design Criteria', '프로세스', 'DSGN')">검토하기</button>
+        </div>
+      </div>
+
+      <!-- 문서 업로드 확정 -->
+      <div class="notif-item done" data-category="doc">
+        <div class="notif-top">
+          <div class="notif-title">전기 · Vendor 선정 문서 확정</div>
+          <div class="notif-time">1시간 전</div>
+        </div>
+        <div class="notif-meta">
+          <span class="tag">전기 · Vendor 선정 · REV-01</span> 벤더 제출 문서가 업로드되어 확정되었습니다.
+        </div>
+        <div class="notif-actions">
+          <button class="notif-btn ghost" onclick="downloadDocument('Vendor A', '전기', 'VEND')">문서 보기</button>
+        </div>
+      </div>
+
+      <!-- ITB 문서 업로드 확정 -->
+      <div class="notif-item done" data-category="doc">
+        <div class="notif-top">
+          <div class="notif-title">계장 · 입찰 문서 확정</div>
+          <div class="notif-time">2시간 전</div>
+        </div>
+        <div class="notif-meta">
+          <span class="tag">계장 · 입찰 · REV-01</span> 수기 업로드된 문서가 확정되었습니다.
+        </div>
+        <div class="notif-actions">
+          <button class="notif-btn ghost" onclick="downloadDocument('ITB', '계장', 'BID')">문서 보기</button>
+        </div>
+      </div>
+
+      <!-- MPS 생성 완료 (읽음) -->
+      <div class="notif-item read" data-category="ai">
+        <div class="notif-top">
+          <div class="notif-title">기계 · 기본설계 생성 완료</div>
+          <div class="notif-time">3시간 전</div>
+        </div>
+        <div class="notif-meta">
+          <span class="tag">기계 · 기본설계 · REV-01</span> AI 생성이 완료되었습니다. 리드 검토가 필요합니다.
+        </div>
+      </div>
+
+      <!-- Technical Evaluation 생성 완료 (읽음) -->
+      <div class="notif-item read" data-category="ai">
+        <div class="notif-top">
+          <div class="notif-title">수처리 · 대조평가 생성 완료</div>
+          <div class="notif-time">어제</div>
+        </div>
+        <div class="notif-meta">
+          <span class="tag">수처리 · 대조평가 · REV-01</span> AI 생성이 완료되었습니다. 리드 검토가 필요합니다.
+        </div>
+      </div>
+
+      <div style="padding:20px 24px;text-align:center;border-top:1px solid var(--gray-100);">
+        <button
+          style="font-family:'IBM Plex Sans KR',sans-serif;font-size:13px;color:var(--gray-600);cursor:pointer;background:transparent;border:none;padding:8px 16px;border-radius:6px;transition:all 0.15s;"
+          onmouseover="this.style.background='var(--gray-50)';this.style.color='var(--gray-900)';"
+          onmouseout="this.style.background='transparent';this.style.color='var(--gray-600)';">
+          이전 알림 더보기
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <script>
+    /* Project search dropdown */
+    function openProjSearch() {
+      document.getElementById('projSearch').classList.add('open');
+    }
+    function closeProjSearch() {
+      document.getElementById('projSearch').classList.remove('open');
+    }
+    function filterProjSearch(q) {
+      q = q.trim().toLowerCase();
+      var items = document.querySelectorAll('#projSearchDropdown .proj-search-item');
+      items.forEach(function (item) {
+        var name = item.querySelector('.proj-search-item-name').textContent.toLowerCase();
+        item.style.display = (q === '' || name.indexOf(q) !== -1) ? '' : 'none';
+      });
+    }
+    function selectProj(name) {
+      closeProjSearch();
+      if (name === '전체 목록') {
+        window.location.href = 'hifi-project-list.html';
+        return;
+      }
+      /* 실제 구현 시: window.location.href = '/projects/' + id */
+      window.location.href = 'hifi-project.html';
+    }
+    document.addEventListener('click', function (e) {
+      var search = document.getElementById('projSearch');
+      if (search && !search.contains(e.target)) closeProjSearch();
+    });
+
+    /* View switcher: matrix / chat */
+    function switchView(view) {
+      document.body.classList.remove('view-matrix', 'view-chat');
+      document.body.classList.add('view-' + view);
+      document.querySelectorAll('.view-tab').forEach(function (t) {
+        t.classList.toggle('active', t.getAttribute('data-view') === view);
+      });
+      if (view === 'chat') {
+        setTimeout(function () {
+          var input = document.getElementById('aiChatInput');
+          if (input) input.focus();
+        }, 100);
+      }
+    }
+
+    /* AI Chat interactions */
+    function autoGrowChatInput(el) {
+      el.style.height = 'auto';
+      el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+    }
+    function updateSendButton() {
+      var input = document.getElementById('aiChatInput');
+      var btn = document.getElementById('aiChatSendBtn');
+      var hasFiles = __chatAttachments.length > 0;
+      btn.disabled = input.value.trim().length === 0 && !hasFiles;
+    }
+
+    /* Chat 파일 첨부 */
+    var __chatAttachments = [];
+    function onChatFilePick(input) {
+      for (var i = 0; i < input.files.length; i++) {
+        __chatAttachments.push(input.files[i]);
+      }
+      renderChatAttachments();
+      input.value = '';
+      updateSendButton();
+    }
+    function removeChatAttachment(idx) {
+      __chatAttachments.splice(idx, 1);
+      renderChatAttachments();
+      updateSendButton();
+    }
+    function renderChatAttachments() {
+      var wrap = document.getElementById('aiChatAttachments');
+      wrap.innerHTML = '';
+      if (__chatAttachments.length === 0) {
+        wrap.classList.remove('has-files');
+        return;
+      }
+      wrap.classList.add('has-files');
+      __chatAttachments.forEach(function (file, idx) {
+        var item = document.createElement('span');
+        item.className = 'ai-chat-attach-item';
+        item.innerHTML = '📄 <span class="file-name">' + file.name + '</span>' +
+          '<button class="file-remove" onclick="removeChatAttachment(' + idx + ')" aria-label="제거">✕</button>';
+        wrap.appendChild(item);
+      });
+    }
+    function onChatInputKeydown(e) {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendChatMessage();
+      }
+    }
+    function selectSuggestion(btn) {
+      var input = document.getElementById('aiChatInput');
+      input.value = btn.textContent;
+      autoGrowChatInput(input);
+      updateSendButton();
+      sendChatMessage();
+    }
+    function addChatMessage(role, html, sources) {
+      var body = document.getElementById('aiChatBody');
+      var msg = document.createElement('div');
+      msg.className = 'chat-msg ' + role;
+      var avatar = role === 'user' ? 'Me' : 'AI';
+      var sourcesHtml = '';
+      if (sources && sources.length) {
+        sourcesHtml = '<div class="chat-msg-sources">' +
+          sources.map(function (s) {
+            return '<span class="chat-msg-source-link" onclick="alert(\'출처: ' + s + '\')">' + s + '</span>';
+          }).join('') + '</div>';
+      }
+      msg.innerHTML =
+        '<div class="chat-msg-avatar">' + avatar + '</div>' +
+        '<div><div class="chat-msg-bubble">' + html + '</div>' + sourcesHtml + '</div>';
+      body.appendChild(msg);
+      body.scrollTop = body.scrollHeight;
+      return msg;
+    }
+    function fakeAiResponse(q) {
+      q = q.toLowerCase();
+      if (/실패|에러|오류/.test(q)) {
+        return {
+          text: '현재 <strong>AI 생성 실패</strong> 상태인 셀이 <strong>1건</strong> 있습니다: <strong>INS·DSGN 계장 계산서</strong>. 3분 전에 처리가 중단되었습니다. 재시도하거나 수기 업로드로 대체할 수 있습니다.',
+          sources: ['INS · DSGN 셀', '시스템 로그']
+        };
+      }
+      if (/처리 중|생성 중|진행 중.*ai|ai.*진행/.test(q) || /몇\s*개.*ai/.test(q) || /ai\s*처리/.test(q)) {
+        return {
+          text: '현재 AI 처리 중인 셀은 <strong>3건</strong>입니다:\n\n• <strong>MEQ·EST</strong> 주기기 사양서\n• <strong>ELE·EST</strong> 전기 사양서\n• <strong>WTR·EST</strong> 수처리 계통도\n\n평균 진행률은 약 45%입니다.',
+          sources: ['산출물 워크스페이스']
+        };
+      }
+      if (/리드 검토|검토 대기/.test(q)) {
+        return {
+          text: '<strong>9건</strong>이 리드 검토를 기다리고 있습니다. 가장 오래된 건은 <strong>PRC·EST</strong>의 공정흐름도 (REV-02)로, AI가 생성한 초안이 검토 대기 상태입니다.',
+          sources: ['PRC · EST 셀', 'PFD REV-02']
+        };
+      }
+      if (/진행률|얼마나|현황/.test(q)) {
+        return {
+          text: '사우디 주바일 복합화력 플랜트 건설 프로젝트의 현재 진행률은 <strong>45%</strong>입니다.\n\n• 완료 18건\n• 리드 검토 대기 9건\n• 미완료 4건',
+          sources: ['프로젝트 대시보드']
+        };
+      }
+      if (/pfd|공정흐름도|p&id|p\*?id/.test(q)) {
+        return {
+          text: '공정흐름도 (PFD)는 <strong>PRC·EST</strong>에 있으며, REV-02로 리드 검토 대기 중입니다. 직전 수정은 수기 업로드로 이루어졌습니다.',
+          sources: ['PRC · EST 셀', 'PFD REV-02']
+        };
+      }
+      if (/이번 주|최근|발행/.test(q)) {
+        return {
+          text: '지난 7일간 <strong>4건</strong>이 발행되었습니다:\n\n• PRC·FEED P&ID (REV-01)\n• CIV·BID 입찰 참가 의향서 (REV-01)\n• MEQ·BID 입찰 참가 의향서 (REV-01)\n• ARC·BID 입찰 참가 의향서 (REV-01)',
+          sources: ['활동 로그', '발행 이력']
+        };
+      }
+      return {
+        text: '현재 프로젝트 정보를 바탕으로 더 정확히 답변드리려면 조금 더 구체적인 질문이 필요합니다. 예를 들어 특정 셀이나 문서, 상태(완료·검토·AI 처리 등)에 대해 물어봐 주세요.',
+        sources: []
+      };
+    }
+    function sendChatMessage() {
+      var input = document.getElementById('aiChatInput');
+      var text = input.value.trim();
+      var hasFiles = __chatAttachments.length > 0;
+      if (!text && !hasFiles) return;
+
+      /* suggestions 제거 (첫 사용자 메시지 이후 가림) */
+      var sug = document.getElementById('aiChatSuggestions');
+      if (sug) sug.style.display = 'none';
+
+      /* 첨부 파일을 user 메시지 하단 칩으로 표시 */
+      var attachmentsHtml = '';
+      if (hasFiles) {
+        attachmentsHtml = '<div class="chat-msg-attachments">' +
+          __chatAttachments.map(function (f) {
+            return '<span class="chat-msg-attachment">📄 ' + f.name + '</span>';
+          }).join('') + '</div>';
+      }
+      var bodyHtml = (text ? text.replace(/\n/g, '<br>') : '') + attachmentsHtml;
+      addChatMessage('user', bodyHtml);
+
+      /* 첨부 초기화 */
+      __chatAttachments = [];
+      renderChatAttachments();
+
+      input.value = '';
+      autoGrowChatInput(input);
+      updateSendButton();
+
+      /* AI typing indicator */
+      var body = document.getElementById('aiChatBody');
+      var typing = document.createElement('div');
+      typing.className = 'chat-msg ai';
+      typing.innerHTML = '<div class="chat-msg-avatar">AI</div><div><div class="chat-msg-bubble"><span class="chat-typing"><span></span><span></span><span></span></span></div></div>';
+      body.appendChild(typing);
+      body.scrollTop = body.scrollHeight;
+
+      setTimeout(function () {
+        typing.remove();
+        var resp = fakeAiResponse(text);
+        addChatMessage('ai', resp.text, resp.sources);
+      }, 900 + Math.random() * 400);
+    }
+
+    function toggleDrawer() {
+      var d = document.getElementById('activityDrawer');
+      var b = document.getElementById('drawerBackdrop');
+      var open = d.classList.toggle('open');
+      b.classList.toggle('open', open);
+    }
+
+    /* Simulation: 발행 클릭 → REV-01 부여 + status "발행됨" + 발행 버튼 제거 */
+    function simulatePublish(btn) {
+      var cell = btn.closest('.m-cell');
+      var title = cell.querySelector('.cell-doc-title');
+      var revEl = title ? title.querySelector('.rev') : null;
+      if (!revEl) {
+        /* 첫 발행 → REV-01 */
+        var rev = document.createElement('span');
+        rev.className = 'rev';
+        rev.setAttribute('data-rev', '1');
+        rev.textContent = 'REV-01';
+        title.appendChild(document.createTextNode(' '));
+        title.appendChild(rev);
+      } else {
+        /* 재발행 → REV +1 */
+        var current = parseInt(revEl.getAttribute('data-rev') || '1', 10);
+        var next = current + 1;
+        revEl.setAttribute('data-rev', next);
+        revEl.textContent = 'REV-' + String(next).padStart(2, '0');
+      }
+      var status = cell.querySelector('.cell-status-line');
+      if (status) status.textContent = '발행됨';
+
+      /* 발행 버튼 제거, 업로드 버튼만 남김 */
+      var publishBtn = cell.querySelector('.cell-cta.primary');
+      if (publishBtn) publishBtn.remove();
+
+      cell.classList.add('cell-flash');
+      setTimeout(function () { cell.classList.remove('cell-flash'); }, 600);
+    }
+
+    /* Simulation: AI 생성 클릭 → Missing/Review/Failed 셀을 Generating 상태로 전환 */
+    function simulateAiGeneration(btn) {
+      var cell = btn.closest('.m-cell');
+      /* 기존 상태 클래스 제거 후 Generating 적용 */
+      cell.classList.remove('status-missing', 'status-review', 'status-ai-failed', 'urgent');
+      cell.classList.add('status-generating', 'ai-ready');
+
+      /* origin-hint, 기존 status-line, 기존 progress bar 제거 */
+      var hint = cell.querySelector('.origin-hint');
+      if (hint) hint.remove();
+      var oldStatus = cell.querySelector('.cell-status-line');
+      if (oldStatus) oldStatus.remove();
+      var oldProgress = cell.querySelector('.cell-progress-mini');
+      if (oldProgress) oldProgress.remove();
+
+      /* REV도 제거 (생성 중인 문서는 아직 버전 없음) */
+      var rev = cell.querySelector('.rev');
+      if (rev) rev.remove();
+
+      /* CTA row 제거 */
+      var ctaRow = cell.querySelector('.cell-cta-row');
+      if (ctaRow) ctaRow.remove();
+
+      var statusLine = document.createElement('div');
+      statusLine.className = 'cell-status-line';
+      statusLine.textContent = 'AI 처리 중...';
+      cell.appendChild(statusLine);
+
+      var progress = document.createElement('div');
+      progress.className = 'cell-progress-mini';
+      progress.innerHTML = '<div class="cell-progress-mini-fill" style="width:0%"></div>';
+      cell.appendChild(progress);
+
+      /* 진행률 애니메이션 */
+      var fill = progress.querySelector('.cell-progress-mini-fill');
+      var pct = 0;
+      var interval = setInterval(function () {
+        pct += 5 + Math.random() * 10;
+        if (pct >= 100) { pct = 100; clearInterval(interval); }
+        fill.style.width = pct + '%';
+      }, 300);
+
+      cell.classList.add('cell-flash');
+      setTimeout(function () { cell.classList.remove('cell-flash'); }, 600);
+    }
+    function markAllRead() {
+      document.querySelectorAll('.notif-item').forEach(function (el) { el.classList.add('read'); });
+      var badge = document.querySelector('.notif-badge');
+      if (badge) { badge.style.display = 'none'; }
+    }
+    function switchTab(el, key) {
+      el.parentNode.querySelectorAll('.drawer-tab').forEach(function (t) { t.classList.remove('active'); });
+      el.classList.add('active');
+    }
+
+    function switchNotifTab(el, category) {
+      el.parentNode.querySelectorAll('.drawer-tab').forEach(function (t) { t.classList.remove('active'); });
+      el.classList.add('active');
+
+      var items = document.querySelectorAll('.notif-item');
+      items.forEach(function (item) {
+        if (category === 'all') {
+          item.style.display = '';
+        } else {
+          var itemCategory = item.getAttribute('data-category');
+          item.style.display = (itemCategory === category) ? '' : 'none';
+        }
+      });
+    }
+
+    function downloadDocument(docType, workstream, stage) {
+      alert('파일 다운로드가 시작됩니다.\n\n문서: ' + docType + '\n전공: ' + workstream + '\n단계: ' + stage);
+      /* 실제 구현 시: 파일 다운로드 API 호출 */
+    }
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') {
+        var d = document.getElementById('activityDrawer');
+        if (d.classList.contains('open')) toggleDrawer();
+        var m = document.getElementById('aiModal');
+        if (m && m.classList.contains('open')) closeAiModal();
+      }
+    });
+
+    /* AI Generation Modal */
+    var __aiModalSourceCell = null;
+    function openAiModal(btn) {
+      var cell = btn.closest('.m-cell');
+      __aiModalSourceCell = cell;
+      var doc = cell.querySelector('.cell-doc-title');
+      var meta = cell.querySelectorAll('.cell-meta > span');
+      var docName = doc ? doc.childNodes[0].textContent.trim() : '';
+      var ws = meta[0] ? meta[0].textContent : '';
+      var stage = meta[1] ? meta[1].textContent : '';
+
+      document.getElementById('aiModalDocName').textContent = docName;
+      document.getElementById('aiModalContext').textContent = ws + ' · ' + stage;
+
+      /* Reset fields */
+      document.getElementById('aiModalPrompt').value = '';
+      document.getElementById('aiModalFileList').innerHTML = '';
+      document.getElementById('aiModalFileInput').value = '';
+
+      document.getElementById('aiModal').classList.add('open');
+    }
+    function closeAiModal() {
+      document.getElementById('aiModal').classList.remove('open');
+      __aiModalSourceCell = null;
+    }
+    function onAiModalFilePick(input) {
+      var list = document.getElementById('aiModalFileList');
+      for (var i = 0; i < input.files.length; i++) {
+        var file = input.files[i];
+        var item = document.createElement('div');
+        item.className = 'modal-file-item';
+        item.innerHTML = '<span class="file-name">📄 ' + file.name + '</span>' +
+          '<span>' + (file.size / 1024).toFixed(1) + ' KB</span>' +
+          '<button class="file-remove" onclick="this.closest(\'.modal-file-item\').remove()">✕</button>';
+        list.appendChild(item);
+      }
+      input.value = '';
+    }
+    function submitAiModal() {
+      var cell = __aiModalSourceCell;
+      closeAiModal();
+      /* Missing / Review / AI 실패 셀 모두 Generating 상태로 전환 */
+      if (cell && (
+        cell.classList.contains('status-missing') ||
+        cell.classList.contains('status-review') ||
+        cell.classList.contains('status-ai-failed')
+      )) {
+        var fakeBtn = { closest: function () { return cell; } };
+        simulateAiGeneration(fakeBtn);
+      }
+    }
+
+    /* Upload Modal */
+    var __uploadModalSourceCell = null;
+    function openUploadModal(btn) {
+      var cell = btn.closest('.m-cell');
+      __uploadModalSourceCell = cell;
+      var doc = cell.querySelector('.cell-doc-title');
+      var meta = cell.querySelectorAll('.cell-meta > span');
+      var docName = doc ? doc.childNodes[0].textContent.trim() : '';
+      var ws = meta[0] ? meta[0].textContent : '';
+      var stage = meta[1] ? meta[1].textContent : '';
+      document.getElementById('uploadModalDocName').textContent = docName;
+      document.getElementById('uploadModalContext').textContent = ws + ' · ' + stage;
+      document.getElementById('uploadModalFileList').innerHTML = '';
+      document.getElementById('uploadModalFileInput').value = '';
+      document.getElementById('uploadModal').classList.add('open');
+    }
+    function closeUploadModal() {
+      document.getElementById('uploadModal').classList.remove('open');
+      __uploadModalSourceCell = null;
+    }
+    function onUploadModalFilePick(input) {
+      var list = document.getElementById('uploadModalFileList');
+      for (var i = 0; i < input.files.length; i++) {
+        var file = input.files[i];
+        var item = document.createElement('div');
+        item.className = 'modal-file-item';
+        item.innerHTML = '<span class="file-name">📄 ' + file.name + '</span>' +
+          '<span>' + (file.size / 1024).toFixed(1) + ' KB</span>' +
+          '<button class="file-remove" onclick="this.closest(\'.modal-file-item\').remove()">✕</button>';
+        list.appendChild(item);
+      }
+      input.value = '';
+    }
+    function submitUploadModal() {
+      var cell = __uploadModalSourceCell;
+      closeUploadModal();
+      if (!cell) return;
+      /* 발행됨 → 업로드 완료 (미발행)로 되돌림. REV 유지. */
+      var status = cell.querySelector('.cell-status-line');
+      if (status) status.textContent = '업로드 완료';
+      /* CTA를 [발행][업로드]로 교체. 기존 업로드 버튼에 onclick 보존 */
+      var ctaRow = cell.querySelector('.cell-cta-row');
+      if (ctaRow) {
+        ctaRow.innerHTML =
+          '<button class="cell-cta primary" onclick="simulatePublish(this)">발행</button>' +
+          '<button class="cell-cta secondary" onclick="openUploadModal(this)">업로드</button>';
+      }
+      cell.classList.add('cell-flash');
+      setTimeout(function () { cell.classList.remove('cell-flash'); }, 600);
+    }
+  </script>
+
+  <!-- AI Generation Modal -->
+  <div class="modal-backdrop" id="aiModal" onclick="if(event.target===this)closeAiModal()">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title">AI 생성 요청</div>
+        <button class="modal-close" onclick="closeAiModal()" aria-label="닫기">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-context">
+          <strong id="aiModalDocName">—</strong><br>
+          <span id="aiModalContext">—</span>
+        </div>
+
+        <div>
+          <label class="modal-field-label">
+            프롬프트 / 추가 지시사항
+            <span class="optional">(선택)</span>
+          </label>
+          <textarea class="modal-textarea" id="aiModalPrompt"
+            placeholder="예: 최근 프로젝트 표준을 따라 작성해줘. 전기 부하 리스트는 REV-01 기준."></textarea>
+        </div>
+
+        <div>
+          <label class="modal-field-label">
+            참고 자료
+            <span class="optional">(선택)</span>
+          </label>
+          <label class="modal-dropzone">
+            <div class="modal-dropzone-icon">📎</div>
+            <div class="modal-dropzone-text">클릭하여 파일 선택</div>
+            <div class="modal-dropzone-hint">PDF · DWG · XLSX · DOCX</div>
+            <input type="file" id="aiModalFileInput" multiple onchange="onAiModalFilePick(this)">
+          </label>
+          <div class="modal-file-list" id="aiModalFileList"></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="modal-btn cancel" onclick="closeAiModal()">취소</button>
+        <button class="modal-btn primary" onclick="submitAiModal()">AI 생성</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Upload Modal -->
+  <div class="modal-backdrop" id="uploadModal" onclick="if(event.target===this)closeUploadModal()">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title">파일 업로드</div>
+        <button class="modal-close" onclick="closeUploadModal()" aria-label="닫기">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-context">
+          <strong id="uploadModalDocName">—</strong><br>
+          <span id="uploadModalContext">—</span>
+        </div>
+
+        <div>
+          <label class="modal-field-label">업로드할 파일</label>
+          <label class="modal-dropzone">
+            <div class="modal-dropzone-icon">📎</div>
+            <div class="modal-dropzone-text">클릭하여 파일 선택</div>
+            <div class="modal-dropzone-hint">PDF · DWG · XLSX · DOCX</div>
+            <input type="file" id="uploadModalFileInput" multiple onchange="onUploadModalFilePick(this)">
+          </label>
+          <div class="modal-file-list" id="uploadModalFileList"></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="modal-btn cancel" onclick="closeUploadModal()">취소</button>
+        <button class="modal-btn primary" onclick="submitUploadModal()">업로드</button>
+      </div>
+    </div>
+  </div>
+
+</body>
+
+</html>
