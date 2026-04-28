@@ -19,7 +19,7 @@ const STATUS_MAP: {
     dotClass: 'bg-[var(--success)]',
     chipBg: 'bg-[var(--success-bg)]',
     chipText: 'text-[var(--success)]',
-    chipBorder: 'border-[var(--success)]/20',
+    chipBorder: 'border-[var(--success-border)]',
   },
   {
     key: 'review',
@@ -27,15 +27,15 @@ const STATUS_MAP: {
     dotClass: 'bg-[var(--warning)]',
     chipBg: 'bg-[var(--warning-bg)]',
     chipText: 'text-[var(--warning)]',
-    chipBorder: 'border-[var(--warning)]/20',
+    chipBorder: 'border-[var(--warning-border)]',
   },
   {
     key: 'generating',
     label: 'AI 처리 중',
-    dotClass: 'bg-[var(--primary-500)]',
-    chipBg: 'bg-[var(--primary-50)]',
-    chipText: 'text-[var(--primary-600)]',
-    chipBorder: 'border-[var(--primary-500)]/20',
+    dotClass: 'bg-[var(--info)]',
+    chipBg: 'bg-[var(--info-bg)]',
+    chipText: 'text-[var(--info)]',
+    chipBorder: 'border-[var(--info-border)]',
   },
   {
     key: 'aiFailed',
@@ -43,7 +43,7 @@ const STATUS_MAP: {
     dotClass: 'bg-[var(--error)]',
     chipBg: 'bg-[var(--error-bg)]',
     chipText: 'text-[var(--error)]',
-    chipBorder: 'border-[var(--error)]/20',
+    chipBorder: 'border-[var(--error-border)]',
   },
   {
     key: 'missing',
@@ -51,7 +51,7 @@ const STATUS_MAP: {
     dotClass: 'bg-[var(--gray-300)]',
     chipBg: 'bg-[var(--gray-100)]',
     chipText: 'text-[var(--gray-500)]',
-    chipBorder: 'border-[var(--gray-300)]/30',
+    chipBorder: 'border-[var(--gray-200)]',
   },
 ]
 
@@ -62,7 +62,7 @@ export function DeliverableLegend({ deliverables }: DeliverableLegendProps) {
   }, {})
 
   return (
-    <div className="flex items-center justify-between border-b border-border bg-card px-8 py-2.5">
+    <div className="flex items-center justify-between border-b border-border/50 bg-card/70 px-8 py-2.5 backdrop-blur-md">
       {/* Tabs */}
       <div className="flex items-center gap-1">
         <Button variant="dark" size="sm" className="text-xs">
