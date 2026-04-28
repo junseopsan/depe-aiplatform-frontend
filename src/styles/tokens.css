@@ -28,8 +28,10 @@
   --success-bg: #EAF5EF;
   --warning: #B07D3A;
   --warning-bg: #FBF2E4;
+  --warning-bg-hover: #f6e8cd;
   --error: #A04545;
   --error-bg: #F9ECEC;
+  --error-bg-hover: #f4dcdc;
   --info: #3A6A96;
   --info-bg: #ECF2F8;
 
