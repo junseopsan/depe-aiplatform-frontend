@@ -9,42 +9,16 @@ type DeliverableRowProps = {
 }
 
 function getWorkstreamProgress(cells: CellType[]) {
-  const total = 6 // 항상 6단계 기준
+  const total = STAGES.length
   const done = cells.filter((c) => c.status === 'ready').length
-  return { done, total, ratio: Math.round((done / total) * 100) }
-}
-
-function getProgressStyle(ratio: number) {
-  if (ratio === 100) {
-    return {
-      track: 'bg-[var(--success-bg)]',
-      gradient: 'linear-gradient(90deg, #2d8a6e, #34d399)',
-    }
-  }
-  if (ratio >= 50) {
-    return {
-      track: 'bg-[var(--primary-50)]',
-      gradient: 'linear-gradient(90deg, var(--primary-700), var(--primary-400))',
-    }
-  }
-  if (ratio > 0) {
-    return {
-      track: 'bg-[var(--primary-50)]',
-      gradient: 'linear-gradient(90deg, var(--primary-300), var(--primary-200))',
-    }
-  }
-  return {
-    track: 'bg-[var(--gray-100)]',
-    gradient: 'var(--gray-300)',
-  }
+  return { done, total, ratio: total > 0 ? Math.round((done / total) * 100) : 0 }
 }
 
 export function DeliverableRow({ workstream, cells, onAction }: DeliverableRowProps) {
   const progress = getWorkstreamProgress(cells)
-  const progressStyle = getProgressStyle(progress.ratio)
 
   return (
-    <div className="grid grid-cols-[176px_repeat(6,1fr)] border-b border-[var(--gray-100)] last:border-b-0">
+    <div className="grid grid-cols-[176px_repeat(4,1fr)] border-b border-[var(--gray-100)] last:border-b-0">
       {/* Workstream label */}
       <div className="flex flex-col justify-center border-r border-[var(--gray-200)] bg-[var(--gray-50)]/60 px-4 py-3">
         <div className="flex items-baseline justify-between">
@@ -59,18 +33,24 @@ export function DeliverableRow({ workstream, cells, onAction }: DeliverableRowPr
           {workstream.name}
         </span>
         {/* Progress bar */}
-        <div className={`mt-2 h-1.5 w-full overflow-hidden rounded-full ${progressStyle.track}`}>
+        <div className="mt-2 h-1.5 w-full overflow-hidden bg-[var(--gray-100)]">
           <div
-            className="h-full rounded-full transition-all duration-500"
+            className="h-full"
             style={{
               width: `${progress.ratio}%`,
-              background: progressStyle.gradient,
+              background: progress.ratio === 100
+                ? 'var(--success)'
+                : progress.ratio >= 50
+                  ? 'var(--primary-500)'
+                  : progress.ratio > 0
+                    ? 'var(--primary-300)'
+                    : 'var(--gray-300)',
             }}
           />
         </div>
       </div>
 
-      {/* 6 Cells */}
+      {/* Cells */}
       {STAGES.map((stage, i) => {
         const cell = cells.find((c) => c.stageCode === stage.code)
         if (!cell) {

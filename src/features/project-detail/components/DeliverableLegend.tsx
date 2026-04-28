@@ -83,9 +83,9 @@ export function DeliverableLegend({ deliverables }: DeliverableLegendProps) {
         {STATUS_MAP.map((s) => (
           <div
             key={s.key}
-            className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 ${s.chipBg} ${s.chipBorder}`}
+            className={`inline-flex items-center gap-1.5 border px-2.5 py-1 ${s.chipBg} ${s.chipBorder}`}
           >
-            <span className={`inline-block h-1.5 w-1.5 rounded-full ${s.dotClass}`} />
+            <span className={`inline-block h-1.5 w-1.5 ${s.dotClass}`} />
             <span className={`text-[11px] font-medium ${s.chipText}`}>
               {s.label}
             </span>

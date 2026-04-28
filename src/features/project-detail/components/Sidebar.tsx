@@ -49,7 +49,7 @@ function NavButton({
       disabled={disabled}
       title={collapsed ? label : undefined}
       className={cn(
-        "group flex w-full items-center gap-3 rounded-lg px-3 py-2 text-[13px] font-medium transition-colors",
+        "group flex w-full items-center gap-3 px-3 py-2 text-[13px] font-medium",
         collapsed && "justify-center px-0",
         active
           ? "bg-[var(--primary-50)] text-[var(--primary-700)]"
@@ -61,23 +61,16 @@ function NavButton({
     >
       <span
         className={cn(
-          "shrink-0 transition-colors",
+          "shrink-0",
           active
             ? "text-[var(--primary-500)]"
-            : "text-[var(--gray-400)] group-hover:text-[var(--gray-600)]",
-          disabled && !active && "group-hover:text-[var(--gray-400)]",
+            : "text-[var(--gray-400)]",
+          !disabled && !active && "group-hover:text-[var(--gray-600)]",
         )}
       >
         {icon}
       </span>
-      {!collapsed && (
-        <>
-          <span className="truncate">{label}</span>
-          {active && (
-            <span className="ml-auto h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--primary-500)]" />
-          )}
-        </>
-      )}
+      {!collapsed && <span className="truncate">{label}</span>}
     </button>
   );
 }
@@ -92,15 +85,15 @@ export function SidebarLogo({
   return (
     <div
       className={cn(
-        "flex shrink-0 items-center bg-card transition-all duration-200",
+        "flex shrink-0 items-center bg-card",
         collapsed ? "w-[60px] justify-center px-0" : "w-[220px] gap-2.5 px-4",
       )}
     >
       <button
         onClick={collapsed ? onToggle : undefined}
         className={cn(
-          "flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[var(--primary-500)] text-[10px] font-bold tracking-wide text-white transition-transform",
-          collapsed && "cursor-pointer hover:scale-110",
+          "flex h-8 w-8 shrink-0 items-center justify-center bg-[var(--primary-500)] text-[10px] font-bold tracking-wide text-white",
+          collapsed && "cursor-pointer",
         )}
         title={collapsed ? "사이드바 펼치기" : undefined}
       >
@@ -116,7 +109,7 @@ export function SidebarLogo({
           </div>
           <button
             onClick={onToggle}
-            className="flex h-7 w-7 shrink-0 cursor-pointer items-center justify-center rounded-md text-[var(--gray-400)] transition-colors hover:bg-[var(--gray-100)] hover:text-[var(--gray-600)]"
+            className="flex h-7 w-7 shrink-0 cursor-pointer items-center justify-center text-[var(--gray-400)] hover:bg-[var(--gray-100)] hover:text-[var(--gray-600)]"
             title="사이드바 접기"
           >
             <PanelLeftClose size={16} />
@@ -131,7 +124,7 @@ export function Sidebar({ collapsed }: { collapsed: boolean }) {
   return (
     <aside
       className={cn(
-        "flex shrink-0 flex-col border-r border-border bg-card transition-all duration-200",
+        "flex shrink-0 flex-col border-r border-border bg-card",
         collapsed ? "w-[60px]" : "w-[220px]",
       )}
     >
@@ -151,11 +144,11 @@ export function Sidebar({ collapsed }: { collapsed: boolean }) {
         {/* User */}
         <div
           className={cn(
-            "mt-2 flex items-center rounded-lg py-2",
+            "mt-2 flex items-center py-2",
             collapsed ? "justify-center px-0" : "gap-2.5 px-3",
           )}
         >
-          <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[var(--gray-200)] text-[11px] font-medium text-[var(--gray-600)]">
+          <div className="flex h-7 w-7 shrink-0 items-center justify-center bg-[var(--gray-200)] text-[11px] font-medium text-[var(--gray-600)]">
             JS
           </div>
           {!collapsed && (
