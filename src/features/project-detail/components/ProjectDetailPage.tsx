@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import type { DeliverableCell, DeliverableAction } from '../types/project-detail.types'
+import type { DeliverableCell, DeliverableAction, Project } from '../types/project-detail.types'
 import { MOCK_PROJECT } from '../data/mock-project'
 import { MOCK_DELIVERABLES } from '../data/mock-deliverables'
 import { publishCell, startGenerating, uploadComplete } from '../utils/deliverable-actions'
@@ -14,6 +14,7 @@ import { AiGenerationDrawer } from './AiGenerationDrawer'
 import { UploadDrawer } from './UploadDrawer'
 
 export function ProjectDetailPage() {
+  const [project, setProject] = useState<Project>(MOCK_PROJECT)
   const [deliverables, setDeliverables] = useState<DeliverableCell[]>(MOCK_DELIVERABLES)
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
 
@@ -62,7 +63,7 @@ export function ProjectDetailPage() {
       {/* Top row — sidebar logo + header */}
       <div className="flex shrink-0 border-b border-border">
         <SidebarLogo collapsed={sidebarCollapsed} onToggle={() => setSidebarCollapsed((prev) => !prev)} />
-        <AppHeader project={MOCK_PROJECT} />
+        <AppHeader project={project} onProjectChange={setProject} />
       </div>
 
       {/* Body — sidebar nav + main content */}

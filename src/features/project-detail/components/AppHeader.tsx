@@ -1,37 +1,26 @@
 'use client'
 
-import { Search } from 'lucide-react'
-import { Input } from '@/components/ui/UiInput'
 import type { Project } from '../types/project-detail.types'
+import { ProjectSwitcher } from './ProjectSwitcher'
+import { ProjectSearchInput } from './ProjectSearchInput'
 
 type AppHeaderProps = {
   project: Project
+  onProjectChange: (project: Project) => void
 }
 
-export function AppHeader({ project }: AppHeaderProps) {
+export const AppHeader = ({ project, onProjectChange }: AppHeaderProps) => {
   return (
     <header className="flex flex-1 items-center justify-between bg-card px-8 py-3.5">
-      {/* Project name */}
+      {/* Breadcrumb + Project switcher */}
       <div className="flex items-center gap-2">
         <span className="text-sm text-muted-foreground">산출물관리</span>
         <span className="text-[var(--gray-300)]">/</span>
-        <span className="text-sm font-semibold text-foreground">
-          {project.name}
-        </span>
+        <ProjectSwitcher current={project} onSelect={onProjectChange} />
       </div>
 
       {/* Search — 중앙 */}
-      <div className="relative w-[380px]">
-        <Search
-          className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--gray-400)]"
-          size={14}
-        />
-        <Input
-          type="text"
-          placeholder="프로젝트 검색..."
-          className="pl-9"
-        />
-      </div>
+      <ProjectSearchInput current={project} onSelect={onProjectChange} />
 
       {/* Meta */}
       <div className="flex items-center gap-4 text-[11px] text-[var(--gray-500)]">
