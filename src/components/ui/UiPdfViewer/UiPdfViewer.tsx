@@ -136,20 +136,14 @@ export const UiPdfViewer = ({ src, searchText: externalSearch, className }: UiPd
   const resetZoom = () => setScale(1.0);
 
   const handlePrint = useCallback(() => {
-    const iframe = document.createElement("iframe");
-    // display:none 대신 크기 0 고정 위치 사용
-    // Edge는 display:none iframe의 print() 호출을 보안 정책으로 차단함
-    iframe.style.position = "fixed";
-    iframe.style.width = "0";
-    iframe.style.height = "0";
-    iframe.style.border = "none";
-    iframe.src = src;
-    document.body.appendChild(iframe);
-    iframe.onload = () => {
-      iframe.contentWindow?.focus();
-      iframe.contentWindow?.print();
-      setTimeout(() => document.body.removeChild(iframe), 1000);
-    };
+    // iframe.onload 내 print()는 Edge에서 비동기 컨텍스트로 인식되어 차단됨
+    // window.open()은 클릭 핸들러와 동일한 사용자 제스처 컨텍스트를 유지함
+    const printWindow = window.open(src, "_blank");
+    if (!printWindow) return;
+    printWindow.addEventListener("load", () => {
+      printWindow.focus();
+      printWindow.print();
+    });
   }, [src]);
 
   const pageArray = useMemo(
