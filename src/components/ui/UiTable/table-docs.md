@@ -71,3 +71,17 @@ const filters: UiTableFilter<Invoice>[] = [
 - **커스텀 렌더링**: `render` 함수로 셀 내용을 자유롭게 커스터마이징.
 - **빈 상태**: 필터 결과가 없을 때 "데이터가 없습니다" 메시지 표시.
 - **Footer**: 합계 등 요약 행 표시.
+
+## 내부 구조
+
+shadcn/ui 표준 Table 프리미티브 위에 구성됨. 같은 폴더의 `table-primitives.tsx`에서 다음 컴포넌트를 export 한다.
+
+```tsx
+import {
+  Table, TableHeader, TableBody, TableFooter,
+  TableHead, TableRow, TableCell, TableCaption,
+} from '@/components/ui/UiTable'
+```
+
+- 프로젝트 디자인 토큰(`var(--gray-*)`)에 맞춰 스타일링됨.
+- `UiTable`을 쓰지 않고 직접 프리미티브를 조합해 커스텀 테이블을 구성할 수도 있다.
