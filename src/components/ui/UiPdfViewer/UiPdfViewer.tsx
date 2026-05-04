@@ -135,16 +135,30 @@ export const UiPdfViewer = ({ src, searchText: externalSearch, className }: UiPd
   const zoomOut = () => setScale((s) => Math.max(0.4, s - 0.2));
   const resetZoom = () => setScale(1.0);
 
+  const printViewerId = useRef(`pdf-viewer-${Math.random().toString(36).slice(2)}`);
+
   const handlePrint = useCallback(() => {
-    // iframe.onload 내 print()는 Edge에서 비동기 컨텍스트로 인식되어 차단됨
-    // window.open()은 클릭 핸들러와 동일한 사용자 제스처 컨텍스트를 유지함
-    const printWindow = window.open(src, "_blank");
-    if (!printWindow) return;
-    printWindow.addEventListener("load", () => {
-      printWindow.focus();
-      printWindow.print();
-    });
-  }, [src]);
+    // window.print() + CSS isolation: 새 탭/팝업 없이 인쇄 다이얼로그 표시
+    // visibility 속성을 사용하므로 canvas 콘텐츠가 그대로 유지됨
+    const style = document.createElement("style");
+    style.textContent = `
+      @media print {
+        body * { visibility: hidden !important; }
+        #${printViewerId.current}, #${printViewerId.current} * { visibility: visible !important; }
+        #${printViewerId.current} {
+          position: fixed !important;
+          inset: 0 !important;
+          display: flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          background: white !important;
+        }
+      }
+    `;
+    document.head.appendChild(style);
+    window.print();
+    document.head.removeChild(style);
+  }, []);
 
   const pageArray = useMemo(
     () => Array.from({ length: numPages }, (_, i) => i + 1),
@@ -391,7 +405,7 @@ export const UiPdfViewer = ({ src, searchText: externalSearch, className }: UiPd
         )}
 
         {/* Main viewer */}
-        <div className="flex flex-1 items-start justify-center overflow-auto bg-[var(--gray-100)] p-4">
+        <div id={printViewerId.current} className="flex flex-1 items-start justify-center overflow-auto bg-[var(--gray-100)] p-4">
           {loading && (
             <div className="flex items-center justify-center py-20 text-sm text-[var(--gray-400)]">
               PDF 로딩 중...
