@@ -1,5 +1,10 @@
-import { ProjectDetailPage } from '@/features/project-detail/components/ProjectDetailPage'
+import { DeliverableMatrixPage } from '@/features/project-detail/components/DeliverableMatrixPage'
 
-export default function ProjectPage() {
-  return <ProjectDetailPage />
+export default async function ProjectPage({
+  params,
+}: {
+  params: Promise<{ projectId: string }>
+}) {
+  const { projectId } = await params
+  return <DeliverableMatrixPage projectId={projectId} />
 }
