@@ -16,7 +16,7 @@ MR_IID = os.environ["CI_MERGE_REQUEST_IID"]
 GITLAB_TOKEN = os.environ["GITLAB_TOKEN"]
 GEMINI_API_KEY = os.environ["GEMINI_API_KEY"]
 
-GEMINI_MODEL = "gemini-2.0-flash-lite"
+GEMINI_MODEL = "gemini-2.5-flash"
 GEMINI_URL = f"https://generativelanguage.googleapis.com/v1beta/models/{GEMINI_MODEL}:generateContent?key={GEMINI_API_KEY}"
 
 
