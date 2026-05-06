@@ -113,9 +113,10 @@ def review_with_gemini(diff_text: str) -> str:
         except urllib.error.HTTPError as e:
             error_body = e.read().decode()
             logger.error("Gemini API HTTP %d: %s", e.code, error_body)
-            if e.code == 429 and attempt < MAX_RETRIES - 1:
+            if e.code in (429, 503) and attempt < MAX_RETRIES - 1:
                 wait = RETRY_DELAY * (attempt + 1)
-                logger.warning("Rate limit 초과, %d초 후 재시도... (%d/%d)", wait, attempt + 1, MAX_RETRIES)
+                reason = "Rate limit 초과" if e.code == 429 else "서버 과부하"
+                logger.warning("%s, %d초 후 재시도... (%d/%d)", reason, wait, attempt + 1, MAX_RETRIES)
                 time.sleep(wait)
             else:
                 raise
