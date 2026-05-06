@@ -62,6 +62,8 @@ def review_with_gemini(diff_text):
 
     data = json.dumps(body).encode()
 
+    print(f"Gemini URL: {GEMINI_URL}")
+
     for attempt in range(5):
         try:
             req = urllib.request.Request(GEMINI_URL, data=data, method="POST")
@@ -70,6 +72,8 @@ def review_with_gemini(diff_text):
                 result = json.loads(res.read())
             return result["candidates"][0]["content"]["parts"][0]["text"]
         except urllib.error.HTTPError as e:
+            error_body = e.read().decode()
+            print(f"HTTP {e.code}: {error_body}")
             if e.code == 429 and attempt < 4:
                 wait = 30 * (attempt + 1)
                 print(f"Rate limit 초과, {wait}초 후 재시도... ({attempt + 1}/5)")
