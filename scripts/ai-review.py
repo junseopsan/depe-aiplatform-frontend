@@ -1,6 +1,7 @@
 import os
 import json
 import ssl
+import time
 import urllib.request
 import urllib.error
 
@@ -15,7 +16,7 @@ MR_IID = os.environ["CI_MERGE_REQUEST_IID"]
 GITLAB_TOKEN = os.environ["GITLAB_TOKEN"]
 GEMINI_API_KEY = os.environ["GEMINI_API_KEY"]
 
-GEMINI_MODEL = "gemini-2.0-flash"
+GEMINI_MODEL = "gemini-2.0-flash-lite"
 GEMINI_URL = f"https://generativelanguage.googleapis.com/v1beta/models/{GEMINI_MODEL}:generateContent?key={GEMINI_API_KEY}"
 
 
@@ -60,12 +61,21 @@ def review_with_gemini(diff_text):
     }
 
     data = json.dumps(body).encode()
-    req = urllib.request.Request(GEMINI_URL, data=data, method="POST")
-    req.add_header("Content-Type", "application/json")
-    with urllib.request.urlopen(req) as res:
-        result = json.loads(res.read())
 
-    return result["candidates"][0]["content"]["parts"][0]["text"]
+    for attempt in range(5):
+        try:
+            req = urllib.request.Request(GEMINI_URL, data=data, method="POST")
+            req.add_header("Content-Type", "application/json")
+            with urllib.request.urlopen(req) as res:
+                result = json.loads(res.read())
+            return result["candidates"][0]["content"]["parts"][0]["text"]
+        except urllib.error.HTTPError as e:
+            if e.code == 429 and attempt < 4:
+                wait = 30 * (attempt + 1)
+                print(f"Rate limit 초과, {wait}초 후 재시도... ({attempt + 1}/5)")
+                time.sleep(wait)
+            else:
+                raise
 
 
 def post_comment(review_text):
