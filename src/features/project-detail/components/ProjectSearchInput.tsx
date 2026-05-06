@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { Search, Check } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Input } from '@/components/ui/UiInput'
@@ -9,10 +10,10 @@ import { MOCK_PROJECTS } from '../data/mock-project'
 
 type ProjectSearchInputProps = {
   current: Project
-  onSelect: (project: Project) => void
 }
 
-export const ProjectSearchInput = ({ current, onSelect }: ProjectSearchInputProps) => {
+export const ProjectSearchInput = ({ current }: ProjectSearchInputProps) => {
+  const router = useRouter()
   const [open, setOpen] = useState(false)
   const [query, setQuery] = useState('')
   const ref = useRef<HTMLDivElement>(null)
@@ -34,7 +35,7 @@ export const ProjectSearchInput = ({ current, onSelect }: ProjectSearchInputProp
   )
 
   const handleSelect = (project: Project) => {
-    onSelect(project)
+    router.push(`/projects/${project.id}`)
     setOpen(false)
     setQuery('')
   }

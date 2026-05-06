@@ -6,21 +6,20 @@ import { ProjectSearchInput } from './ProjectSearchInput'
 
 type AppHeaderProps = {
   project: Project
-  onProjectChange: (project: Project) => void
 }
 
-export const AppHeader = ({ project, onProjectChange }: AppHeaderProps) => {
+export const AppHeader = ({ project }: AppHeaderProps) => {
   return (
     <header className="flex flex-1 items-center justify-between bg-card px-8 py-3.5">
       {/* Breadcrumb + Project switcher */}
       <div className="flex items-center gap-2">
         <span className="text-sm text-muted-foreground">산출물관리</span>
         <span className="text-[var(--gray-300)]">/</span>
-        <ProjectSwitcher current={project} onSelect={onProjectChange} />
+        <ProjectSwitcher current={project} />
       </div>
 
       {/* Search — 중앙 */}
-      <ProjectSearchInput current={project} onSelect={onProjectChange} />
+      <ProjectSearchInput current={project} />
 
       {/* Meta */}
       <div className="flex items-center gap-4 text-[11px] text-[var(--gray-500)]">
