@@ -1,7 +1,13 @@
 import os
 import json
+import ssl
 import urllib.request
 import urllib.error
+
+# 자체 호스팅 GitLab의 자체 서명 인증서 허용
+SSL_CTX = ssl.create_default_context()
+SSL_CTX.check_hostname = False
+SSL_CTX.verify_mode = ssl.CERT_NONE
 
 GITLAB_URL = os.environ["CI_SERVER_URL"]
 PROJECT_ID = os.environ["CI_PROJECT_ID"]
@@ -20,7 +26,7 @@ def gitlab_api(method, endpoint, body=None):
     req.add_header("PRIVATE-TOKEN", GITLAB_TOKEN)
     if data:
         req.add_header("Content-Type", "application/json")
-    with urllib.request.urlopen(req) as res:
+    with urllib.request.urlopen(req, context=SSL_CTX) as res:
         return json.loads(res.read())
 
 
