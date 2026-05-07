@@ -24,4 +24,4 @@
 
 - [x] `scripts/ai-review.py` 생성 (diff 추출 → Gemini API 리뷰 → MR 코멘트)
 - [x] `.gitlab-ci.yml` 생성 (MR 이벤트 시 ai-review job 트리거)
-- [ ] MR 생성하여 동작 테스트
+- [x] MR 생성하여 동작 테스트
