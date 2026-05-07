@@ -1,16 +1,19 @@
-'use client'
+"use client";
 
-import { useEffect } from 'react'
+import { useEffect } from "react";
 
 type GlobalErrorProps = {
-  error: Error & { digest?: string }
-  unstable_retry: () => void
-}
+  error: Error & { digest?: string };
+  unstable_retry: () => void;
+};
 
-export default function GlobalError({ error, unstable_retry }: GlobalErrorProps) {
+export default function GlobalError({
+  error,
+  unstable_retry,
+}: GlobalErrorProps) {
   useEffect(() => {
-    console.error(error)
-  }, [error])
+    console.error(error);
+  }, [error]);
 
   return (
     <html lang="ko" className="h-full antialiased">
@@ -23,22 +26,31 @@ export default function GlobalError({ error, unstable_retry }: GlobalErrorProps)
             문제가 발생했습니다
           </h1>
           <p className="max-w-md text-sm text-[var(--gray-500)]">
-            애플리케이션에서 예기치 않은 오류가 발생했습니다.
+            잠시 후 다시 시도해 주세요. 문제가 계속되면 관리자에게 문의해
+            주세요.
           </p>
           {error.digest && (
             <p className="font-mono text-[11px] text-[var(--gray-400)]">
               ref: {error.digest}
             </p>
           )}
-          <button
-            type="button"
-            onClick={() => unstable_retry()}
-            className="mt-2 inline-flex h-9 items-center rounded-lg bg-[var(--primary-500)] px-4 text-sm font-medium text-white transition-colors hover:bg-[var(--primary-600)]"
-          >
-            다시 시도
-          </button>
+          <div className="mt-2 flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => unstable_retry()}
+              className="inline-flex h-9 items-center rounded-lg bg-[var(--primary-500)] px-4 text-sm font-medium text-white transition-colors hover:bg-[var(--primary-600)]"
+            >
+              다시 시도
+            </button>
+            <a
+              href="/"
+              className="inline-flex h-9 items-center rounded-lg border border-[var(--gray-200)] bg-card px-4 text-sm font-medium text-[var(--gray-700)] transition-colors hover:bg-[var(--gray-50)]"
+            >
+              홈으로 가기
+            </a>
+          </div>
         </div>
       </body>
     </html>
-  )
+  );
 }
