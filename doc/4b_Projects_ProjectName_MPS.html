@@ -1,0 +1,2126 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EPC PE AI Platform</title>
+  <link rel="icon" type="image/png" href="reference/logo.png">
+  <link
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+    rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --primary-900: #081E3A;
+      --primary-800: #0F2E57;
+      --primary-700: #173F73;
+      --primary-600: #1F4E91;
+      --primary-500: #275DB2;
+      --primary-400: #4A7BC7;
+      --primary-300: #7FA2D9;
+      --primary-200: #B2C7E8;
+      --primary-100: #D4DFEE;
+      --primary-50: #EEF2F9;
+      --gray-900: #0D1117;
+      --gray-800: #1C2230;
+      --gray-700: #2E3A4E;
+      --gray-600: #4A5568;
+      --gray-500: #6B7A8F;
+      --gray-400: #94A3B8;
+      --gray-300: #CBD5E1;
+      --gray-200: #E2E8F0;
+      --gray-100: #F1F5F9;
+      --gray-50: #F8FAFC;
+      --success: #3A8C6E;
+      --warning: #B07D3A;
+      --error: #A04545;
+      --info: #3A6A96;
+    }
+
+    html,
+    body {
+      font-family: 'IBM Plex Sans KR', sans-serif;
+      color: var(--gray-700);
+      background: var(--gray-100);
+      font-size: 14px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      height: 100vh;
+      overflow-y: hidden;
+      overflow-x: auto;
+      min-width: 1100px;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button {
+      font-family: inherit;
+      cursor: pointer;
+      border: none;
+      background: none;
+    }
+
+    .mono {
+      font-family: 'IBM Plex Mono', monospace;
+    }
+
+    .top-band {
+      height: 2px;
+      background: var(--primary-500);
+    }
+
+    .app-header {
+      width: 100%;
+      min-width: 100%;
+      height: 52px;
+      background: #fff;
+      border-bottom: 1px solid var(--gray-200);
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      padding: 0 24px;
+      position: sticky;
+      top: 2px;
+      z-index: 99;
+    }
+
+    .hdr-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .hdr-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .hdr-logo img {
+      height: 28px;
+      width: auto;
+      display: block;
+    }
+
+    .hdr-sysname {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--gray-800);
+      letter-spacing: -0.01em;
+    }
+
+    .hdr-tabs {
+      display: flex;
+      gap: 4px;
+    }
+
+    .hdr-tab {
+      height: 52px;
+      display: inline-flex;
+      align-items: center;
+      padding: 0 18px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--gray-500);
+      border-bottom: 2px solid transparent;
+      transition: color .15s, border-color .15s;
+    }
+
+    .hdr-tab:hover {
+      color: var(--gray-700);
+    }
+
+    .hdr-tab.active {
+      color: var(--primary-500);
+      font-weight: 600;
+      border-bottom-color: var(--primary-500);
+    }
+
+    .hdr-right {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    .notif-bell {
+      width: 32px;
+      height: 32px;
+      border-radius: 4px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: #fff;
+      color: var(--gray-700);
+      border: 1px solid transparent;
+      position: relative;
+      transition: background .15s, border-color .15s;
+    }
+
+    .notif-bell:hover {
+      background: var(--gray-50);
+      border-color: var(--gray-200);
+    }
+
+    .notif-bell svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .notif-bell .badge {
+      position: absolute;
+      top: -4px; right: -4px;
+      min-width: 18px; height: 18px;
+      padding: 0 5px;
+      border-radius: 9px;
+      background: var(--primary-500);
+      color: #fff;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px; font-weight: 500;
+      display: inline-flex; align-items: center; justify-content: center;
+      border: 2px solid #fff;
+      line-height: 1;
+    }
+    .notif-bell .badge.pulse::after {
+      content: ''; position: absolute; inset: -2px;
+      border-radius: 50%;
+      background: var(--primary-500);
+      opacity: 0.3;
+      animation: notif-pulse 2s infinite;
+    }
+    @keyframes notif-pulse {
+      0% { transform: scale(1); opacity: 0.4; }
+      100% { transform: scale(1.6); opacity: 0; }
+    }
+
+    .btn {
+      height: 36px;
+      padding: 0 14px;
+      border-radius: 4px;
+      font-size: 13px;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background .15s, border-color .15s, color .15s;
+      border: 1px solid transparent;
+      white-space: nowrap;
+    }
+
+    .btn i {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+    }
+
+    /* legend-bar 내부 버튼은 pill(28px)과의 위계 균형을 위해 축소 — 32px/12px */
+    .legend-bar .btn {
+      height: 32px;
+      padding: 0 12px;
+      font-size: 12px;
+    }
+
+    .legend-bar .btn i {
+      width: 14px;
+      height: 14px;
+    }
+
+    .btn.btn-primary {
+      background: var(--primary-500);
+      color: #fff;
+    }
+
+    .btn.btn-primary:hover {
+      background: var(--primary-600);
+    }
+
+    .btn.btn-secondary {
+      background: #fff;
+      border-color: var(--gray-300);
+      color: var(--gray-700);
+    }
+
+    .btn.btn-secondary:hover {
+      background: var(--gray-50);
+    }
+
+    .btn:disabled,
+    .btn.is-disabled {
+      opacity: 0.4;
+      pointer-events: none;
+    }
+
+    .project-bar {
+      width: 100%;
+      min-width: 100%;
+      height: 72px;
+      background: #fff;
+      border-bottom: 1px solid var(--gray-200);
+      display: flex;
+      align-items: center;
+      padding: 0 32px;
+      gap: 24px;
+    }
+
+    .proj-name-block {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      min-width: 0;
+      flex: 1;
+    }
+
+    .proj-name {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--gray-800);
+      line-height: 1.2;
+      letter-spacing: -0.01em;
+    }
+
+    .proj-meta {
+      font-size: 13px;
+      color: var(--gray-600);
+      word-spacing: 0.2em;
+      letter-spacing: 0.01em;
+      display: flex;
+      gap: 12px;
+    }
+
+    .proj-meta-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .proj-meta-label {
+      color: var(--gray-400);
+      font-weight: 500;
+    }
+
+    .proj-meta .mono {
+      font-family: 'IBM Plex Mono', monospace;
+      color: var(--gray-700);
+    }
+
+    .proj-meta-sep::before {
+      content: '·';
+      color: var(--gray-400);
+      margin: 0 4px;
+    }
+
+    .subtab-bar {
+      width: 100%;
+      min-width: 100%;
+      height: 44px;
+      background: #fff;
+      border-bottom: 1px solid var(--gray-200);
+      display: flex;
+      padding: 0 32px;
+      align-items: stretch;
+    }
+
+    .subtab {
+      height: 44px;
+      display: inline-flex;
+      align-items: center;
+      padding: 0 20px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--gray-500);
+      border-bottom: 2px solid transparent;
+      transition: color .15s, border-color .15s;
+    }
+
+    .subtab:first-child {
+      padding-left: 0;
+    }
+
+    .subtab:hover {
+      color: var(--gray-700);
+    }
+
+    .subtab.active {
+      color: var(--primary-500);
+      border-bottom-color: var(--primary-500);
+    }
+
+    .legend-bar {
+      width: 100%;
+      min-width: 100%;
+      height: 48px;
+      background: var(--gray-50);
+      border-bottom: 1px solid var(--gray-200);
+      padding: 0 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .legend-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .legend-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Zone A — ITB 기준 pill (모든 탭 공통) */
+    /* Zone A — 선행 문서 anchor chip 컨테이너. MPS는 ITB+DC 2개 나열 */
+    .legend-anchors {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .legend-anchor {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      height: 28px;
+      padding: 0 12px 0 10px;
+      border-radius: 999px;
+      background: var(--primary-50);
+      color: var(--primary-700);
+      font-size: 12px;
+      font-weight: 600;
+      font-family: 'IBM Plex Sans KR', sans-serif;
+    }
+
+    .legend-anchor .icon {
+      width: 14px;
+      height: 14px;
+      color: var(--primary-500);
+      stroke-width: 2;
+      flex-shrink: 0;
+    }
+
+    .legend-anchor.is-blocked {
+      background: var(--gray-100);
+      color: var(--gray-700);
+      border: 1px solid var(--gray-300);
+    }
+
+    .legend-anchor.is-blocked .icon {
+      color: var(--gray-500);
+    }
+
+    .legend-anchor.is-done {
+      background: var(--primary-50);
+      color: var(--primary-700);
+    }
+
+    .legend-anchor.is-done .icon {
+      color: var(--primary-500);
+    }
+
+    /* Zone B — 현 문서 Rev pill. 클릭 시 이력 드로어 */
+    /* Rev pill — 읽기 전용 뱃지. 크기·폰트는 anchor와 동일, 색은 뉴트럴(축 분리) */
+    .legend-rev {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      height: 28px;
+      padding: 0 12px 0 10px;
+      border-radius: 999px;
+      background: #fff;
+      border: 1px solid var(--gray-300);
+      color: var(--gray-700);
+      font-family: 'IBM Plex Sans KR', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .legend-rev .sep {
+      margin: 0 4px;
+      color: var(--gray-400);
+    }
+
+    .legend-rev[hidden] {
+      display: none !important;
+    }
+
+    /* Document generation status indicator */
+    .save-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--gray-500);
+      transition: color .2s;
+    }
+
+    .save-status[hidden] {
+      display: none !important;
+    }
+
+    .save-status.saving {
+      color: var(--primary-500);
+      font-weight: 600;
+    }
+
+    .save-status.review {
+      color: var(--warning);
+      font-weight: 600;
+    }
+
+    .save-status.issued {
+      color: var(--success);
+      font-weight: 600;
+    }
+
+    .save-status.dirty {
+      color: var(--warning);
+      font-weight: 600;
+    }
+
+    .save-status.error {
+      color: var(--error);
+      font-weight: 600;
+    }
+
+    .save-status-spinner {
+      display: none;
+      width: 12px;
+      height: 12px;
+      border: 1.5px solid var(--primary-100);
+      border-top-color: var(--primary-500);
+      border-radius: 50%;
+      animation: save-spin .8s linear infinite;
+      flex-shrink: 0;
+    }
+
+    .save-status.has-spinner .save-status-spinner {
+      display: inline-block;
+    }
+
+    .pdf-stage.template-mode,
+    .pdf-stage.generating-mode,
+    .pdf-stage.failed-mode,
+    .pdf-stage.blocked-mode {
+      min-height: 60vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .placeholder-state {
+      text-align: center;
+      max-width: 560px;
+      padding: 48px 24px;
+      font-family: 'IBM Plex Sans KR', sans-serif;
+    }
+
+    .placeholder-state-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--gray-800);
+      margin-bottom: 8px;
+    }
+
+    .placeholder-state-desc {
+      font-size: 13px;
+      color: var(--gray-500);
+      line-height: 1.55;
+      margin-bottom: 24px;
+    }
+
+    .placeholder-state .btn-cta-large {
+      height: 44px;
+      padding: 0 22px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .loading-spinner {
+      width: 36px;
+      height: 36px;
+      margin: 0 auto 18px;
+      border: 3px solid var(--primary-100);
+      border-top-color: var(--primary-500);
+      border-radius: 50%;
+      animation: save-spin .8s linear infinite;
+    }
+
+    .pdf-stage.failed-mode .placeholder-state-title {
+      color: var(--error);
+    }
+
+    .placeholder-state-admin {
+      margin-bottom: 16px;
+      padding: 10px 14px;
+      background: var(--error-bg, #F4DCDC);
+      border: 1px solid var(--error);
+      border-radius: 4px;
+      color: var(--error);
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    /* B′ 재생성 실패 배너 — 이전 Rev 콘텐츠가 있는 상태에서 재생성 실패 시 중앙 상단에 삽입. §12.4.1 B' */
+    .b-prime-banner {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      padding: 14px 18px;
+      margin: 0 0 20px;
+      background: var(--error-bg, #F4DCDC);
+      border: 1px solid var(--error);
+      border-radius: 4px;
+      color: var(--gray-800);
+      font-family: 'IBM Plex Sans KR', sans-serif;
+    }
+
+    .b-prime-banner-body {
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+
+    .b-prime-banner-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--error);
+      margin-bottom: 4px;
+    }
+
+    .b-prime-banner-desc {
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--gray-700);
+      line-height: 1.55;
+    }
+
+    .b-prime-banner-hint {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--error);
+      margin-top: 6px;
+    }
+
+    .b-prime-banner-action {
+      flex: 0 0 auto;
+      align-self: center;
+    }
+
+    .b-prime-banner-action .btn {
+      height: 32px;
+      padding: 0 14px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    /* blocked-mode: generating과 동일한 레이아웃. spinner 자리에 hourglass 아이콘(primary-500) flip 애니메이션 */
+    .blocked-hourglass {
+      width: 36px;
+      height: 36px;
+      margin: 0 auto 18px;
+      color: var(--primary-500);
+      display: block;
+      animation: hourglass-flip 2.4s ease-in-out infinite;
+      transform-origin: 50% 50%;
+    }
+
+    @keyframes hourglass-flip {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      45% {
+        transform: rotate(0deg);
+      }
+
+      55% {
+        transform: rotate(180deg);
+      }
+
+      100% {
+        transform: rotate(180deg);
+      }
+    }
+
+    .predecessor-badges {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    .predecessor-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 500;
+      line-height: 1;
+      background: #fff;
+      border: 1px solid var(--gray-300);
+      color: var(--gray-700);
+    }
+
+    .predecessor-badge.is-done {
+      border-color: var(--primary-500);
+      color: var(--primary-700);
+      background: var(--primary-50);
+    }
+
+    .toast-container {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 2000;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      pointer-events: none;
+    }
+
+    .toast {
+      background: var(--gray-800);
+      color: #fff;
+      padding: 10px 16px;
+      border-radius: 6px;
+      font-size: 13px;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18);
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity .2s, transform .2s;
+      max-width: 360px;
+      pointer-events: auto;
+    }
+
+    .toast.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .drawer-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(13, 17, 23, 0.35);
+      z-index: 900;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .drawer-backdrop[hidden] {
+      display: none !important;
+    }
+
+    .drawer-panel {
+      width: 420px;
+      background: #fff;
+      overflow-y: auto;
+      box-shadow: -6px 0 24px rgba(0, 0, 0, 0.12);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .drawer-header {
+      padding: 18px 22px 14px;
+      border-bottom: 1px solid var(--gray-200);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .drawer-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--gray-800);
+      margin: 0;
+    }
+
+    .drawer-body {
+      padding: 8px 22px 22px;
+      flex: 1;
+    }
+
+    .rev-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .rev-list li {
+      padding: 14px 0;
+      border-bottom: 1px solid var(--gray-100);
+    }
+
+    .rev-list li:last-child {
+      border-bottom: none;
+    }
+
+    .rev-label {
+      font-weight: 600;
+      font-size: 13px;
+      color: var(--gray-800);
+    }
+
+    .rev-date {
+      font-size: 12px;
+      color: var(--gray-500);
+      margin-left: 8px;
+      font-family: 'IBM Plex Mono', monospace;
+    }
+
+    .rev-prompt {
+      font-size: 12px;
+      color: var(--gray-600);
+      margin-top: 6px;
+      line-height: 1.5;
+    }
+
+    .rev-compare {
+      font-size: 11px;
+      color: var(--primary-500);
+      margin-top: 6px;
+      display: inline-block;
+      cursor: pointer;
+      font-weight: 500;
+    }
+
+    .rev-compare:hover {
+      text-decoration: underline;
+    }
+
+    .rev-list-empty {
+      font-size: 12px;
+      color: var(--gray-500);
+      padding: 20px 0;
+      text-align: center;
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      background: rgba(13, 17, 23, 0.45);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .modal-backdrop[hidden] {
+      display: none;
+    }
+
+    .modal-panel {
+      background: #fff;
+      border-radius: 6px;
+      width: 100%;
+      max-width: 520px;
+      box-shadow: 0 20px 40px rgba(13, 17, 23, 0.2);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 22px 14px;
+      border-bottom: 1px solid var(--gray-200);
+    }
+
+    .modal-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--gray-800);
+      margin: 0;
+    }
+
+    .modal-close {
+      width: 28px;
+      height: 28px;
+      border-radius: 4px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--gray-500);
+      transition: background .15s, color .15s;
+    }
+
+    .modal-close:hover {
+      background: var(--gray-100);
+      color: var(--gray-800);
+    }
+
+    .modal-close i,
+    .modal-close svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .modal-body {
+      padding: 18px 22px;
+    }
+
+    .modal-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--gray-700);
+      margin-bottom: 8px;
+    }
+
+    .modal-textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--gray-300);
+      border-radius: 4px;
+      font-family: inherit;
+      font-size: 13px;
+      line-height: 1.55;
+      color: var(--gray-800);
+      resize: vertical;
+      min-height: 120px;
+      outline: none;
+    }
+
+    .modal-textarea:focus {
+      border-color: var(--primary-500);
+    }
+
+    .modal-hint {
+      margin-top: 10px;
+      font-size: 12px;
+      color: var(--gray-500);
+      line-height: 1.45;
+    }
+
+    .modal-message {
+      font-size: 13px;
+      color: var(--gray-700);
+      line-height: 1.6;
+      white-space: pre-wrap;
+    }
+
+    .modal-footer {
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end;
+      padding: 14px 22px 18px;
+      border-top: 1px solid var(--gray-100);
+    }
+
+    @keyframes save-spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .content-area {
+      height: calc(100vh - 2px - 52px - 72px - 44px - 49px);
+      background: var(--gray-100);
+      overflow: auto;
+      padding: 24px 32px;
+      scroll-behavior: smooth;
+    }
+
+    .pdf-stage {
+      max-width: 900px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .pdf-page {
+      background: #fff;
+      border: 1px solid var(--gray-200);
+      border-radius: 4px;
+      padding: 48px 56px 56px;
+      font-family: 'Times New Roman', serif;
+      font-size: 12px;
+      line-height: 1.75;
+      color: var(--gray-700);
+      min-height: 1100px;
+      position: relative;
+    }
+
+    .pdf-page-num {
+      position: absolute;
+      top: 14px;
+      right: 20px;
+      font-size: 10px;
+      color: var(--gray-400);
+      font-family: 'IBM Plex Mono', monospace;
+    }
+
+    .pdf-doc-title {
+      text-align: center;
+      font-family: 'IBM Plex Sans KR', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--gray-800);
+      margin-bottom: 4px;
+    }
+
+    .pdf-doc-sub {
+      text-align: center;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      color: var(--gray-500);
+      margin-bottom: 28px;
+    }
+
+    .pdf-h1 {
+      font-family: 'IBM Plex Sans KR', sans-serif;
+      font-weight: 700;
+      font-size: 15px;
+      margin: 18px 0 8px;
+      color: var(--gray-800);
+    }
+
+    .pdf-h2 {
+      font-family: 'IBM Plex Sans KR', sans-serif;
+      font-weight: 600;
+      font-size: 13px;
+      margin: 14px 0 6px;
+      color: var(--gray-700);
+    }
+
+    .pdf-p {
+      margin-bottom: 10px;
+      text-align: justify;
+    }
+
+    .pdf-list {
+      margin: 8px 0 12px 20px;
+    }
+
+    .pdf-list li {
+      margin-bottom: 4px;
+    }
+
+    .pdf-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0;
+      font-size: 11px;
+    }
+
+    .pdf-table th,
+    .pdf-table td {
+      border: 1px solid var(--gray-400);
+      padding: 6px 10px;
+    }
+
+    .pdf-table th {
+      background: var(--gray-100);
+      font-weight: 600;
+    }
+
+    .pdf-table td.right {
+      text-align: right;
+      font-family: 'IBM Plex Mono', monospace;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="top-band"></div>
+
+  <header class="app-header">
+    <div class="hdr-left">
+      <a href="index.html#/" class="hdr-logo">
+        <img src="reference/logo.png" alt="EPC PE Platform">
+        <span class="hdr-sysname">EPC PE AI-Platform</span>
+      </a>
+    </div>
+    <nav class="hdr-tabs">
+      <a href="index.html#/" class="hdr-tab active">Projects</a>
+      <a href="index.html#/templates" class="hdr-tab">Templates</a>
+      <a href="index.html#/bot" class="hdr-tab">AI Q&amp;A</a>
+    </nav>
+    <div class="hdr-right">
+      <button class="notif-bell" aria-label="Notifications">
+        <i data-lucide="bell"></i>
+        <span class="badge pulse">3</span>
+      </button>
+    </div>
+  </header>
+
+  <div class="project-bar">
+    <div class="proj-name-block">
+      <div class="proj-name">Saudi ARAMCO Jafurah Gas Plant Phase 2</div>
+      <div class="proj-meta">
+        <span class="proj-meta-item"><span class="proj-meta-label">계약번호</span><span
+            class="mono">JA-2025-078</span></span>
+        <span class="proj-meta-item proj-meta-sep"><span class="proj-meta-label">계약기간</span><span class="mono">2025.03 —
+            2027.08</span></span>
+        <span class="proj-meta-item proj-meta-sep"><span class="proj-meta-label">발주처</span>Saudi ARAMCO</span>
+      </div>
+    </div>
+  </div>
+
+  <nav class="subtab-bar">
+    <a href="index.html#/dashboard" class="subtab" style="display: none;">Dashboard</a>
+    <a href="index.html#/itb" class="subtab">독소조항</a>
+    <a href="index.html#/irs" class="subtab">IRS</a>
+    <a href="index.html#/design-criteria" class="subtab">Design Criteria</a>
+    <a href="index.html#/mps" class="subtab active">MPS</a>
+    <a href="index.html#/pnid" class="subtab" style="display: none;">P&amp;ID</a>
+    <a href="index.html#/compare" class="subtab" style="display: none;">문서비교</a>
+    <a href="index.html#/rev-history" class="subtab" style="display: none;" hidden>ITB 이력</a>
+  </nav>
+
+  <div class="legend-bar">
+    <div class="legend-left">
+      <span class="legend-anchors" id="anchor-group"></span>
+      <span class="legend-rev" id="rev-pill" hidden>
+        <span class="rev-text"></span>
+      </span>
+      <span class="save-status" id="gen-status" aria-live="polite">
+        <span class="save-status-spinner" aria-hidden="true"></span><span class="save-status-text">AI 생성 대기</span>
+      </span>
+    </div>
+    <div class="legend-right">
+      <button class="btn btn-secondary is-disabled" id="btn-download">다운로드</button>
+      <button class="btn btn-secondary" id="btn-generate"><span id="generate-label">AI 생성</span></button>
+      <button class="btn btn-primary is-disabled" id="btn-confirm"><span id="confirm-label">검토 완료</span></button>
+    </div>
+  </div>
+
+  <main class="content-area">
+    <div class="pdf-stage">
+
+      <div class="pdf-page">
+        <span class="pdf-page-num">p. 1 / 3</span>
+        <div class="pdf-doc-title">Material Purchasing Specification (MPS)</div>
+        <div class="pdf-doc-sub">Saudi ARAMCO · Jafurah Gas Plant Phase 2 · Rev A</div>
+
+        <div class="pdf-h1">1. Scope</div>
+        <p class="pdf-p">This Material Purchasing Specification (MPS) defines the technical requirements for procurement
+          of piping components (pipe, fittings, flanges, valves, gaskets, and bolting) for the Jafurah Gas Plant Phase 2
+          Project. This specification supplements ARAMCO Standard 02-SAMSS-011 and shall be used in conjunction with the
+          relevant piping material classes.</p>
+
+        <div class="pdf-h1">2. Applicable Codes and Standards</div>
+        <ul class="pdf-list">
+          <li>ASME B31.3 — Process Piping</li>
+          <li>ASME B16.5 — Pipe Flanges and Flanged Fittings</li>
+          <li>ASME B16.9 — Factory-Made Wrought Buttwelding Fittings</li>
+          <li>ASME B16.34 — Valves - Flanged, Threaded, and Welding End</li>
+          <li>API 602 — Gate, Globe, and Check Valves for General Refinery Service</li>
+          <li>NACE MR0175 / ISO 15156 — Materials for Sour Service</li>
+          <li>02-SAMSS-011 — Procurement of Piping Components</li>
+        </ul>
+
+        <div class="pdf-h1">3. Piping Material Class Summary</div>
+        <table class="pdf-table">
+          <thead>
+            <tr>
+              <th style="width:14%;">Class</th>
+              <th>Service</th>
+              <th style="width:22%;">Base Material</th>
+              <th style="width:14%;">Rating</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="mono">C1A</td>
+              <td>General carbon steel, non-sour</td>
+              <td>A106 Gr.B</td>
+              <td>CL150</td>
+            </tr>
+            <tr>
+              <td class="mono">C3A</td>
+              <td>Sour gas wet service</td>
+              <td>A333 Gr.6 + NACE</td>
+              <td>CL600</td>
+            </tr>
+            <tr>
+              <td class="mono">S1A</td>
+              <td>Amine service</td>
+              <td>A106 Gr.B + PWHT</td>
+              <td>CL300</td>
+            </tr>
+            <tr>
+              <td class="mono">S4B</td>
+              <td>Sulfur liquid (hot)</td>
+              <td>A335 P11 (Cr-½Mo)</td>
+              <td>CL300</td>
+            </tr>
+            <tr>
+              <td class="mono">A1A</td>
+              <td>High pressure sour</td>
+              <td>A694 F65 / Alloy 625 clad</td>
+              <td>CL900</td>
+            </tr>
+            <tr>
+              <td class="mono">D1B</td>
+              <td>Produced water</td>
+              <td>Duplex A790 UNS S31803</td>
+              <td>CL300</td>
+            </tr>
+            <tr>
+              <td class="mono">U1A</td>
+              <td>Cooling water</td>
+              <td>A106 Gr.B + epoxy</td>
+              <td>CL150</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="pdf-page">
+        <span class="pdf-page-num">p. 2 / 3</span>
+
+        <div class="pdf-h1">4. Material Requirements</div>
+        <div class="pdf-h2">4.1 Pipe</div>
+        <table class="pdf-table">
+          <thead>
+            <tr>
+              <th>Size Range</th>
+              <th>Class</th>
+              <th>Manufacturing Standard</th>
+              <th>Hydro Test</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1/2" — 1 1/2"</td>
+              <td>C1A, S1A</td>
+              <td>ASTM A106 Gr.B seamless</td>
+              <td>Per ASTM</td>
+            </tr>
+            <tr>
+              <td>2" — 24"</td>
+              <td>C1A, S1A</td>
+              <td>ASTM A106 Gr.B seamless</td>
+              <td>100%</td>
+            </tr>
+            <tr>
+              <td>2" — 24"</td>
+              <td>C3A</td>
+              <td>ASTM A333 Gr.6 seamless + NACE</td>
+              <td>100%</td>
+            </tr>
+            <tr>
+              <td>26" — 48"</td>
+              <td>C1A</td>
+              <td>ASTM A672 Gr.B70 CL22 DSAW</td>
+              <td>100%</td>
+            </tr>
+            <tr>
+              <td>2" — 24"</td>
+              <td>A1A</td>
+              <td>Alloy 625 cladded + UT 100%</td>
+              <td>100% + PWHT</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="pdf-h2">4.2 Flanges</div>
+        <p class="pdf-p">All flanges shall be weld-neck (WN) type per ASME B16.5, raised-face finish (125–250 µin Ra).
+          For sour service (C3A, A1A), flanges shall be forged A105N or A694 F65 with full traceability (MTC 3.1). Ring
+          Type Joint (RTJ) flanges shall be used for Class 900 and higher, or where specified by piping material class.
+        </p>
+
+        <div class="pdf-h2">4.3 Valves</div>
+        <table class="pdf-table">
+          <thead>
+            <tr>
+              <th>Type</th>
+              <th>Size</th>
+              <th>Standard</th>
+              <th>Trim (Sour)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Gate valve</td>
+              <td>≥ 2"</td>
+              <td>API 600</td>
+              <td>13Cr + Stellite</td>
+            </tr>
+            <tr>
+              <td>Globe valve</td>
+              <td>≥ 2"</td>
+              <td>BS 1873</td>
+              <td>13Cr + Stellite</td>
+            </tr>
+            <tr>
+              <td>Check valve (swing)</td>
+              <td>≥ 3"</td>
+              <td>API 594</td>
+              <td>13Cr</td>
+            </tr>
+            <tr>
+              <td>Ball valve</td>
+              <td>≥ 2"</td>
+              <td>API 6D</td>
+              <td>Inconel 625 overlay</td>
+            </tr>
+            <tr>
+              <td>Control valve</td>
+              <td>All sizes</td>
+              <td>ISA 75.01.01</td>
+              <td>Per service</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="pdf-page">
+        <span class="pdf-page-num">p. 3 / 3</span>
+
+        <div class="pdf-h1">5. Inspection and Testing Requirements</div>
+        <table class="pdf-table">
+          <thead>
+            <tr>
+              <th>Activity</th>
+              <th>Requirement</th>
+              <th style="width:20%;">NDE Coverage</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Visual inspection</td>
+              <td>Per ASME B31.3 normal fluid service</td>
+              <td>100%</td>
+            </tr>
+            <tr>
+              <td>PMI (Positive Material Identification)</td>
+              <td>All alloy components</td>
+              <td>100%</td>
+            </tr>
+            <tr>
+              <td>Radiographic test (RT)</td>
+              <td>Sour service butt welds</td>
+              <td>100%</td>
+            </tr>
+            <tr>
+              <td>Ultrasonic test (UT)</td>
+              <td>CS butt welds, category normal</td>
+              <td>10%</td>
+            </tr>
+            <tr>
+              <td>Magnetic particle (MT)</td>
+              <td>Ferritic fillet welds</td>
+              <td>10%</td>
+            </tr>
+            <tr>
+              <td>Hardness test</td>
+              <td>Sour service post-PWHT</td>
+              <td>100% per weld</td>
+            </tr>
+            <tr>
+              <td>Hydrostatic pressure test</td>
+              <td>1.5 × design pressure, 1 hour</td>
+              <td>100%</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="pdf-h1">6. Marking and Identification</div>
+        <p class="pdf-p">All piping components shall be permanently marked with: manufacturer's name or trademark, size,
+          rating, material designation, heat number, and applicable ASTM/API standard. For sour service components, the
+          marking shall include "NACE MR0175" or "HIC/SSC tested". Marking shall be by die-stamping (low stress) or
+          vibro-etch; paint stencils are acceptable only for temporary identification.</p>
+
+        <div class="pdf-h1">7. Packaging, Shipping and Storage</div>
+        <ul class="pdf-list">
+          <li>All machined surfaces shall be protected with rust preventive coating (Mil-C-16173 Grade 2 or equivalent)
+          </li>
+          <li>Flange faces shall be fitted with wooden or plastic covers</li>
+          <li>Valve ends shall be closed with plastic caps or plywood covers</li>
+          <li>Stainless steel and alloy components shall be packaged separately from carbon steel</li>
+          <li>All shipments shall include a certified packing list and material test certificates (MTC 3.1 or 3.2)</li>
+        </ul>
+
+        <div class="pdf-h1">8. Vendor Documentation</div>
+        <p class="pdf-p">The following documents shall be submitted with each shipment:</p>
+        <ul class="pdf-list">
+          <li>Material Test Certificate (MTC) per EN 10204 Type 3.1 (or 3.2 for critical service)</li>
+          <li>Hydrostatic test reports</li>
+          <li>NDE reports (RT films / UT records)</li>
+          <li>PMI reports for alloy components</li>
+          <li>Heat treatment charts (where applicable)</li>
+          <li>NACE compliance certificate (for sour service)</li>
+        </ul>
+
+        <p class="pdf-p" style="margin-top: 32px; text-align: center; color: var(--gray-500); font-size: 10px;">— End of
+          Document —</p>
+      </div>
+
+    </div>
+  </main>
+
+  <script>
+    lucide.createIcons();
+
+    // ═══ 슬롯 편집 모달 — placeholder ═══
+    (function() {
+      const slotModal = document.getElementById('slot-edit-modal');
+      const slotBtn = document.getElementById('btn-slot-edit');
+      if (!slotModal || !slotBtn) return;
+      const open = () => {
+        slotModal.hidden = false;
+        slotModal.setAttribute('aria-hidden', 'false');
+      };
+      const close = () => {
+        slotModal.hidden = true;
+        slotModal.setAttribute('aria-hidden', 'true');
+      };
+      slotBtn.addEventListener('click', open);
+      slotModal.querySelectorAll('[data-slot-edit-close]').forEach(el => {
+        el.addEventListener('click', close);
+      });
+      slotModal.addEventListener('click', (e) => {
+        if (e.target === slotModal) close();
+      });
+    })();
+
+    const DOC_CONFIG = {
+      name: 'MPS',
+      filePrefix: 'MPS_Jafurah',
+      // 소스 문서 (mock). 실제 구현에서는 sourceDocuments[0] 에서 채워지는 자리 — CLAUDE.md Core Value #3 "문서 간 의존성 추적"
+      sourceDoc: { type: 'ITB', revLetter: 'B', issuedDate: '2026.05.03' },
+      // 선행 문서 체인 — MPS는 ITB 분석 완료 + DC 발행 완료 두 조건 필요.
+      // currentStatus는 mock. URL ?blockedBy=dc 로 "ITB=done, DC=waiting" 시나리오 재현.
+      predecessors: [
+        { type: 'ITB', displayName: 'ITB', requiredVerb: '분석', currentStatus: 'in-progress', revLetter: 'B', issuedDate: '2026.05.03' },
+        { type: 'DC', displayName: 'Design Criteria', requiredVerb: '발행', currentStatus: 'waiting', revLetter: 'A', issuedDate: '2026.04.28' }
+      ],
+    };
+
+    const btnDownload = document.getElementById('btn-download');
+    const btnGenerate = document.getElementById('btn-generate');
+    const generateLabel = document.getElementById('generate-label');
+    const btnConfirm = document.getElementById('btn-confirm');
+    const confirmLabel = document.getElementById('confirm-label');
+    const genStatus = document.getElementById('gen-status');
+    const genStatusText = genStatus.querySelector('.save-status-text');
+    const anchorGroup = document.getElementById('anchor-group');
+    const revPill = document.getElementById('rev-pill');
+    const revText = revPill.querySelector('.rev-text');
+    const pdfStage = document.querySelector('.pdf-stage');
+
+    const FULL_CONTENT_HTML = pdfStage.innerHTML;
+    function templateViewHTML() {
+      return `
+    <div class="placeholder-state">
+      <div class="placeholder-state-title">아직 생성된 문서가 없습니다</div>
+      <div class="placeholder-state-desc">AI 생성을 눌러 프로젝트에 맞는 ${DOC_CONFIG.name} 문서를 생성하세요.</div>
+      <button class="btn btn-primary btn-cta-large" id="btn-generate-hero">AI 생성</button>
+    </div>
+  `;
+    }
+    function generatingViewHTML() {
+      const src = DOC_CONFIG.sourceDoc;
+      return `
+    <div class="placeholder-state">
+      <div class="loading-spinner"></div>
+      <div class="placeholder-state-title">AI가 ${DOC_CONFIG.name} 문서를 생성하는 중입니다</div>
+      <div class="placeholder-state-desc">최신 ${src.type} 문서(Rev ${src.revLetter} · ${src.issuedDate})를 바탕으로 프로젝트 산출물을 생성하는 중입니다.<br>잠시만 기다려 주세요.</div>
+    </div>
+  `;
+    }
+    function failedViewHTML() {
+      const typeLabel = lastErrorType === 'quota' ? '할당량 초과'
+        : lastErrorType === 'policy' ? '정책 위반'
+          : lastErrorType === 'server' ? '서버 오류'
+            : '일시적 오류';
+      const desc = lastErrorType === 'quota'
+        ? `이번 달 AI 생성 할당량을 모두 소진했습니다.<br>관리자에게 문의해 할당량 상향을 요청할 수 있습니다.`
+        : lastErrorType === 'policy'
+          ? `입력하신 프롬프트가 정책에 맞지 않습니다.<br>다른 방향으로 지시를 수정해 다시 시도해 주세요.`
+          : lastErrorType === 'server'
+            ? `서버에 일시적인 문제가 발생해 생성을 완료하지 못했습니다.<br>잠시 후 다시 시도해 주세요.`
+            : `일시적인 문제로 ${DOC_CONFIG.name} 문서 생성이 중단되었습니다.<br>다시 시도하거나 다른 지시로 재생성해 주세요.`;
+      const adminHint = lastSuggestAdmin
+        ? `<div class="placeholder-state-admin">3회 연속 실패했습니다. 관리자 개입이 필요합니다.</div>`
+        : '';
+      const useAdminCta = lastErrorType === 'quota' || lastSuggestAdmin;
+      const cta = useAdminCta
+        ? `<button class="btn btn-primary btn-cta-large" id="btn-contact-admin">관리자에게 문의</button>`
+        : `<button class="btn btn-primary btn-cta-large" id="btn-generate-hero">AI 재시도</button>`;
+      return `
+    <div class="placeholder-state">
+      <div class="placeholder-state-title">AI 생성에 실패했습니다 (${typeLabel})</div>
+      <div class="placeholder-state-desc">${desc}</div>
+      ${adminHint}
+      ${cta}
+    </div>
+  `;
+    }
+    // B′ 재생성 실패 배너 — Rev 이미 발행된 상태에서 재생성 시도 실패 시 중앙 상단에 삽입.
+    function bPrimeBannerHTML() {
+      const typeLabel = lastErrorType === 'quota' ? '할당량 초과'
+        : lastErrorType === 'policy' ? '정책 위반'
+          : lastErrorType === 'server' ? '서버 오류'
+            : '일시적 오류';
+      const desc = lastErrorType === 'quota'
+        ? `이번 달 AI 생성 할당량을 모두 소진했습니다. 이전에 발행된 Rev ${revLetter} 내용을 그대로 보여드립니다.`
+        : lastErrorType === 'policy'
+          ? `입력하신 프롬프트가 AI 정책에 맞지 않습니다. 이전에 발행된 Rev ${revLetter} 내용을 그대로 보여드립니다.`
+          : lastErrorType === 'server'
+            ? `서버에 일시적인 문제가 발생해 재생성을 완료하지 못했습니다. 이전에 발행된 Rev ${revLetter} 내용을 그대로 보여드립니다.`
+            : `일시적인 문제로 재생성이 중단되었습니다. 이전에 발행된 Rev ${revLetter} 내용을 그대로 보여드립니다.`;
+      const hint = lastSuggestAdmin ? `3회 연속 실패했습니다. 관리자 개입이 필요합니다.` : '';
+      const useAdminCta = lastErrorType === 'quota' || lastSuggestAdmin;
+      const actionBtn = useAdminCta
+        ? `<button class="btn btn-primary" id="btn-contact-admin">관리자에게 문의</button>`
+        : `<button class="btn btn-secondary" id="btn-generate-hero">AI 재시도</button>`;
+      return `
+    <div class="b-prime-banner" role="alert">
+      <div class="b-prime-banner-body">
+        <div class="b-prime-banner-title">AI 생성에 실패했습니다 (${typeLabel})</div>
+        <div class="b-prime-banner-desc">${desc}</div>
+        ${hint ? `<div class="b-prime-banner-hint">${hint}</div>` : ''}
+      </div>
+      <div class="b-prime-banner-action">${actionBtn}</div>
+    </div>
+  `;
+    }
+    // blocked 뷰 — 선행 작업 미완. 서버는 선행 발행 시 자동으로 후행 생성을 트리거하므로
+    // "사용자가 할 행동 없음"이 올바른 상태. 대기 중인 선행 문서만 시각 뱃지로 전달.
+    function blockedViewHTML() {
+      const chain = resolveBlockedChain();
+      const blocker = chain.find(p => p.currentStatus !== 'done') || chain[0];
+      // 선행이 1개뿐이면 본문 메시지와 중복되므로 뱃지 생략. MPS처럼 2개 이상일 때만 체인 시각화.
+      const badgesHTML = chain.length >= 2 ? `
+      <div class="predecessor-badges">
+        ${chain.map(p => `
+          <span class="predecessor-badge ${p.currentStatus === 'done' ? 'is-done' : ''}">
+            ${p.displayName} · ${predecessorStatusLabel(p)}
+          </span>
+        `).join('')}
+      </div>` : '';
+      return `
+    <div class="placeholder-state">
+      <i data-lucide="hourglass" class="blocked-hourglass"></i>
+      <div class="placeholder-state-title">선행 작업 완료 후 자동 생성됩니다</div>
+      <div class="placeholder-state-desc">${blocker.displayName} ${blocker.requiredVerb}이 완료되면 ${DOC_CONFIG.name} 문서가 자동으로 생성됩니다.</div>
+      ${badgesHTML}
+    </div>
+  `;
+    }
+    function predecessorStatusLabel(p) {
+      if (p.currentStatus === 'done') return p.requiredVerb + ' 완료';
+      if (p.currentStatus === 'in-progress') return p.requiredVerb + ' 중';
+      return '대기';
+    }
+    function resolveBlockedChain() {
+      // MPS는 blockedBy=dc 시 ITB는 완료·DC만 대기 시나리오를 표현 (QA/시연).
+      const href = location.href;
+      const m = href.match(/[?&]blockedBy=([a-z]+)/i);
+      const by = m && m[1].toLowerCase();
+      return DOC_CONFIG.predecessors.map(p => {
+        const q = { ...p };
+        if (by === 'dc') {
+          if (p.type === 'ITB') q.currentStatus = 'done';
+          if (p.type === 'DC') q.currentStatus = 'waiting';
+        }
+        return q;
+      });
+    }
+
+    function fmtIssuedDate(d) {
+      return `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(2, '0')}`;
+    }
+    function fmtIssuedDateTime(d) {
+      const hh = String(d.getHours()).padStart(2, '0');
+      const mm = String(d.getMinutes()).padStart(2, '0');
+      return `${fmtIssuedDate(d)} ${hh}:${mm}`;
+    }
+    function nextRevLetter(cur) {
+      if (!cur) return 'A';
+      if (cur >= 'Z') return 'Z';
+      return String.fromCharCode(cur.charCodeAt(0) + 1);
+    }
+    function setStatus(state, text, opts) {
+      const withSpinner = opts && opts.spinner;
+      genStatus.className = 'save-status ' + state + (withSpinner ? ' has-spinner' : '');
+      genStatus.hidden = false;
+      genStatusText.textContent = text;
+    }
+    function hideStatus() { genStatus.hidden = true; }
+    function disable(btn) { btn.classList.add('is-disabled'); }
+    function enable(btn) { btn.classList.remove('is-disabled'); }
+
+    let docState = resolveInitialState();
+    let revLetter = null;
+    let issuedAt = null;
+    let failedAt = null;
+    let lastErrorType = null;
+    let lastSuggestAdmin = false;
+    let hasContent = false;
+    let genTimer = null;
+    let completedSnapshot = null;
+    let revHistory = [];
+    let lastGenerationPrompt = '';
+
+    function resolveInitialState() {
+      const href = location.href;
+      const m = href.match(/[?&]state=([a-z-]+)/i);
+      const override = m && m[1].toLowerCase();
+      const valid = ['template', 'generating', 'ai-failed', 'review', 'issued', 'blocked'];
+      if (valid.includes(override)) return override;
+      return 'generating';
+    }
+
+    if (Array.isArray(window.__spaOnUnload)) {
+      window.__spaOnUnload.push(() => { if (genTimer) { clearTimeout(genTimer); genTimer = null; } });
+    }
+
+    // Zone A — 모든 선행 문서 anchor chip 나열. MPS는 ITB+DC 2개 병렬.
+    // chain[i].currentStatus에 따라 chip 스타일 분기: done=success tint / done 아님=blocked gray
+    // 일반(non-blocked) 상태에서는 모든 선행이 완료된 것으로 간주하고 Rev+날짜만 표기
+    function renderAnchors() {
+      const chain = (docState === 'blocked')
+        ? resolveBlockedChain()
+        : DOC_CONFIG.predecessors.map(p => ({ ...p, currentStatus: 'done' }));
+      anchorGroup.innerHTML = chain.map(p => {
+        const cls = p.currentStatus === 'done' ? '' : ' is-blocked';
+        const label = p.currentStatus === 'done'
+          ? `${p.displayName} Rev ${p.revLetter} · ${p.issuedDate}`
+          : `${p.displayName} ${p.requiredVerb} 대기`;
+        return `<span class="legend-anchor${cls}"><i data-lucide="link-2" class="icon"></i><span class="anchor-text">${label}</span></span>`;
+      }).join('');
+      if (window.lucide) lucide.createIcons();
+    }
+
+    // Zone B — Rev pill
+    function renderRevPill() {
+      if (revLetter) {
+        const datePart = issuedAt ? `<span class="sep">·</span>${fmtIssuedDate(issuedAt)}` : '';
+        revText.innerHTML = `Rev ${revLetter}${datePart}`;
+        revPill.hidden = false;
+      } else {
+        revPill.hidden = true;
+      }
+    }
+
+    const PLACEHOLDER_CLASSES = ['template-mode', 'generating-mode', 'failed-mode', 'blocked-mode'];
+
+    function setStageView(viewClass, html) {
+      PLACEHOLDER_CLASSES.forEach(c => { if (c !== viewClass) pdfStage.classList.remove(c); });
+      if (viewClass) pdfStage.classList.add(viewClass);
+      else PLACEHOLDER_CLASSES.forEach(c => pdfStage.classList.remove(c));
+      pdfStage.innerHTML = html;
+      const hero = document.getElementById('btn-generate-hero');
+      if (hero) hero.addEventListener('click', startGeneration);
+      const contactAdmin = document.getElementById('btn-contact-admin');
+      if (contactAdmin) contactAdmin.addEventListener('click', () => {
+        if (typeof window.__showToast === 'function') window.__showToast('관리자에게 문의 요청을 전송했습니다. (mock)');
+      });
+      if (pdfStage.querySelector('[data-lucide]')) lucide.createIcons();
+    }
+
+    function renderContent() {
+      if (docState === 'blocked') {
+        setStageView('blocked-mode', blockedViewHTML());
+        return;
+      }
+      if (docState === 'template') {
+        setStageView('template-mode', templateViewHTML());
+        return;
+      }
+      if (docState === 'generating' && !hasContent) {
+        setStageView('generating-mode', generatingViewHTML());
+        return;
+      }
+      if (docState === 'ai-failed' && !hasContent) {
+        setStageView('failed-mode', failedViewHTML());
+        return;
+      }
+
+      if (!hasContent || PLACEHOLDER_CLASSES.some(c => pdfStage.classList.contains(c))) {
+        setStageView(null, FULL_CONTENT_HTML);
+        hasContent = true;
+      }
+      const docSub = pdfStage.querySelector('.pdf-doc-sub');
+      if (docSub) {
+        const base = docSub.textContent.replace(/\s*·\s*Rev\s*[A-Z]\s*$/, '');
+        docSub.textContent = revLetter ? `${base} · Rev ${revLetter}` : base;
+      }
+
+      // B′ 재생성 실패 배너: 이전 Rev 콘텐츠 위에 삽입. 상태 복귀 시 자동 제거.
+      const existingBanner = pdfStage.querySelector('.b-prime-banner');
+      if (docState === 'ai-failed' && hasContent) {
+        if (!existingBanner) {
+          pdfStage.insertAdjacentHTML('afterbegin', bPrimeBannerHTML());
+          const hero = document.getElementById('btn-generate-hero');
+          if (hero) hero.addEventListener('click', startGeneration);
+          const contactAdmin = document.getElementById('btn-contact-admin');
+          if (contactAdmin) contactAdmin.addEventListener('click', () => {
+            if (typeof window.__showToast === 'function') window.__showToast('관리자에게 문의 요청을 전송했습니다. (mock)');
+          });
+          if (pdfStage.querySelector('[data-lucide]')) lucide.createIcons();
+        }
+      } else if (existingBanner) {
+        existingBanner.remove();
+      }
+    }
+
+    function applyState() {
+      renderContent();
+      renderAnchors();
+      renderRevPill();
+      const nextLetter = nextRevLetter(revLetter);
+
+      switch (docState) {
+        case 'template':
+          disable(btnDownload); disable(btnConfirm);
+          enable(btnGenerate); generateLabel.textContent = 'AI 생성';
+          confirmLabel.textContent = 'Rev 발행';
+          setStatus('idle', '시작 전');
+          break;
+        case 'generating':
+          disable(btnDownload); disable(btnConfirm); disable(btnGenerate);
+          generateLabel.textContent = '생성 중…';
+          confirmLabel.textContent = hasContent && revLetter === null ? 'Rev A 발행' : (revLetter ? `Rev ${nextLetter} 발행` : 'Rev 발행');
+          if (hasContent) {
+            setStatus('saving', 'AI 생성 중…', { spinner: true });
+          } else {
+            hideStatus();
+          }
+          break;
+        case 'ai-failed': {
+          disable(btnDownload); disable(btnConfirm);
+          if (lastErrorType === 'quota' || lastSuggestAdmin) disable(btnGenerate);
+          else enable(btnGenerate);
+          generateLabel.textContent = 'AI 재시도';
+          confirmLabel.textContent = revLetter ? `Rev ${nextLetter} 발행` : 'Rev 발행';
+          const typeLabel = lastErrorType === 'quota' ? '할당량 초과'
+            : lastErrorType === 'policy' ? '정책 위반'
+              : lastErrorType === 'server' ? '서버 오류'
+                : '';
+          const adminSuffix = lastSuggestAdmin ? ' · 3회 연속 실패 — 관리자에게 문의하세요' : '';
+          // Rev 정보는 Zone B Rev pill이 담당하므로 save-status에선 중복 생략.
+          // B(첫 실패, hasContent=false)와 B′(재생성 실패, hasContent=true)를 같은 포맷으로 통일.
+          setStatus('error', `AI 생성 실패${typeLabel ? ` · ${typeLabel}` : ''}${failedAt ? ' · ' + fmtIssuedDateTime(failedAt) : ''}${adminSuffix}`);
+          if (hasContent && revLetter) enable(btnDownload);
+          break;
+        }
+        case 'review':
+          enable(btnDownload); enable(btnGenerate); enable(btnConfirm);
+          generateLabel.textContent = '슬롯 편집 후 재생성';
+          confirmLabel.textContent = `Rev ${nextLetter} 발행`;
+          setStatus('review', '담당자 검토 대기');
+          break;
+        case 'issued':
+          enable(btnDownload); enable(btnGenerate);
+          disable(btnConfirm); confirmLabel.textContent = '발행됨';
+          generateLabel.textContent = '슬롯 편집 후 재생성';
+          hideStatus();
+          break;
+        case 'dirty':
+          // dirty는 상태 머신에 남아있되 진입 경로는 없음 (편집 기능 확정 후 연결 예정).
+          enable(btnDownload); enable(btnGenerate); enable(btnConfirm);
+          generateLabel.textContent = '슬롯 편집 후 재생성';
+          confirmLabel.textContent = `Rev ${nextLetter} 발행`;
+          setStatus('dirty', `Rev ${revLetter} 발행 후 편집됨`);
+          break;
+        case 'blocked':
+          disable(btnDownload); disable(btnGenerate); disable(btnConfirm);
+          generateLabel.textContent = 'AI 생성';
+          confirmLabel.textContent = 'Rev 발행';
+          setStatus('idle', '선행 작업 대기');
+          break;
+      }
+    }
+
+
+    function startGeneration() {
+      if (docState === 'generating') return;
+      if (typeof window.__openPromptModal === 'function') {
+        if (docState === 'ai-failed' && lastErrorType === 'policy') {
+          window.__openPromptModal({ mode: 'policy-retry', initialPrompt: lastGenerationPrompt || '' });
+        } else if (docState === 'ai-failed' && lastGenerationPrompt) {
+          window.__openPromptModal({ initialPrompt: lastGenerationPrompt });
+        } else {
+          window.__openPromptModal();
+        }
+      } else {
+        runGeneration('');
+      }
+    }
+
+    function mockGenerationResponse() {
+      const m = location.href.match(/[?&]failReason=(quota|policy|server)/);
+      const legacyFail = /[?&]failOnRetry=1/.test(location.href);
+      const forcedReason = m ? m[1] : (legacyFail ? 'policy' : null);
+      if (!hasContent || !forcedReason) {
+        sessionStorage.removeItem(`retryCount_${DOC_CONFIG.name}`);
+        return { success: true };
+      }
+      const key = `retryCount_${DOC_CONFIG.name}`;
+      const count = (parseInt(sessionStorage.getItem(key), 10) || 0) + 1;
+      sessionStorage.setItem(key, String(count));
+      return { success: false, errorType: forcedReason, suggestAdmin: count >= 3 };
+    }
+
+    function runGeneration(prompt) {
+      if (docState === 'generating') return;
+      docState = 'generating';
+      applyState();
+      genTimer = setTimeout(() => {
+        genTimer = null;
+        const res = mockGenerationResponse();
+        if (res.success) {
+          docState = 'review';
+          if (prompt) lastGenerationPrompt = prompt;
+        } else {
+          failedAt = new Date();
+          lastErrorType = res.errorType;
+          lastSuggestAdmin = !!res.suggestAdmin;
+          docState = 'ai-failed';
+        }
+        applyState();
+      }, 3000);
+    }
+
+    window.__runGeneration = runGeneration;
+
+    btnGenerate.addEventListener('click', () => {
+      if (btnGenerate.classList.contains('is-disabled')) return;
+      startGeneration();
+    });
+
+    btnConfirm.addEventListener('click', async () => {
+      if (btnConfirm.classList.contains('is-disabled')) return;
+      const proposedLetter = nextRevLetter(revLetter);
+      const ok = typeof window.__openConfirmModal === 'function'
+        ? await window.__openConfirmModal({
+          title: 'Rev 발행 확인',
+          message: `현재 ${DOC_CONFIG.name} 문서를 Rev ${proposedLetter}로 발행하시겠습니까?\n발행 후 새로운 AI 생성 지시가 있기 전까지는 동일 Rev로 재발행할 수 없습니다.`,
+          confirmLabel: `Rev ${proposedLetter} 발행`,
+          cancelLabel: '취소',
+        })
+        : confirm(`현재 ${DOC_CONFIG.name} 문서를 Rev ${proposedLetter}로 발행하시겠습니까?`);
+      if (ok) {
+        revLetter = proposedLetter;
+        issuedAt = new Date();
+        completedSnapshot = {};
+        revHistory.push({ letter: proposedLetter, issuedAt: new Date(issuedAt), prompt: lastGenerationPrompt || '' });
+        docState = 'issued';
+        applyState();
+      }
+    });
+
+    (function bootstrap() {
+      if (docState === 'review' || docState === 'issued') {
+        hasContent = true;
+        if (docState === 'issued') {
+          revLetter = revLetter || 'A';
+          issuedAt = issuedAt || new Date(Date.now() - 10 * 60 * 1000);
+          const mockPrompt = 'ARAMCO 표준을 엄격히 따르고 지연배상금 조항을 보수적으로 작성해 주세요.';
+          revHistory.push({ letter: revLetter, issuedAt: new Date(issuedAt), prompt: mockPrompt });
+          lastGenerationPrompt = mockPrompt;
+          // B′ 즉시 재현: ?state=issued&failReason=<X>로 진입하면 "Rev A 발행된 상태에서 재생성 실패" 시나리오
+          // (Dashboard Row 11 MEC가 이 URL로 링크됨)
+          const m = location.href.match(/[?&]failReason=(quota|policy|server)/);
+          if (m) {
+            lastErrorType = m[1];
+            if (/[?&]suggestAdmin=1/.test(location.href)) lastSuggestAdmin = true;
+            failedAt = new Date(Date.now() - 3 * 60 * 1000);
+            docState = 'ai-failed';  // hasContent=true + revLetter='A' 유지 → renderContent가 B′ 배너 삽입
+          }
+        }
+      } else if (docState === 'ai-failed') {
+        failedAt = new Date(Date.now() - 8 * 60 * 1000);
+        const m = location.href.match(/[?&]failReason=(quota|policy|server)/);
+        if (m) lastErrorType = m[1];
+        if (/[?&]suggestAdmin=1/.test(location.href)) lastSuggestAdmin = true;
+      } else if (docState === 'generating') {
+        genTimer = setTimeout(() => {
+          genTimer = null;
+          docState = 'review';
+          applyState();
+        }, 3000);
+      }
+    })();
+
+    applyState();
+
+    btnDownload.addEventListener('click', () => {
+      if (btnDownload.classList.contains('is-disabled')) return;
+      const filename = revLetter ? `${DOC_CONFIG.filePrefix}_Rev${revLetter}.pdf` : `${DOC_CONFIG.filePrefix}.pdf`;
+      if (typeof window.__showToast === 'function') window.__showToast(`${filename} 다운로드를 시작합니다.`);
+    });
+    // Rev pill은 읽기 전용 뱃지. 과거 Rev 조회는 Rev 이력 서브탭에서 제공.
+
+  </script>
+
+  <div class="modal-backdrop" id="prompt-modal" hidden role="dialog" aria-modal="true"
+    aria-labelledby="prompt-modal-title">
+    <div class="modal-panel">
+      <div class="modal-header">
+        <h2 class="modal-title" id="prompt-modal-title">AI 생성 지시</h2>
+        <button class="modal-close" id="prompt-modal-close" aria-label="닫기"><i data-lucide="x"></i></button>
+      </div>
+      <div class="modal-body">
+        <label class="modal-label" id="prompt-modal-label" for="prompt-input">어떤 방향으로 문서를 생성할지 지시해 주세요.</label>
+        <textarea id="prompt-input" class="modal-textarea" rows="6"
+          placeholder="예: ARAMCO 표준을 엄격히 따르고, 지연배상금 조항은 업계 평균 대비 보수적으로 작성해 주세요."></textarea>
+        <div class="modal-hint" id="prompt-modal-hint">생성된 문서는 검토 대기 상태가 되며, 이후 <b>Rev 발행</b>으로 확정할 수 있습니다.</div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="prompt-modal-cancel">취소</button>
+        <button class="btn btn-primary is-disabled" id="prompt-modal-submit">생성 시작</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      let lastPrompt = '';
+      let currentMode = 'default';
+      let initialPrompt = '';
+      const modal = document.getElementById('prompt-modal');
+      const modalInput = document.getElementById('prompt-input');
+      const modalSubmit = document.getElementById('prompt-modal-submit');
+      const modalCancel = document.getElementById('prompt-modal-cancel');
+      const modalClose = document.getElementById('prompt-modal-close');
+      const modalLabel = document.getElementById('prompt-modal-label');
+      const modalHint = document.getElementById('prompt-modal-hint');
+
+      const DEFAULT_LABEL = '어떤 방향으로 문서를 생성할지 지시해 주세요.';
+      const DEFAULT_HINT = '생성된 문서는 검토 대기 상태가 되며, 이후 <b>Rev 발행</b>으로 확정할 수 있습니다.';
+      const POLICY_LABEL = '이전 프롬프트가 정책에 맞지 않습니다. 내용을 수정한 뒤 다시 시도해 주세요.';
+      const POLICY_HINT = '프롬프트를 이전과 다르게 수정해야 재시도할 수 있습니다.';
+
+      function updateSubmitState() {
+        const val = modalInput.value.trim();
+        const empty = val.length === 0;
+        const unchanged = currentMode === 'policy-retry' && val === initialPrompt.trim();
+        modalSubmit.classList.toggle('is-disabled', empty || unchanged);
+      }
+      function openPromptModal(opts) {
+        const options = opts || {};
+        currentMode = options.mode === 'policy-retry' ? 'policy-retry' : 'default';
+        if (currentMode === 'policy-retry') {
+          initialPrompt = options.initialPrompt || '';
+          modalInput.value = initialPrompt;
+          modalLabel.textContent = POLICY_LABEL;
+          modalHint.innerHTML = POLICY_HINT;
+        } else {
+          initialPrompt = '';
+          modalInput.value = options.initialPrompt || lastPrompt;
+          modalLabel.textContent = DEFAULT_LABEL;
+          modalHint.innerHTML = DEFAULT_HINT;
+        }
+        updateSubmitState();
+        modal.hidden = false;
+        setTimeout(() => modalInput.focus(), 0);
+      }
+      function closePromptModal() { modal.hidden = true; }
+      function onKeydown(e) {
+        if (!modal.hidden && e.key === 'Escape') closePromptModal();
+      }
+
+      modalInput.addEventListener('input', updateSubmitState);
+      modalCancel.addEventListener('click', closePromptModal);
+      modalClose.addEventListener('click', closePromptModal);
+      modal.addEventListener('click', (e) => { if (e.target === modal) closePromptModal(); });
+      document.addEventListener('keydown', onKeydown);
+
+      modalSubmit.addEventListener('click', () => {
+        if (modalSubmit.classList.contains('is-disabled')) return;
+        lastPrompt = modalInput.value.trim();
+        closePromptModal();
+        if (typeof window.__runGeneration === 'function') window.__runGeneration(lastPrompt);
+      });
+
+      window.__openPromptModal = openPromptModal;
+
+      if (Array.isArray(window.__spaOnUnload)) {
+        window.__spaOnUnload.push(() => {
+          document.removeEventListener('keydown', onKeydown);
+          if (!modal.hidden) modal.hidden = true;
+          delete window.__openPromptModal;
+          delete window.__runGeneration;
+        });
+      }
+      lucide.createIcons();
+    })();
+  </script>
+
+  <div class="modal-backdrop" id="confirm-modal" hidden role="dialog" aria-modal="true"
+    aria-labelledby="confirm-modal-title">
+    <div class="modal-panel">
+      <div class="modal-header">
+        <h2 class="modal-title" id="confirm-modal-title">확인</h2>
+        <button class="modal-close" id="confirm-modal-close" aria-label="닫기"><i data-lucide="x"></i></button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-message" id="confirm-modal-message"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="confirm-modal-cancel">취소</button>
+        <button class="btn btn-primary" id="confirm-modal-submit">확인</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const modal = document.getElementById('confirm-modal');
+      const titleEl = document.getElementById('confirm-modal-title');
+      const messageEl = document.getElementById('confirm-modal-message');
+      const submitBtn = document.getElementById('confirm-modal-submit');
+      const cancelBtn = document.getElementById('confirm-modal-cancel');
+      const closeBtn = document.getElementById('confirm-modal-close');
+
+      let resolveFn = null;
+
+      function openConfirm({ title = '확인', message = '', confirmLabel = '확인', cancelLabel = '취소' } = {}) {
+        return new Promise((resolve) => {
+          titleEl.textContent = title;
+          messageEl.textContent = message;
+          submitBtn.textContent = confirmLabel;
+          cancelBtn.textContent = cancelLabel;
+          resolveFn = resolve;
+          modal.hidden = false;
+          setTimeout(() => submitBtn.focus(), 0);
+        });
+      }
+      function close(result) {
+        modal.hidden = true;
+        if (resolveFn) { resolveFn(result); resolveFn = null; }
+      }
+      function onKeydown(e) {
+        if (modal.hidden) return;
+        if (e.key === 'Escape') close(false);
+        if (e.key === 'Enter' && document.activeElement === submitBtn) close(true);
+      }
+
+      submitBtn.addEventListener('click', () => close(true));
+      cancelBtn.addEventListener('click', () => close(false));
+      closeBtn.addEventListener('click', () => close(false));
+      modal.addEventListener('click', (e) => { if (e.target === modal) close(false); });
+      document.addEventListener('keydown', onKeydown);
+
+      window.__openConfirmModal = openConfirm;
+
+      if (Array.isArray(window.__spaOnUnload)) {
+        window.__spaOnUnload.push(() => {
+          document.removeEventListener('keydown', onKeydown);
+          if (!modal.hidden) close(false);
+          delete window.__openConfirmModal;
+        });
+      }
+      lucide.createIcons();
+    })();
+  </script>
+
+  <div class="toast-container" id="toast-container" aria-live="polite"></div>
+  <script>
+    (function () {
+      const container = document.getElementById('toast-container');
+      function showToast(message, durationMs = 2800) {
+        const t = document.createElement('div');
+        t.className = 'toast';
+        t.textContent = message;
+        container.appendChild(t);
+        requestAnimationFrame(() => t.classList.add('visible'));
+        setTimeout(() => { t.classList.remove('visible'); setTimeout(() => t.remove(), 220); }, durationMs);
+      }
+      window.__showToast = showToast;
+      if (Array.isArray(window.__spaOnUnload)) {
+        window.__spaOnUnload.push(() => { container.innerHTML = ''; delete window.__showToast; });
+      }
+    })();
+  </script>
+
+  <div class="drawer-backdrop" id="history-drawer" hidden role="dialog" aria-modal="true"
+    aria-labelledby="history-drawer-title">
+    <aside class="drawer-panel">
+      <div class="drawer-header">
+        <h2 class="drawer-title" id="history-drawer-title">Rev 이력</h2>
+        <button class="modal-close" id="history-drawer-close" aria-label="닫기"><i data-lucide="x"></i></button>
+      </div>
+      <div class="drawer-body">
+        <ul class="rev-list" id="rev-list"></ul>
+      </div>
+    </aside>
+  </div>
+  <script>
+    (function () {
+      const drawer = document.getElementById('history-drawer');
+      const closeBtn = document.getElementById('history-drawer-close');
+      const listEl = document.getElementById('rev-list');
+      function fmt(d) {
+        return `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(2, '0')} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+      }
+      function escapeHtml(s) {
+        return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+      }
+      function render(revs) {
+        if (!revs || revs.length === 0) {
+          listEl.innerHTML = '<div class="rev-list-empty">아직 발행 이력이 없습니다.</div>';
+          return;
+        }
+        listEl.innerHTML = revs.slice().reverse().map((r, idx, arr) => {
+          const prevLetter = arr[idx + 1] ? arr[idx + 1].letter : null;
+          const compare = prevLetter ? `<a class="rev-compare" data-from="${prevLetter}" data-to="${r.letter}">Rev ${prevLetter} ↔ Rev ${r.letter} 비교</a>` : '';
+          const prompt = r.prompt ? `<div class="rev-prompt">${escapeHtml(r.prompt)}</div>` : '';
+          return `<li><span class="rev-label">Rev ${r.letter}</span><span class="rev-date">${fmt(r.issuedAt)}</span>${prompt}${compare}</li>`;
+        }).join('');
+      }
+      function open(revs) { render(revs); drawer.hidden = false; }
+      function close() { drawer.hidden = true; }
+      function onKeydown(e) { if (!drawer.hidden && e.key === 'Escape') close(); }
+      closeBtn.addEventListener('click', close);
+      drawer.addEventListener('click', (e) => { if (e.target === drawer) close(); });
+      document.addEventListener('keydown', onKeydown);
+      listEl.addEventListener('click', (e) => {
+        const link = e.target.closest('.rev-compare');
+        if (!link) return;
+        location.hash = `#/compare?from=Rev${link.dataset.from}&to=Rev${link.dataset.to}`;
+        close();
+      });
+      window.__openHistoryDrawer = open;
+      if (Array.isArray(window.__spaOnUnload)) {
+        window.__spaOnUnload.push(() => {
+          document.removeEventListener('keydown', onKeydown);
+          if (!drawer.hidden) close();
+          delete window.__openHistoryDrawer;
+        });
+      }
+      lucide.createIcons();
+    })();
+  </script>
+
+<script>
+  // Role 기반 탭 가시성 — 모든 페이지 공통
+  (function () {
+    var role = localStorage.getItem('userRole') || 'member';
+    document.querySelectorAll('.hdr-tab[href*="templates"]').forEach(function (el) {
+      el.style.display = (role === 'admin') ? '' : 'none';
+    });
+    document.querySelectorAll('.hdr-tab[href*="/bot"]').forEach(function (el) {
+      el.style.display = (role === 'admin') ? 'none' : '';
+    });
+  })();
+</script>
+</body>
+
+</html>

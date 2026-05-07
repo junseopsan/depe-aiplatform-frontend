@@ -1,0 +1,1104 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EPC PE AI Platform</title>
+  <link rel="icon" type="image/png" href="reference/logo.png">
+  <link
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+    rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --primary-900: #081E3A;
+      --primary-800: #0F2E57;
+      --primary-700: #173F73;
+      --primary-600: #1F4E91;
+      --primary-500: #275DB2;
+      --primary-400: #4A7BC7;
+      --primary-300: #7FA2D9;
+      --primary-200: #B2C7E8;
+      --primary-100: #D4DFEE;
+      --primary-50: #EEF2F9;
+      --gray-900: #0D1117;
+      --gray-800: #1C2230;
+      --gray-700: #2E3A4E;
+      --gray-600: #4A5568;
+      --gray-500: #6B7A8F;
+      --gray-400: #94A3B8;
+      --gray-300: #CBD5E1;
+      --gray-200: #E2E8F0;
+      --gray-100: #F1F5F9;
+      --gray-50: #F8FAFC;
+      --success: #3A8C6E;
+      --warning: #B07D3A;
+      --error: #A04545;
+      --info: #3A6A96;
+      --accent-gold: #D4A017;
+    }
+
+    html,
+    body {
+      font-family: 'IBM Plex Sans KR', sans-serif;
+      color: var(--gray-700);
+      background: var(--gray-100);
+      font-size: 14px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      min-width: 1100px;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button {
+      font-family: inherit;
+      cursor: pointer;
+      border: none;
+      background: none;
+    }
+
+    input,
+    textarea,
+    select {
+      font-family: inherit;
+    }
+
+    .mono {
+      font-family: 'IBM Plex Mono', monospace;
+    }
+
+    /* Top band */
+    .top-band {
+      height: 2px;
+      background: var(--primary-500);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    /* Header (공통) */
+    .app-header {
+      width: 100%;
+      min-width: 100%;
+      height: 52px;
+      background: #fff;
+      border-bottom: 1px solid var(--gray-200);
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      padding: 0 24px;
+      position: sticky;
+      top: 2px;
+      z-index: 99;
+    }
+
+    .hdr-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .hdr-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .hdr-logo img {
+      height: 28px;
+      width: auto;
+      display: block;
+    }
+
+    .hdr-sysname {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--gray-800);
+      letter-spacing: -0.01em;
+    }
+
+    .hdr-tabs {
+      display: flex;
+      gap: 4px;
+    }
+
+    .hdr-tab {
+      height: 52px;
+      display: inline-flex;
+      align-items: center;
+      padding: 0 18px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--gray-500);
+      border-bottom: 2px solid transparent;
+      transition: color .15s, border-color .15s;
+    }
+
+    .hdr-tab:hover {
+      color: var(--gray-700);
+    }
+
+    .hdr-tab.active {
+      color: var(--primary-500);
+      font-weight: 600;
+      border-bottom-color: var(--primary-500);
+    }
+
+    .hdr-right {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    .notif-bell {
+      width: 32px;
+      height: 32px;
+      border-radius: 4px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: #fff;
+      color: var(--gray-700);
+      border: 1px solid transparent;
+      position: relative;
+      transition: background .15s, border-color .15s;
+    }
+
+    .notif-bell:hover {
+      background: var(--gray-50);
+      border-color: var(--gray-200);
+    }
+
+    .notif-bell svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .notif-bell .badge {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      min-width: 18px;
+      height: 18px;
+      padding: 0 5px;
+      border-radius: 999px;
+      background: var(--primary-500);
+      color: #fff;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid #fff;
+      line-height: 1;
+    }
+
+    /* Dev role toggle (시연용) — 작은 세그먼트 */
+    .role-toggle {
+      display: inline-flex;
+      height: 28px;
+      border: 1px solid var(--gray-300);
+      border-radius: 4px;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .role-toggle button {
+      padding: 0 10px;
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--gray-500);
+      background: #fff;
+      transition: background .15s, color .15s;
+    }
+
+    .role-toggle button.is-active {
+      background: var(--primary-50);
+      color: var(--primary-700);
+      font-weight: 600;
+    }
+
+    /* Buttons */
+    .btn {
+      height: 36px;
+      padding: 0 14px;
+      border-radius: 4px;
+      font-size: 13px;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background .15s, border-color .15s, color .15s;
+      border: 1px solid transparent;
+      white-space: nowrap;
+    }
+
+    .btn i,
+    .btn svg {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+    }
+
+    .btn.btn-primary {
+      background: var(--primary-500);
+      color: #fff;
+    }
+
+    .btn.btn-primary:hover {
+      background: var(--primary-600);
+    }
+
+    .btn.btn-secondary {
+      background: #fff;
+      border-color: var(--gray-300);
+      color: var(--gray-700);
+    }
+
+    .btn.btn-secondary:hover {
+      background: var(--gray-50);
+    }
+
+    .btn:disabled,
+    .btn.is-disabled {
+      opacity: 0.4;
+      pointer-events: none;
+    }
+
+    /* Page content */
+    .page-wrap {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 32px;
+    }
+
+    .page-header h1 {
+      font-size: 28px;
+      font-weight: 600;
+      color: var(--gray-800);
+      line-height: 1.25;
+      margin-bottom: 4px;
+    }
+
+    .page-header .page-subtitle {
+      font-size: 13px;
+      color: var(--gray-500);
+      margin-bottom: 24px;
+    }
+
+
+    /* Template 목록 (table) */
+    .tpl-table {
+      width: 100%;
+      background: #fff;
+      border: 1px solid var(--gray-200);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .tpl-table-head {
+      display: grid;
+      grid-template-columns: 220px 1fr 100px 1fr;
+      align-items: center;
+      padding: 12px 20px;
+      background: var(--gray-50);
+      border-bottom: 1px solid var(--gray-200);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--gray-600);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .tpl-row {
+      display: grid;
+      grid-template-columns: 220px 1fr 100px 1fr;
+      align-items: center;
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--gray-100);
+      font-size: 13px;
+      color: var(--gray-700);
+    }
+
+    .tpl-row:last-child {
+      border-bottom: none;
+    }
+
+    .tpl-row:hover {
+      background: var(--gray-50);
+    }
+
+    .tpl-row-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--gray-800);
+    }
+
+    .tpl-row-version {
+      font-family: 'IBM Plex Mono', monospace;
+      font-weight: 600;
+      color: var(--primary-700);
+    }
+
+    .tpl-row-date {
+      font-family: 'IBM Plex Mono', monospace;
+      color: var(--gray-600);
+    }
+
+    .tpl-row-ref {
+      font-family: 'IBM Plex Mono', monospace;
+      color: var(--gray-700);
+    }
+
+    .tpl-row-actions {
+      display: flex;
+      justify-content: flex-start;
+      gap: 6px;
+    }
+
+    .tpl-row-actions .btn-sm {
+      height: 30px;
+      min-width: 72px;
+      padding: 0 12px;
+      font-size: 12px;
+      font-weight: 500;
+      border: 1px solid var(--gray-300);
+      border-radius: 4px;
+      background: #fff;
+      color: var(--gray-700);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      cursor: pointer;
+      transition: background .15s, border-color .15s, color .15s;
+    }
+
+    .tpl-row-actions .btn-sm:hover {
+      background: var(--gray-50);
+    }
+
+    .tpl-row-actions .btn-sm i {
+      width: 14px;
+      height: 14px;
+    }
+
+    .tpl-row-actions .btn-sm.btn-primary {
+      background: var(--primary-500);
+      border-color: var(--primary-500);
+      color: #fff;
+    }
+
+    .tpl-row-actions .btn-sm.btn-primary:hover {
+      background: var(--primary-600);
+      border-color: var(--primary-600);
+    }
+
+    /* ── Modal (공통 스펙 §9.1) ─────────────────── */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(13, 17, 23, 0.45);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .modal-backdrop.is-open {
+      display: flex;
+    }
+
+    .modal-panel {
+      background: #fff;
+      border-radius: 6px;
+      width: 100%;
+      max-width: 520px;
+      max-height: calc(100vh - 48px);
+      box-shadow: 0 20px 40px rgba(13, 17, 23, 0.2);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .modal-header {
+      padding: 18px 22px 14px;
+      border-bottom: 1px solid var(--gray-200);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .modal-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--gray-800);
+      margin: 0;
+    }
+
+    .modal-close {
+      width: 28px;
+      height: 28px;
+      border-radius: 4px;
+      color: var(--gray-500);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: none;
+      border: none;
+      cursor: pointer;
+      transition: background .15s, color .15s;
+    }
+
+    .modal-close:hover {
+      background: var(--gray-100);
+      color: var(--gray-800);
+    }
+
+    .modal-close i,
+    .modal-close svg {
+      width: 24px;
+      height: 24px;
+    }
+
+    .modal-body {
+      padding: 18px 22px;
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    .modal-footer {
+      padding: 14px 22px 18px;
+      border-top: 1px solid var(--gray-100);
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    .modal-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--gray-700);
+      margin-bottom: 6px;
+    }
+
+    .modal-hint {
+      margin-top: 10px;
+      font-size: 12px;
+      color: var(--gray-500);
+      line-height: 1.5;
+    }
+
+    .modal-field+.modal-field {
+      margin-top: 14px;
+    }
+
+    .modal-input,
+    .modal-textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--gray-300);
+      border-radius: 4px;
+      font-family: inherit;
+      font-size: 13px;
+      color: var(--gray-800);
+      outline: none;
+      line-height: 1.55;
+    }
+
+    .modal-textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .modal-input:focus,
+    .modal-textarea:focus {
+      border-color: var(--primary-500);
+    }
+
+    .file-drop {
+      display: block;
+      border: 1.5px dashed var(--gray-300);
+      border-radius: 4px;
+      padding: 20px;
+      text-align: center;
+      color: var(--gray-500);
+      font-size: 13px;
+      cursor: pointer;
+      transition: border-color .15s, background .15s;
+    }
+
+    .file-drop:hover {
+      border-color: var(--primary-500);
+      background: var(--primary-50);
+      color: var(--primary-700);
+    }
+
+    .file-drop.has-file {
+      border-color: var(--primary-500);
+      background: var(--primary-50);
+      color: var(--primary-700);
+      font-weight: 500;
+    }
+
+    .file-drop input[type="file"] {
+      display: none;
+    }
+
+    .modal-option-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--gray-700);
+      margin-top: 12px;
+    }
+
+    .modal-option-row input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--primary-500);
+    }
+
+    /* ── Drawer (버전 이력) ─────────────────── */
+    .drawer-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(13, 17, 23, 0.3);
+      z-index: 900;
+      display: none;
+    }
+
+    .drawer-backdrop.is-open {
+      display: block;
+    }
+
+    .drawer-panel {
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: 420px;
+      background: #fff;
+      box-shadow: -8px 0 24px rgba(13, 17, 23, 0.1);
+      z-index: 901;
+      display: flex;
+      flex-direction: column;
+      transform: translateX(100%);
+      transition: transform .2s ease-out;
+    }
+
+    .drawer-backdrop.is-open+.drawer-panel {
+      transform: translateX(0);
+    }
+
+    .drawer-header {
+      padding: 18px 22px 14px;
+      border-bottom: 1px solid var(--gray-200);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .drawer-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--gray-800);
+    }
+
+    .drawer-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 18px 22px;
+    }
+
+    .version-item {
+      padding: 14px 0;
+      border-bottom: 1px solid var(--gray-100);
+    }
+
+    .version-item:last-child {
+      border-bottom: none;
+    }
+
+    .version-head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 6px;
+    }
+
+    .version-marker {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--gray-300);
+      flex-shrink: 0;
+    }
+
+    .version-marker.is-active {
+      background: var(--primary-500);
+    }
+
+    .version-number {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--gray-800);
+    }
+
+    .version-active-tag {
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: var(--primary-50);
+      color: var(--primary-700);
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .version-date {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      color: var(--gray-500);
+      margin-left: auto;
+    }
+
+    .version-meta {
+      font-size: 13px;
+      color: var(--gray-600);
+      margin-left: 20px;
+      margin-bottom: 8px;
+    }
+
+    .version-changelog {
+      font-size: 13px;
+      color: var(--gray-700);
+      margin-left: 20px;
+      margin-bottom: 8px;
+    }
+
+    .version-actions {
+      display: flex;
+      gap: 6px;
+      margin-left: 20px;
+    }
+
+    .version-actions .btn-sm {
+      height: 28px;
+      padding: 0 10px;
+      font-size: 12px;
+      border-radius: 4px;
+      border: 1px solid var(--gray-300);
+      background: #fff;
+      color: var(--gray-700);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .version-actions .btn-sm:hover {
+      background: var(--gray-50);
+    }
+
+    .version-actions .btn-sm i {
+      width: 12px;
+      height: 12px;
+    }
+
+    /* ── Toast ─────────────────── */
+    .toast-container {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 1100;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .toast {
+      background: var(--gray-800);
+      color: #fff;
+      font-size: 13px;
+      padding: 12px 16px;
+      border-radius: 4px;
+      box-shadow: 0 8px 16px rgba(13, 17, 23, 0.2);
+      max-width: 480px;
+      word-break: keep-all;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      animation: toast-in .2s ease-out;
+    }
+
+    .toast .toast-action {
+      color: var(--primary-300);
+      font-weight: 600;
+      background: none;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+    }
+
+    .toast .toast-action:hover {
+      color: #fff;
+    }
+
+    @keyframes toast-in {
+      from {
+        transform: translateY(10px);
+        opacity: 0;
+      }
+
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="top-band"></div>
+
+  <header class="app-header">
+    <div class="hdr-left">
+      <a href="index.html#/" class="hdr-logo">
+        <img src="reference/logo.png" alt="EPC PE Platform">
+        <span class="hdr-sysname">EPC PE AI-Platform</span>
+      </a>
+    </div>
+    <nav class="hdr-tabs">
+      <a href="index.html#/" class="hdr-tab">Projects</a>
+      <a href="index.html#/templates" class="hdr-tab active">Templates</a>
+      <a href="index.html#/bot" class="hdr-tab">AI Q&amp;A</a>
+    </nav>
+    <div class="hdr-right">
+      <!-- Dev role toggle (시연용) -->
+      <div class="role-toggle" aria-label="권한 전환 (시연용)">
+        <button type="button" data-role="member">Member</button>
+        <button type="button" data-role="admin">Admin</button>
+      </div>
+      <button class="notif-bell" aria-label="Notifications">
+        <i data-lucide="bell"></i>
+        <span class="badge pulse">3</span>
+      </button>
+    </div>
+  </header>
+
+  <main class="page-wrap">
+    <div class="page-header">
+      <h1>Templates</h1>
+      <div class="page-subtitle">프로젝트가 참조하는 표준 템플릿을 관리합니다</div>
+    </div>
+
+    <!-- 목록 -->
+    <div id="tpl-list"></div>
+  </main>
+
+  <!-- Modal: 새 버전 업로드 -->
+  <div class="modal-backdrop" id="modal-upload" aria-hidden="true">
+    <div class="modal-panel" role="dialog" aria-labelledby="modal-upload-title">
+      <div class="modal-header">
+        <div class="modal-title" id="modal-upload-title">새 버전 업로드</div>
+        <button type="button" class="modal-close" data-modal-close><i data-lucide="x"></i></button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-field">
+          <label class="modal-label" for="upload-file"><span id="upload-tpl-name">—</span></label>
+          <label class="file-drop" id="file-drop">
+            <i data-lucide="upload"
+              style="width: 20px; height: 20px; margin-bottom: 6px; display: block; margin-left: auto; margin-right: auto;"></i>
+            <span id="file-drop-text">클릭 또는 드래그하여 DOCX 파일 선택</span>
+            <input type="file" id="upload-file" accept=".docx">
+          </label>
+        </div>
+        <div class="modal-option-row">
+          <input type="checkbox" id="upload-regen" checked>
+          <label for="upload-regen">진행 중인 프로젝트 즉시 재생성</label>
+        </div>
+        <div class="modal-hint">업로드 시 진행 중인 프로젝트의 해당 문서를 자동으로 생성합니다.</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-modal-close>취소</button>
+        <button type="button" class="btn btn-primary is-disabled" id="btn-upload-submit">업로드</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Drawer: 버전 이력 -->
+  <div class="drawer-backdrop" id="drawer-backdrop" aria-hidden="true"></div>
+  <aside class="drawer-panel" id="drawer-history" aria-hidden="true">
+    <div class="drawer-header">
+      <div class="drawer-title" id="drawer-title">버전 이력</div>
+      <button type="button" class="modal-close" data-drawer-close><i data-lucide="x"></i></button>
+    </div>
+    <div class="drawer-body" id="drawer-body"></div>
+  </aside>
+
+  <div class="toast-container" id="toast-container"></div>
+
+  <script>
+    // ═══ Mock 데이터 ═══
+    const TEMPLATES_SEED = [
+      {
+        id: 'irs', name: 'IRS', scope: 'standard',
+        filename: 'IRS_template.docx',
+        activeVersion: 2,
+        versions: [
+          { n: 2, uploadedAt: '2025.08.20', uploadedBy: '관리자', changelog: '질의 항목 카테고리 재정비' },
+          { n: 1, uploadedAt: '2023.12.05', uploadedBy: '관리자', changelog: '초기 버전' },
+        ],
+      },
+      {
+        id: 'dc', name: 'Design Criteria', scope: 'standard',
+        filename: 'DC_template.docx',
+        activeVersion: 4,
+        versions: [
+          { n: 4, uploadedAt: '2026.03.18', uploadedBy: '관리자', changelog: '배관·기계 설계 기준 통합' },
+          { n: 3, uploadedAt: '2025.11.02', uploadedBy: '관리자', changelog: '전기 설계 섹션 확장' },
+          { n: 2, uploadedAt: '2024.09.15', uploadedBy: '관리자', changelog: '목차 구조 표준화' },
+          { n: 1, uploadedAt: '2023.10.20', uploadedBy: '관리자', changelog: '초기 버전' },
+        ],
+      },
+      {
+        id: 'mps', name: 'MPS', scope: 'standard',
+        filename: 'MPS_template.docx',
+        activeVersion: 2,
+        versions: [
+          { n: 2, uploadedAt: '2025.10.11', uploadedBy: '관리자', changelog: '구매 사양 항목 확장' },
+          { n: 1, uploadedAt: '2024.01.28', uploadedBy: '관리자', changelog: '초기 버전' },
+        ],
+      },
+    ];
+
+    const TEMPLATES = JSON.parse(JSON.stringify(TEMPLATES_SEED));
+    let currentRole = localStorage.getItem('userRole') || 'member';
+    let targetTemplateId = null;
+    let pendingFile = null;
+
+    // ═══ List render ═══
+    const listEl = document.getElementById('tpl-list');
+    const roleButtons = document.querySelectorAll('.role-toggle button');
+
+    function renderGrid() {
+      const rows = TEMPLATES.map(t => `
+          <div class="tpl-row">
+            <div class="tpl-row-name">${t.name}</div>
+            <div class="tpl-row-date mono">${t.filename}</div>
+            <div class="tpl-row-version">v${t.activeVersion}</div>
+            <div class="tpl-row-actions">
+              <button type="button" class="btn-sm btn-primary" data-action="upload" data-id="${t.id}">업로드</button>
+              <button type="button" class="btn-sm" data-action="download" data-id="${t.id}">다운로드</button>
+            </div>
+          </div>`).join('');
+      listEl.innerHTML = `
+        <div class="tpl-table">
+          <div class="tpl-table-head">
+            <div>문서 종류</div>
+            <div>파일명</div>
+            <div>버전</div>
+            <div>액션</div>
+          </div>
+          ${rows}
+        </div>`;
+      if (window.lucide) lucide.createIcons();
+    }
+
+    listEl.addEventListener('click', (e) => {
+      const btn = e.target.closest('[data-action]');
+      if (!btn) return;
+      const id = btn.dataset.id;
+      const action = btn.dataset.action;
+      if (action === 'upload') openUploadModal(id);
+      if (action === 'history') openHistoryDrawer(id);
+      if (action === 'download') {
+        const t = TEMPLATES.find(x => x.id === id);
+        if (t) showToast(`${t.name} v${t.activeVersion} 다운로드를 시작합니다. (mock)`);
+      }
+    });
+
+    // ═══ Role toggle (renderGrid 정의 이후에 실행) ═══
+    function applyRole(role) {
+      currentRole = role;
+      localStorage.setItem('userRole', role);
+      roleButtons.forEach(b => b.classList.toggle('is-active', b.dataset.role === role));
+      // Templates 탭 — admin 전용
+      document.querySelectorAll('.hdr-tab[href*="templates"]').forEach(el => {
+        el.style.display = (role === 'admin') ? '' : 'none';
+      });
+      // AI Q&A 탭 — member 전용
+      document.querySelectorAll('.hdr-tab[href*="/bot"]').forEach(el => {
+        el.style.display = (role === 'admin') ? 'none' : '';
+      });
+      // Templates는 admin 전용 화면. member로 전환 시 Projects로 리다이렉트
+      if (role !== 'admin') {
+        location.href = 'index.html#/';
+        return;
+      }
+      renderGrid();
+    }
+    roleButtons.forEach(b => b.addEventListener('click', () => applyRole(b.dataset.role)));
+    applyRole(currentRole);
+
+    // ═══ Upload modal ═══
+    const modalUpload = document.getElementById('modal-upload');
+    const uploadTplName = document.getElementById('upload-tpl-name');
+    const fileDrop = document.getElementById('file-drop');
+    const fileDropText = document.getElementById('file-drop-text');
+    const uploadFile = document.getElementById('upload-file');
+    const uploadRegen = document.getElementById('upload-regen');
+    const btnUploadSubmit = document.getElementById('btn-upload-submit');
+
+    function openUploadModal(id) {
+      const t = TEMPLATES.find(x => x.id === id);
+      if (!t) return;
+      targetTemplateId = id;
+      pendingFile = null;
+      uploadTplName.textContent = t.name;
+      fileDropText.textContent = '클릭 또는 드래그하여 DOCX 파일 선택';
+      fileDrop.classList.remove('has-file');
+      uploadFile.value = '';
+      uploadRegen.checked = true;
+      updateSubmitState();
+      modalUpload.classList.add('is-open');
+      modalUpload.setAttribute('aria-hidden', 'false');
+    }
+    function closeUploadModal() {
+      modalUpload.classList.remove('is-open');
+      modalUpload.setAttribute('aria-hidden', 'true');
+    }
+    function updateSubmitState() {
+      btnUploadSubmit.classList.toggle('is-disabled', !pendingFile);
+    }
+    uploadFile.addEventListener('change', () => {
+      pendingFile = uploadFile.files[0] || null;
+      if (pendingFile) {
+        fileDropText.textContent = pendingFile.name;
+        fileDrop.classList.add('has-file');
+      } else {
+        fileDropText.textContent = '클릭 또는 드래그하여 DOCX 파일 선택';
+        fileDrop.classList.remove('has-file');
+      }
+      updateSubmitState();
+    });
+
+    btnUploadSubmit.addEventListener('click', () => {
+      if (btnUploadSubmit.classList.contains('is-disabled')) return;
+      const t = TEMPLATES.find(x => x.id === targetTemplateId);
+      if (!t) return;
+      const newN = t.activeVersion + 1;
+      const today = new Date().toISOString().slice(0, 10).replace(/-/g, '.');
+      t.versions.unshift({ n: newN, uploadedAt: today, uploadedBy: '관리자' });
+      t.activeVersion = newN;
+      closeUploadModal();
+      renderGrid();
+      const msg = uploadRegen.checked
+        ? `${t.name} v${newN} 업로드 완료 · 진행 중인 프로젝트의 문서가 자동 생성됩니다`
+        : `${t.name} v${newN} 업로드 완료`;
+      showToast(msg);
+    });
+
+    // ═══ History drawer ═══
+    const drawerBackdrop = document.getElementById('drawer-backdrop');
+    const drawerHistory = document.getElementById('drawer-history');
+    const drawerTitle = document.getElementById('drawer-title');
+    const drawerBody = document.getElementById('drawer-body');
+
+    function openHistoryDrawer(id) {
+      const t = TEMPLATES.find(x => x.id === id);
+      if (!t) return;
+      drawerTitle.textContent = `${t.name} · 버전 이력`;
+      drawerBody.innerHTML = t.versions.map(v => {
+        const isActive = v.n === t.activeVersion;
+        const restoreBtn = currentRole === 'admin' && !isActive
+          ? `<button type="button" class="btn-sm" data-restore="${v.n}"><i data-lucide="rotate-ccw"></i> 이 버전으로 전환</button>`
+          : '';
+        return `
+          <div class="version-item">
+            <div class="version-head">
+              <span class="version-marker ${isActive ? 'is-active' : ''}"></span>
+              <span class="version-number">v${v.n}</span>
+              ${isActive ? `<span class="version-active-tag">활성</span>` : ''}
+              <span class="version-date">${v.uploadedAt}</span>
+            </div>
+            <div class="version-meta">업로드: ${v.uploadedBy}</div>
+            <div class="version-changelog">${v.changelog}</div>
+            <div class="version-actions">
+              <button type="button" class="btn-sm" data-download="${v.n}"><i data-lucide="download"></i> 다운로드</button>
+              ${restoreBtn}
+            </div>
+          </div>`;
+      }).join('');
+      if (window.lucide) lucide.createIcons();
+      drawerBackdrop.classList.add('is-open');
+      drawerHistory.setAttribute('aria-hidden', 'false');
+
+      drawerBody.querySelectorAll('[data-restore]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const n = Number(btn.dataset.restore);
+          t.activeVersion = n;
+          renderGrid();
+          openHistoryDrawer(id);
+          showToast(`${t.name} v${n}로 전환됨`);
+        });
+      });
+      drawerBody.querySelectorAll('[data-download]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          showToast(`v${btn.dataset.download} 다운로드를 시작합니다. (mock)`);
+        });
+      });
+    }
+    function closeDrawer() {
+      drawerBackdrop.classList.remove('is-open');
+      drawerHistory.setAttribute('aria-hidden', 'true');
+    }
+
+    // ═══ Modal/drawer 공통 닫기 ═══
+    document.querySelectorAll('[data-modal-close]').forEach(b => b.addEventListener('click', closeUploadModal));
+    document.querySelectorAll('[data-drawer-close]').forEach(b => b.addEventListener('click', closeDrawer));
+    modalUpload.addEventListener('click', e => { if (e.target === modalUpload) closeUploadModal(); });
+    drawerBackdrop.addEventListener('click', closeDrawer);
+    document.addEventListener('keydown', e => {
+      if (e.key !== 'Escape') return;
+      if (modalUpload.classList.contains('is-open')) closeUploadModal();
+      else if (drawerBackdrop.classList.contains('is-open')) closeDrawer();
+    });
+
+    // ═══ Toast ═══
+    const toastContainer = document.getElementById('toast-container');
+    function showToast(message, { duration = 2800 } = {}) {
+      const el = document.createElement('div');
+      el.className = 'toast';
+      el.innerHTML = `<span>${message}</span>`;
+      toastContainer.appendChild(el);
+      setTimeout(() => {
+        el.style.transition = 'opacity .2s';
+        el.style.opacity = '0';
+        setTimeout(() => el.remove(), 200);
+      }, duration);
+    }
+    window.__showToast = showToast;
+
+    lucide.createIcons();
+  </script>
+</body>
+
+</html>

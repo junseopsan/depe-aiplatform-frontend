@@ -1,0 +1,1282 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EPC PE AI Platform</title>
+  <link rel="icon" type="image/png" href="reference/logo.png">
+  <link
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+    rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    /* ═══ 공통 디자인 토큰 & 기반 스타일 ═══ */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --primary-900: #081E3A;
+      --primary-800: #0F2E57;
+      --primary-700: #173F73;
+      --primary-600: #1F4E91;
+      --primary-500: #275DB2;
+      --primary-400: #4A7BC7;
+      --primary-300: #7FA2D9;
+      --primary-200: #B2C7E8;
+      --primary-100: #D4DFEE;
+      --primary-50: #EEF2F9;
+      --gray-900: #0D1117;
+      --gray-800: #1C2230;
+      --gray-700: #2E3A4E;
+      --gray-600: #4A5568;
+      --gray-500: #6B7A8F;
+      --gray-400: #94A3B8;
+      --gray-300: #CBD5E1;
+      --gray-200: #E2E8F0;
+      --gray-100: #F1F5F9;
+      --gray-50: #F8FAFC;
+      --success: #3A8C6E;
+      --warning: #B07D3A;
+      --error: #A04545;
+      --info: #3A6A96;
+      --success-bg: #E8F3EE;
+      --warning-bg: #F6E8CD;
+      --error-bg: #F4DCDC;
+      --matrix-bg: var(--gray-100);
+      --matrix-border: var(--gray-200);
+      --matrix-cell-bg: #fff;
+      --matrix-header-bg: var(--gray-50);
+    }
+
+    html,
+    body {
+      font-family: 'IBM Plex Sans KR', sans-serif;
+      color: var(--gray-700);
+      background: var(--gray-100);
+      font-size: 14px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      height: 100vh;
+      overflow-y: hidden;
+      overflow-x: auto;
+      min-width: 1100px;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button {
+      font-family: inherit;
+      cursor: pointer;
+      border: none;
+      background: none;
+    }
+
+    input,
+    select,
+    textarea {
+      font-family: inherit;
+    }
+
+    .mono {
+      font-family: 'IBM Plex Mono', monospace;
+    }
+
+    .top-band {
+      height: 2px;
+      background: var(--primary-500);
+    }
+
+    .app-header {
+      width: 100%;
+      min-width: 100%;
+      height: 52px;
+      background: #fff;
+      border-bottom: 1px solid var(--gray-200);
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      padding: 0 24px;
+      position: sticky;
+      top: 2px;
+      z-index: 99;
+    }
+
+    .hdr-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .hdr-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .hdr-logo img {
+      height: 28px;
+      width: auto;
+      display: block;
+    }
+
+    .hdr-sysname {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--gray-800);
+      letter-spacing: -0.01em;
+    }
+
+    .hdr-tabs {
+      display: flex;
+      gap: 4px;
+    }
+
+    .hdr-tab {
+      height: 52px;
+      display: inline-flex;
+      align-items: center;
+      padding: 0 18px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--gray-500);
+      border-bottom: 2px solid transparent;
+      transition: color .15s, border-color .15s;
+    }
+
+    .hdr-tab:hover {
+      color: var(--gray-700);
+    }
+
+    .hdr-tab.active {
+      color: var(--primary-500);
+      font-weight: 600;
+      border-bottom-color: var(--primary-500);
+    }
+
+    .hdr-right {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    .notif-bell {
+      width: 32px;
+      height: 32px;
+      border-radius: 4px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: #fff;
+      color: var(--gray-700);
+      border: 1px solid transparent;
+      position: relative;
+      transition: background .15s, border-color .15s;
+    }
+
+    .notif-bell:hover {
+      background: var(--gray-50);
+      border-color: var(--gray-200);
+    }
+
+    .notif-bell svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .notif-bell .badge {
+      position: absolute;
+      top: -4px; right: -4px;
+      min-width: 18px; height: 18px;
+      padding: 0 5px;
+      border-radius: 9px;
+      background: var(--primary-500);
+      color: #fff;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px; font-weight: 500;
+      display: inline-flex; align-items: center; justify-content: center;
+      border: 2px solid #fff;
+      line-height: 1;
+    }
+    .notif-bell .badge.pulse::after {
+      content: ''; position: absolute; inset: -2px;
+      border-radius: 50%;
+      background: var(--primary-500);
+      opacity: 0.3;
+      animation: notif-pulse 2s infinite;
+    }
+    @keyframes notif-pulse {
+      0% { transform: scale(1); opacity: 0.4; }
+      100% { transform: scale(1.6); opacity: 0; }
+    }
+
+    .btn {
+      height: 36px;
+      padding: 0 14px;
+      border-radius: 4px;
+      font-size: 13px;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background .15s, border-color .15s, color .15s;
+      border: 1px solid transparent;
+      white-space: nowrap;
+    }
+
+    .btn i {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+    }
+
+    .btn.btn-primary {
+      background: var(--primary-500);
+      color: #fff;
+    }
+
+    .btn.btn-primary:hover {
+      background: var(--primary-600);
+    }
+
+    .btn.btn-secondary {
+      background: #fff;
+      border-color: var(--gray-300);
+      color: var(--gray-700);
+    }
+
+    .btn.btn-secondary:hover {
+      background: var(--gray-50);
+    }
+
+    .btn:disabled,
+    .btn.is-disabled {
+      opacity: 0.4;
+      pointer-events: none;
+    }
+
+    /* ③ Project Bar */
+    .project-bar {
+      width: 100%;
+      min-width: 100%;
+      height: 72px;
+      background: #fff;
+      border-bottom: 1px solid var(--gray-200);
+      display: flex;
+      align-items: center;
+      padding: 0 32px;
+      gap: 24px;
+    }
+
+    .proj-name-block {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      min-width: 0;
+      flex: 1;
+    }
+
+    .proj-name {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--gray-800);
+      line-height: 1.2;
+      letter-spacing: -0.01em;
+    }
+
+    .proj-meta {
+      font-size: 13px;
+      color: var(--gray-600);
+      word-spacing: 0.2em;
+      letter-spacing: 0.01em;
+      display: flex;
+      gap: 12px;
+    }
+
+    .proj-meta-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .proj-meta-label {
+      color: var(--gray-400);
+      font-weight: 500;
+    }
+
+    .proj-meta .mono {
+      font-family: 'IBM Plex Mono', monospace;
+      color: var(--gray-700);
+    }
+
+    .proj-meta-sep::before {
+      content: '·';
+      color: var(--gray-400);
+      margin: 0 4px;
+    }
+
+    /* ④ Sub-tab Bar */
+    .subtab-bar {
+      width: 100%;
+      min-width: 100%;
+      height: 44px;
+      background: #fff;
+      border-bottom: 1px solid var(--gray-200);
+      display: flex;
+      padding: 0 32px;
+      align-items: stretch;
+    }
+
+    .subtab {
+      height: 44px;
+      display: inline-flex;
+      align-items: center;
+      padding: 0 20px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--gray-500);
+      border-bottom: 2px solid transparent;
+      transition: color .15s, border-color .15s;
+    }
+
+    .subtab:first-child {
+      padding-left: 0;
+    }
+
+    .subtab:hover {
+      color: var(--gray-700);
+    }
+
+    .subtab.active {
+      color: var(--primary-500);
+      border-bottom-color: var(--primary-500);
+    }
+
+    .subtab.inactive-dimmed {
+      opacity: 0.4;
+    }
+
+    /* ⑤ Legend Bar */
+    .legend-bar {
+      width: 100%;
+      min-width: 100%;
+      height: 48px;
+      background: var(--gray-50);
+      border-bottom: 1px solid var(--gray-200);
+      padding: 0 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .legend-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .legend-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Zone A — 선행 문서 anchor chip 컨테이너. Dashboard는 프로젝트 루트 ITB 1개 */
+    .legend-anchors {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .legend-anchor {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      height: 28px;
+      padding: 0 12px 0 10px;
+      border-radius: 999px;
+      background: var(--primary-50);
+      color: var(--primary-700);
+      font-size: 12px;
+      font-weight: 600;
+      font-family: 'IBM Plex Sans KR', sans-serif;
+    }
+
+    .legend-anchor .icon {
+      width: 14px;
+      height: 14px;
+      color: var(--primary-500);
+      stroke-width: 2;
+      flex-shrink: 0;
+    }
+
+    .legend-items {
+      display: flex;
+      gap: 18px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    /* ═══ §9 Status Dot & Cell Tag — 텍스트/카운트는 중립 gray, 도트만 상태색 ═══ */
+    .cell-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      height: 28px;
+      padding: 0;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--gray-700);
+      white-space: nowrap;
+    }
+
+    .cell-tag::before {
+      content: '';
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--gray-400);
+      flex-shrink: 0;
+    }
+
+    .cell-tag-count {
+      font-weight: 600;
+      color: var(--gray-500);
+      margin-left: 2px;
+    }
+
+    .cell-tag.issued::before {
+      background: var(--success);
+    }
+
+    .cell-tag.review::before {
+      background: var(--warning);
+    }
+
+    .cell-tag.generating::before {
+      background: var(--primary-500);
+    }
+
+    .cell-tag.ai-failed::before {
+      background: var(--error);
+    }
+
+    .cell-tag.pre-start::before {
+      background: var(--gray-400);
+    }
+
+    /* ═══ Matrix ═══ */
+    .content-area {
+      height: calc(100vh - 2px - 52px - 72px - 44px - 49px);
+      overflow: auto;
+      padding: 20px 32px 32px;
+    }
+
+    .matrix-wrap {
+      background: #fff;
+      border: 1px solid var(--matrix-border);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .matrix-scroll {
+      overflow-x: auto;
+    }
+
+    .matrix-grid {
+      display: grid;
+      grid-template-columns: 160px repeat(5, minmax(0, 1fr));
+    }
+
+    /* Header row */
+    .m-corner {
+      background: var(--matrix-header-bg);
+      border-bottom: 1px solid var(--matrix-border);
+      border-right: 1px solid var(--matrix-border);
+      padding: 14px 14px;
+    }
+
+    .m-phase-hdr {
+      background: var(--matrix-header-bg);
+      border-bottom: 1px solid var(--matrix-border);
+      border-right: 1px solid var(--matrix-border);
+      padding: 14px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .m-phase-hdr:last-child {
+      border-right: none;
+    }
+
+    .phase-idx {
+      font-family: 'IBM Plex Sans KR', sans-serif;
+      font-size: 10px;
+      font-weight: 400;
+      color: var(--gray-400);
+      letter-spacing: 0.08em;
+    }
+
+    .phase-name {
+      font-family: 'IBM Plex Sans KR', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--gray-800);
+    }
+
+    /* Workstream label cells */
+    .m-ws-label {
+      background: var(--matrix-header-bg);
+      border-bottom: 1px solid var(--matrix-border);
+      border-right: 1px solid var(--matrix-border);
+      padding: 10px 14px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 1px;
+      position: sticky;
+      left: 0;
+    }
+
+    .ws-code {
+      font-family: 'IBM Plex Sans KR', sans-serif;
+      font-size: 10px;
+      font-weight: 400;
+      color: var(--gray-400);
+      letter-spacing: 0.08em;
+    }
+
+    .ws-name {
+      font-family: 'IBM Plex Sans KR', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--gray-800);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .my-badge {
+      display: inline-flex;
+      align-items: center;
+      font-size: 10px;
+      font-weight: 500;
+      padding: 1px 6px;
+      border-radius: 999px;
+      background: var(--primary-500);
+      color: #fff;
+      letter-spacing: 0.01em;
+    }
+
+    /* Cells — 네비게이션 전용. 셀 전체가 <a href>로 Stage 탭 페이지로 이동 */
+    .m-cell {
+      border-bottom: 1px solid var(--matrix-border);
+      border-right: 1px solid var(--matrix-border);
+      padding: 10px 12px 10px 13px;
+      background: #fff;
+      min-height: 90px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      border-left: 3px solid var(--gray-200);
+      transition: background .15s;
+      cursor: pointer;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .m-cell:last-child {
+      border-right: none;
+    }
+
+    .m-cell:hover {
+      background: var(--gray-50);
+    }
+
+    /* blocked 셀 중 링크 없는(<div>) 것만 not-allowed. <a>는 a 기본 pointer 유지 */
+    div.m-cell.cell-blocked {
+      cursor: not-allowed;
+    }
+
+    /* pre-start 셀은 아직 자동 트리거 전이라 볼 화면 없음 → 클릭 비활성 */
+    .m-cell.status-pre-start {
+      pointer-events: none;
+      cursor: default;
+    }
+
+    .cell-doc-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--gray-800);
+      line-height: 1.35;
+    }
+
+    .cell-source-line {
+      font-size: 11px;
+      font-weight: 400;
+      color: var(--gray-600);
+      line-height: 1.4;
+      display: inline-flex;
+      align-items: baseline;
+      gap: 4px;
+      flex-wrap: wrap;
+    }
+
+    .sep {
+      color: var(--gray-400);
+      margin: 0 2px;
+    }
+
+    .cell-status-line {
+      font-size: 11px;
+      font-weight: 600;
+      margin-top: 2px;
+    }
+
+    /* Cell States */
+    .m-cell.status-issued {
+      border-left-color: var(--success);
+    }
+
+    .m-cell.status-issued .cell-status-line {
+      color: var(--success);
+    }
+
+    .m-cell.status-review {
+      border-left-color: var(--warning);
+      background: var(--warning-bg);
+    }
+
+    .m-cell.status-review .cell-status-line {
+      color: var(--warning);
+    }
+
+    .m-cell.status-review:hover {
+      background: #EFD9AF;
+    }
+
+    .m-cell.status-generating {
+      border-left-color: var(--primary-500);
+      background: var(--primary-50);
+    }
+
+    .m-cell.status-generating .cell-status-line {
+      color: var(--primary-500);
+    }
+
+    .m-cell.status-generating:hover {
+      background: var(--primary-100);
+    }
+
+    .m-cell.status-ai-failed {
+      border-left-color: var(--error);
+      background: var(--error-bg);
+    }
+
+    .m-cell.status-ai-failed .cell-status-line {
+      color: var(--error);
+    }
+
+    .m-cell.status-ai-failed:hover {
+      background: #EFC9C9;
+    }
+
+    .m-cell.status-pre-start {
+      border-left-color: var(--gray-300);
+    }
+
+    .m-cell.status-pre-start .cell-status-line {
+      color: var(--gray-500);
+    }
+
+    .m-cell.cell-blocked {
+      background: repeating-linear-gradient(135deg, #fff, #fff 6px, var(--gray-50) 6px, var(--gray-50) 12px);
+      border-left-color: var(--gray-300);
+    }
+
+    .m-cell.cell-blocked .cell-status-line {
+      color: var(--gray-400);
+    }
+
+    /* AI progress mini — status-generating 셀 전용, 셀 하단에 단독 배치 */
+    .cell-progress-mini {
+      width: 100%;
+      height: 3px;
+      background: var(--primary-100);
+      border-radius: 2px;
+      overflow: hidden;
+      margin-top: auto;
+    }
+
+    .cell-progress-mini-fill {
+      height: 100%;
+      background: var(--primary-500);
+      transition: width .3s;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="top-band"></div>
+
+  <header class="app-header">
+    <div class="hdr-left">
+      <a href="index.html#/" class="hdr-logo">
+        <img src="reference/logo.png" alt="EPC PE Platform">
+        <span class="hdr-sysname">EPC PE AI-Platform</span>
+      </a>
+    </div>
+    <nav class="hdr-tabs">
+      <a href="index.html#/" class="hdr-tab active">Projects</a>
+      <a href="index.html#/templates" class="hdr-tab">Templates</a>
+      <a href="index.html#/bot" class="hdr-tab">AI Q&amp;A</a>
+    </nav>
+    <div class="hdr-right">
+      <button class="notif-bell" aria-label="Notifications">
+        <i data-lucide="bell"></i>
+        <span class="badge pulse">3</span>
+      </button>
+    </div>
+  </header>
+
+  <div class="project-bar">
+    <div class="proj-name-block">
+      <div class="proj-name">Saudi ARAMCO Jafurah Gas Plant Phase 2</div>
+      <div class="proj-meta">
+        <span class="proj-meta-item"><span class="proj-meta-label">계약번호</span><span
+            class="mono">JA-2025-078</span></span>
+        <span class="proj-meta-item proj-meta-sep"><span class="proj-meta-label">계약기간</span><span class="mono">2025.03 —
+            2027.08</span></span>
+        <span class="proj-meta-item proj-meta-sep"><span class="proj-meta-label">발주처</span>Saudi ARAMCO</span>
+      </div>
+    </div>
+  </div>
+
+  <nav class="subtab-bar">
+    <a href="index.html#/dashboard" class="subtab active" style="display: none;">Dashboard</a>
+    <a href="index.html#/itb" class="subtab">독소조항</a>
+    <a href="index.html#/irs" class="subtab">IRS</a>
+    <a href="index.html#/design-criteria" class="subtab">Design Criteria</a>
+    <a href="index.html#/mps" class="subtab">MPS</a>
+    <a href="index.html#/pnid" class="subtab" style="display: none;">P&amp;ID</a>
+    <a href="index.html#/compare" class="subtab" style="display: none;">문서비교</a>
+    <a href="index.html#/rev-history" class="subtab" style="display: none;" hidden>ITB 이력</a>
+  </nav>
+
+  <div class="legend-bar">
+    <div class="legend-left">
+      <!-- Zone A: 선행 문서 anchor chip 컨테이너 — 4탭 공통. Dashboard는 프로젝트 루트 ITB 1개 -->
+      <span class="legend-anchors">
+        <span class="legend-anchor">
+          <i data-lucide="link-2" class="icon"></i>
+          <span class="anchor-text">ITB Rev B · 2026.05.03</span>
+        </span>
+      </span>
+      <div class="legend-items">
+        <span class="cell-tag pre-start">작업 대기<span class="cell-tag-count">18</span></span>
+        <span class="cell-tag generating">AI 생성 중<span class="cell-tag-count">9</span></span>
+        <span class="cell-tag ai-failed">AI 생성 실패<span class="cell-tag-count">3</span></span>
+        <span class="cell-tag review">담당자 검토 대기<span class="cell-tag-count">5</span></span>
+        <span class="cell-tag issued">발행<span class="cell-tag-count">20</span></span>
+      </div>
+    </div>
+    <div class="legend-right"></div>
+  </div>
+
+  <main class="content-area">
+    <div class="matrix-wrap">
+      <div class="matrix-scroll">
+        <div class="matrix-grid">
+
+          <!-- Header Row -->
+          <div class="m-corner"></div>
+          <div class="m-phase-hdr">
+            <div class="phase-idx">BIDDING</div>
+            <div class="phase-name">입찰</div>
+          </div>
+          <div class="m-phase-hdr">
+            <div class="phase-idx">ESTIMATION</div>
+            <div class="phase-name">견적</div>
+          </div>
+          <div class="m-phase-hdr">
+            <div class="phase-idx">BASIC DESIGN</div>
+            <div class="phase-name">기본설계</div>
+          </div>
+          <div class="m-phase-hdr">
+            <div class="phase-idx">DETAILED DESIGN</div>
+            <div class="phase-name">상세설계</div>
+          </div>
+          <div class="m-phase-hdr">
+            <div class="phase-idx">VENDOR SELECTION</div>
+            <div class="phase-name">Vendor 선정</div>
+          </div>
+
+          <!-- ━━ 정상 워크플로우 (진행 단계 순) ━━ -->
+
+          <!-- Row 1: PRC 프로세스 (내 담당) — IRS/DC 병렬 생성 중, MPS DC 대기 -->
+          <div class="m-ws-label">
+            <div class="ws-code">PRC</div>
+            <div class="ws-name">프로세스</div>
+          </div>
+          <a class="m-cell status-issued" href="index.html#/itb">
+            <div class="cell-doc-title">ITB</div>
+            <div class="cell-source-line">—</div>
+            <div class="cell-status-line">Rev A 발행 <span class="sep">·</span> 05.03</div>
+          </a>
+          <a class="m-cell status-generating" href="index.html#/irs?state=generating">
+            <div class="cell-doc-title">IRS</div>
+            <div class="cell-source-line">ITB Rev B 기반</div>
+            <div class="cell-status-line">AI 생성 중…</div>
+            <div class="cell-progress-mini">
+              <div class="cell-progress-mini-fill" style="width: 55%;"></div>
+            </div>
+          </a>
+          <a class="m-cell status-generating" href="index.html#/design-criteria?state=generating">
+            <div class="cell-doc-title">Design Criteria</div>
+            <div class="cell-source-line">ITB Rev B 기반</div>
+            <div class="cell-status-line">AI 생성 중…</div>
+            <div class="cell-progress-mini">
+              <div class="cell-progress-mini-fill" style="width: 40%;"></div>
+            </div>
+          </a>
+          <a class="m-cell cell-blocked" href="index.html#/mps?state=blocked&amp;blockedBy=dc">
+            <div class="cell-doc-title">MPS</div>
+            <div class="cell-source-line">ITB Rev B 기반</div>
+            <div class="cell-status-line">선행 작업 대기</div>
+          </a>
+          <a class="m-cell status-pre-start" href="index.html#/compare">
+            <div class="cell-doc-title">Vendor 도서</div>
+            <div class="cell-source-line">비교 대상 2건</div>
+            <div class="cell-status-line">시작 전</div>
+          </a>
+
+          <!-- Row 2: WTR 수처리 — IRS/DC 병렬 생성 중 -->
+          <div class="m-ws-label">
+            <div class="ws-code">WTR</div>
+            <div class="ws-name">수처리</div>
+          </div>
+          <a class="m-cell status-issued" href="index.html#/itb">
+            <div class="cell-doc-title">ITB</div>
+            <div class="cell-source-line">—</div>
+            <div class="cell-status-line">Rev A 발행 <span class="sep">·</span> 05.03</div>
+          </a>
+          <a class="m-cell status-generating" href="index.html#/irs?state=generating">
+            <div class="cell-doc-title">IRS</div>
+            <div class="cell-source-line">ITB Rev B 기반</div>
+            <div class="cell-status-line">AI 생성 중…</div>
+            <div class="cell-progress-mini">
+              <div class="cell-progress-mini-fill" style="width: 45%;"></div>
+            </div>
+          </a>
+          <a class="m-cell status-generating" href="index.html#/design-criteria?state=generating">
+            <div class="cell-doc-title">Design Criteria</div>
+            <div class="cell-source-line">ITB Rev B 기반</div>
+            <div class="cell-status-line">AI 생성 중…</div>
+            <div class="cell-progress-mini">
+              <div class="cell-progress-mini-fill" style="width: 35%;"></div>
+            </div>
+          </a>
+          <a class="m-cell cell-blocked" href="index.html#/mps?state=blocked&amp;blockedBy=dc">
+            <div class="cell-doc-title">MPS</div>
+            <div class="cell-source-line">ITB Rev B 기반</div>
+            <div class="cell-status-line">선행 작업 대기</div>
+          </a>
+          <a class="m-cell status-pre-start" href="index.html#/compare">
+            <div class="cell-doc-title">Vendor 도서</div>
+            <div class="cell-source-line">비교 대상 2건</div>
+            <div class="cell-status-line">시작 전</div>
+          </a>
+
+          <!-- Row 3: PIP 배관 — IRS 검토, DC 생성 중 -->
+          <div class="m-ws-label">
+            <div class="ws-code">PIP</div>
+            <div class="ws-name">배관</div>
+          </div>
+          <a class="m-cell status-issued" href="index.html#/itb">
+            <div class="cell-doc-title">ITB</div>
+            <div class="cell-source-line">—</div>
+            <div class="cell-status-line">Rev A 발행 <span class="sep">·</span> 05.03</div>
+          </a>
+          <a class="m-cell status-review" href="index.html#/irs?state=review">
+            <div class="cell-doc-title">IRS</div>
+            <div class="cell-source-line">ITB Rev B 기반</div>
+            <div class="cell-status-line">담당자 검토 대기</div>
+          </a>
+          <a class="m-cell status-generating" href="index.html#/design-criteria?state=generating">
+            <div class="cell-doc-title">Design Criteria</div>
+            <div class="cell-source-line">ITB Rev B 기반</div>
+            <div class="cell-status-line">AI 생성 중…</div>
+            <div class="cell-progress-mini">
+              <div class="cell-progress-mini-fill" style="width: 70%;"></div>
+            </div>
+          </a>
+          <a class="m-cell cell-blocked" href="index.html#/mps?state=blocked&amp;blockedBy=dc">
+            <div class="cell-doc-title">MPS</div>
+            <div class="cell-source-line">ITB Rev B 기반</div>
+            <div class="cell-status-line">선행 작업 대기</div>
+          </a>
+          <a class="m-cell status-pre-start" href="index.html#/compare">
+            <div class="cell-doc-title">Vendor 도서</div>
+            <div class="cell-source-line">비교 대상 3건</div>
+            <div class="cell-status-line">시작 전</div>
+          </a>
+
+          <!-- Row 4: CIV 토목 — IRS 발행, DC 검토 -->
+          <div class="m-ws-label">
+            <div class="ws-code">CIV</div>
+            <div class="ws-name">토목</div>
+          </div>
+          <a class="m-cell status-issued" href="index.html#/itb">
+            <div class="cell-doc-title">ITB</div>
+            <div class="cell-source-line">—</div>
+            <div class="cell-status-line">Rev A 발행 <span class="sep">·</span> 05.03</div>
+          </a>
+          <a class="m-cell status-issued" href="index.html#/irs?state=issued">
+            <div class="cell-doc-title">IRS</div>
+            <div class="cell-source-line">ITB Rev B 기반</div>
+            <div class="cell-status-line">Rev A 발행 <span class="sep">·</span> 05.03</div>
+          </a>
+          <a class="m-cell status-review" href="index.html#/design-criteria?state=review">
+            <div class="cell-doc-title">Design Criteria</div>
+            <div class="cell-source-line">ITB Rev B 기반</div>
+            <div class="cell-status-line">담당자 검토 대기</div>
+          </a>
+          <a class="m-cell cell-blocked" href="index.html#/mps?state=blocked&amp;blockedBy=dc">
+            <div class="cell-doc-title">MPS</div>
+            <div class="cell-source-line">ITB Rev B 기반</div>
+            <div class="cell-status-line">선행 작업 대기</div>
+          </a>
+          <a class="m-cell status-pre-start" href="index.html#/compare">
+            <div class="cell-doc-title">Vendor 도서</div>
+            <div class="cell-source-line">비교 대상 1건</div>
+            <div class="cell-status-line">시작 전</div>
+          </a>
+
+          <!-- Row 5: INS 계장 — DC 발행, MPS 생성 중 -->
+          <div class="m-ws-label">
+            <div class="ws-code">INS</div>
+            <div class="ws-name">계장</div>
+          </div>
+          <a class="m-cell status-issued" href="index.html#/itb">
+            <div class="cell-doc-title">ITB</div>
+            <div class="cell-source-line">—</div>
+            <div class="cell-status-line">Rev A 발행 <span class="sep">·</span> 05.03</div>
+          </a>
+          <a class="m-cell status-issued" href="index.html#/irs?state=issued">
+            <div class="cell-doc-title">IRS</div>
+            <div class="cell-source-line">ITB Rev B 기반</div>
+            <div class="cell-status-line">Rev A 발행 <span class="sep">·</span> 05.03</div>
+          </a>
+          <a class="m-cell status-issued" href="index.html#/design-criteria?state=issued">
+            <div class="cell-doc-title">Design Criteria</div>
+            <div class="cell-source-line">ITB Rev B 기반</div>
+            <div class="cell-status-line">Rev A 발행 <span class="sep">·</span> 05.03</div>
+          </a>
+          <a class="m-cell status-generating" href="index.html#/mps?state=generating">
+            <div class="cell-doc-title">MPS</div>
+            <div class="cell-source-line">ITB Rev B <span class="sep">·</span> Design Criteria Rev A 기반</div>
+            <div class="cell-status-line">AI 생성 중…</div>
+            <div class="cell-progress-mini">
+              <div class="cell-progress-mini-fill" style="width: 62%;"></div>
+            </div>
+          </a>
+          <a class="m-cell status-pre-start" href="index.html#/compare">
+            <div class="cell-doc-title">Vendor 도서</div>
+            <div class="cell-source-line">비교 대상 2건</div>
+            <div class="cell-status-line">시작 전</div>
+          </a>
+
+          <!-- Row 6: UTL 설비 — MPS 검토 대기 -->
+          <div class="m-ws-label">
+            <div class="ws-code">UTL</div>
+            <div class="ws-name">설비</div>
+          </div>
+          <a class="m-cell status-issued" href="index.html#/itb">
+            <div class="cell-doc-title">ITB</div>
+            <div class="cell-source-line">—</div>
+            <div class="cell-status-line">Rev A 발행 <span class="sep">·</span> 05.03</div>
+          </a>
+          <a class="m-cell status-issued" href="index.html#/irs?state=issued">
+            <div class="cell-doc-title">IRS</div>
+            <div class="cell-source-line">ITB Rev B 기반</div>
+            <div class="cell-status-line">Rev A 발행 <span class="sep">·</span> 05.03</div>
+          </a>
+          <a class="m-cell status-issued" href="index.html#/design-criteria?state=issued">
+            <div class="cell-doc-title">Design Criteria</div>
+            <div class="cell-source-line">ITB Rev B 기반</div>
+            <div class="cell-status-line">Rev A 발행 <span class="sep">·</span> 05.03</div>
+          </a>
+          <a class="m-cell status-review" href="index.html#/mps?state=review">
+            <div class="cell-doc-title">MPS</div>
+            <div class="cell-source-line">ITB Rev B <span class="sep">·</span> Design Criteria Rev A 기반</div>
+            <div class="cell-status-line">담당자 검토 대기</div>
+          </a>
+          <a class="m-cell status-pre-start" href="index.html#/compare">
+            <div class="cell-doc-title">Vendor 도서</div>
+            <div class="cell-source-line">비교 대상 2건</div>
+            <div class="cell-status-line">시작 전</div>
+          </a>
+
+          <!-- Row 7: LAY 공간 — ITB 갱신(Rev B). IRS 재발행(Rev B), DC는 Rev B 기반 결과 검토 대기, MPS blocked(dc). Vendor 검토 중 -->
+          <div class="m-ws-label">
+            <div class="ws-code">LAY</div>
+            <div class="ws-name">공간</div>
+          </div>
+          <a class="m-cell status-issued" href="index.html#/itb">
+            <div class="cell-doc-title">ITB</div>
+            <div class="cell-source-line">—</div>
+            <div class="cell-status-line">Rev B 발행 <span class="sep">·</span> 05.03</div>
+          </a>
+          <a class="m-cell status-issued" href="index.html#/irs?state=issued">
+            <div class="cell-doc-title">IRS</div>
+            <div class="cell-source-line">ITB Rev B 기반</div>
+            <div class="cell-status-line">Rev B 발행 <span class="sep">·</span> 05.03</div>
+          </a>
+          <a class="m-cell status-review" href="index.html#/design-criteria?state=review">
+            <div class="cell-doc-title">Design Criteria</div>
+            <div class="cell-source-line">ITB Rev B 기반</div>
+            <div class="cell-status-line">Rev A <span class="sep">·</span> 담당자 검토 대기</div>
+          </a>
+          <a class="m-cell cell-blocked" href="index.html#/mps?state=blocked&amp;blockedBy=dc">
+            <div class="cell-doc-title">MPS</div>
+            <div class="cell-source-line">ITB Rev B 기반</div>
+            <div class="cell-status-line">선행 작업 대기</div>
+          </a>
+          <a class="m-cell status-review" href="index.html#/compare">
+            <div class="cell-doc-title">Vendor 도서</div>
+            <div class="cell-source-line">비교 대상 3건</div>
+            <div class="cell-status-line">담당자 검토 대기</div>
+          </a>
+
+          <!-- Row 8: ARC 건축 — ITB Rev B 갱신 직후. IRS·DC 재트리거 중, MPS는 DC Rev B 확정 대기(blocked/dc) -->
+          <div class="m-ws-label">
+            <div class="ws-code">ARC</div>
+            <div class="ws-name">건축</div>
+          </div>
+          <a class="m-cell status-issued" href="index.html#/itb">
+            <div class="cell-doc-title">ITB</div>
+            <div class="cell-source-line">—</div>
+            <div class="cell-status-line">Rev B 발행 <span class="sep">·</span> 05.03</div>
+          </a>
+          <a class="m-cell status-generating" href="index.html#/irs?state=generating">
+            <div class="cell-doc-title">IRS</div>
+            <div class="cell-source-line">ITB Rev B 기반</div>
+            <div class="cell-status-line">AI 생성 중…</div>
+            <div class="cell-progress-mini">
+              <div class="cell-progress-mini-fill" style="width: 30%;"></div>
+            </div>
+          </a>
+          <a class="m-cell status-generating" href="index.html#/design-criteria?state=generating">
+            <div class="cell-doc-title">Design Criteria</div>
+            <div class="cell-source-line">ITB Rev B 기반</div>
+            <div class="cell-status-line">AI 생성 중…</div>
+            <div class="cell-progress-mini">
+              <div class="cell-progress-mini-fill" style="width: 20%;"></div>
+            </div>
+          </a>
+          <a class="m-cell cell-blocked" href="index.html#/mps?state=blocked&amp;blockedBy=dc">
+            <div class="cell-doc-title">MPS</div>
+            <div class="cell-source-line">ITB Rev B 기반</div>
+            <div class="cell-status-line">선행 작업 대기</div>
+          </a>
+          <a class="m-cell status-pre-start" href="index.html#/compare">
+            <div class="cell-doc-title">Vendor 도서</div>
+            <div class="cell-source-line">비교 대상 2건</div>
+            <div class="cell-status-line">시작 전</div>
+          </a>
+
+          <!-- ━━ AI 생성 실패 ━━ -->
+
+          <!-- Row 9: MEQ 주기기 — IRS 할당량 초과. DC는 IRS 실패와 무관하게 ITB 기반 자동 생성 중 (IRS/DC 독립) -->
+          <div class="m-ws-label">
+            <div class="ws-code">MEQ</div>
+            <div class="ws-name">주기기</div>
+          </div>
+          <a class="m-cell status-issued" href="index.html#/itb">
+            <div class="cell-doc-title">ITB</div>
+            <div class="cell-source-line">—</div>
+            <div class="cell-status-line">Rev A 발행 <span class="sep">·</span> 05.03</div>
+          </a>
+          <a class="m-cell status-ai-failed"
+            href="index.html#/irs?state=ai-failed&amp;failReason=quota">
+            <div class="cell-doc-title">IRS</div>
+            <div class="cell-source-line">ITB Rev B 기반</div>
+            <div class="cell-status-line">AI 생성 실패 (할당량 초과)</div>
+          </a>
+          <a class="m-cell status-generating" href="index.html#/design-criteria?state=generating">
+            <div class="cell-doc-title">Design Criteria</div>
+            <div class="cell-source-line">ITB Rev B 기반</div>
+            <div class="cell-status-line">AI 생성 중…</div>
+            <div class="cell-progress-mini">
+              <div class="cell-progress-mini-fill" style="width: 50%;"></div>
+            </div>
+          </a>
+          <a class="m-cell cell-blocked" href="index.html#/mps?state=blocked&amp;blockedBy=dc">
+            <div class="cell-doc-title">MPS</div>
+            <div class="cell-source-line">ITB Rev B 기반</div>
+            <div class="cell-status-line">선행 작업 대기</div>
+          </a>
+          <a class="m-cell status-pre-start" href="index.html#/compare">
+            <div class="cell-doc-title">Vendor 도서</div>
+            <div class="cell-source-line">비교 대상 1건</div>
+            <div class="cell-status-line">시작 전</div>
+          </a>
+
+          <!-- Row 10: ELE 전기 — DC 정책 위반 실패 -->
+          <div class="m-ws-label">
+            <div class="ws-code">ELE</div>
+            <div class="ws-name">전기</div>
+          </div>
+          <a class="m-cell status-issued" href="index.html#/itb">
+            <div class="cell-doc-title">ITB</div>
+            <div class="cell-source-line">—</div>
+            <div class="cell-status-line">Rev A 발행 <span class="sep">·</span> 05.03</div>
+          </a>
+          <a class="m-cell status-issued" href="index.html#/irs?state=issued">
+            <div class="cell-doc-title">IRS</div>
+            <div class="cell-source-line">ITB Rev B 기반</div>
+            <div class="cell-status-line">Rev A 발행 <span class="sep">·</span> 05.03</div>
+          </a>
+          <a class="m-cell status-ai-failed"
+            href="index.html#/design-criteria?state=ai-failed&amp;failReason=policy">
+            <div class="cell-doc-title">Design Criteria</div>
+            <div class="cell-source-line">ITB Rev B 기반</div>
+            <div class="cell-status-line">AI 생성 실패 (정책 위반)</div>
+          </a>
+          <a class="m-cell cell-blocked" href="index.html#/mps?state=blocked&amp;blockedBy=dc">
+            <div class="cell-doc-title">MPS</div>
+            <div class="cell-source-line">ITB Rev B 기반</div>
+            <div class="cell-status-line">선행 작업 대기</div>
+          </a>
+          <a class="m-cell status-pre-start" href="index.html#/compare">
+            <div class="cell-doc-title">Vendor 도서</div>
+            <div class="cell-source-line">비교 대상 1건</div>
+            <div class="cell-status-line">시작 전</div>
+          </a>
+
+          <!-- Row 11: MEC 기계 — MPS Rev A 발행 후 재생성 서버 오류 (B′) -->
+          <div class="m-ws-label">
+            <div class="ws-code">MEC</div>
+            <div class="ws-name">기계</div>
+          </div>
+          <a class="m-cell status-issued" href="index.html#/itb">
+            <div class="cell-doc-title">ITB</div>
+            <div class="cell-source-line">—</div>
+            <div class="cell-status-line">Rev A 발행 <span class="sep">·</span> 05.03</div>
+          </a>
+          <a class="m-cell status-issued" href="index.html#/irs?state=issued">
+            <div class="cell-doc-title">IRS</div>
+            <div class="cell-source-line">ITB Rev B 기반</div>
+            <div class="cell-status-line">Rev A 발행 <span class="sep">·</span> 05.03</div>
+          </a>
+          <a class="m-cell status-issued" href="index.html#/design-criteria?state=issued">
+            <div class="cell-doc-title">Design Criteria</div>
+            <div class="cell-source-line">ITB Rev B 기반</div>
+            <div class="cell-status-line">Rev A 발행 <span class="sep">·</span> 05.03</div>
+          </a>
+          <a class="m-cell status-ai-failed" href="index.html#/mps?state=issued&amp;failReason=server">
+            <div class="cell-doc-title">MPS</div>
+            <div class="cell-source-line">ITB Rev B <span class="sep">·</span> DC Rev A 기반</div>
+            <div class="cell-status-line">AI 생성 실패 (서버 오류)</div>
+          </a>
+          <a class="m-cell status-pre-start" href="index.html#/compare">
+            <div class="cell-doc-title">Vendor 도서</div>
+            <div class="cell-source-line">비교 대상 2건</div>
+            <div class="cell-status-line">시작 전</div>
+          </a>
+
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    lucide.createIcons();
+
+    // Workstream 최상단 정렬 — URL ?workstream=XXX 또는 localStorage.myRole
+    // '내 담당' 뱃지는 ?mine=1 (내가 즐겨찾기한 프로젝트)일 때만 노출
+    (function () {
+      // SPA(hash) + 직접 파일 진입(search) 둘 다 지원
+      const hashQ = location.hash.split('?')[1] || '';
+      const searchQ = location.search.replace(/^\?/, '');
+      const params = new URLSearchParams(hashQ || searchQ);
+      const targetCode = params.get('workstream') || localStorage.getItem('myRole');
+      const isMineProject = params.get('mine') === '1';
+      if (!targetCode) return;
+
+      const grid = document.querySelector('.matrix-grid');
+      if (!grid) return;
+
+      // 헤더 행(m-corner + m-phase-hdr 5개) 이후의 workstream 행들을 그룹핑
+      const children = Array.from(grid.children);
+      const firstWsIdx = children.findIndex(el => el.classList.contains('m-ws-label'));
+      if (firstWsIdx === -1) return;
+
+      const rows = [];
+      let current = null;
+      for (let i = firstWsIdx; i < children.length; i++) {
+        const el = children[i];
+        if (el.classList.contains('m-ws-label')) {
+          if (current) rows.push(current);
+          const code = el.querySelector('.ws-code')?.textContent.trim() || '';
+          current = { code, elements: [el] };
+        } else if (current) {
+          current.elements.push(el);
+        }
+      }
+      if (current) rows.push(current);
+
+      const targetRow = rows.find(r => r.code === targetCode);
+      if (!targetRow) return;
+
+      // 기존 '내 담당' 뱃지 제거. mine=1일 때만 타깃 행 ws-name에 삽입
+      grid.querySelectorAll('.my-badge').forEach(b => b.remove());
+      if (isMineProject) {
+        const targetWsName = targetRow.elements[0].querySelector('.ws-name');
+        if (targetWsName) {
+          const badge = document.createElement('span');
+          badge.className = 'my-badge';
+          badge.textContent = '내 담당';
+          targetWsName.appendChild(badge);
+        }
+      }
+
+      // 이미 첫 행이면 이동 불필요
+      if (targetRow === rows[0]) return;
+
+      // 헤더 행 바로 뒤 = 원래 첫 행의 ws-label 위치 (헤더 행은 이동 대상 아님)
+      const anchor = rows[0].elements[0];
+      targetRow.elements.forEach(el => {
+        grid.insertBefore(el, anchor);
+      });
+    })();
+  </script>
+
+<script>
+  // Role 기반 탭 가시성 — 모든 페이지 공통
+  (function () {
+    var role = localStorage.getItem('userRole') || 'member';
+    document.querySelectorAll('.hdr-tab[href*="templates"]').forEach(function (el) {
+      el.style.display = (role === 'admin') ? '' : 'none';
+    });
+    document.querySelectorAll('.hdr-tab[href*="/bot"]').forEach(function (el) {
+      el.style.display = (role === 'admin') ? 'none' : '';
+    });
+  })();
+</script>
+</body>
+
+</html>
