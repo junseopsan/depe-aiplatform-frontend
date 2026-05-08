@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EPC PE AI Platform</title>
+  <link rel="icon" type="image/png" href="reference/logo.png">
+  <link
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+    rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    /* Shell의 바탕 (페이지 로딩 전 잠깐 보이는 배경) */
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'IBM Plex Sans KR', sans-serif;
+      color: #2E3A4E;
+      background: #F1F5F9;
+      min-height: 100vh;
+      min-width: 1100px;
+    }
+
+    #spa-root,
+    #spa-content {
+      min-width: 1100px;
+    }
+
+    /* 초기 로드 flash 방지 */
+    #spa-root {
+      opacity: 0;
+      transition: opacity .18s ease;
+    }
+
+    #spa-root.ready {
+      opacity: 1;
+    }
+
+    /* SPA fade between pages (fallback when View Transitions API is unavailable) */
+    #spa-content.fading {
+      opacity: 0;
+    }
+
+    #spa-content {
+      transition: opacity .15s ease;
+    }
+
+    /* View Transitions API — 지원 브라우저(Chrome/Edge 111+, Safari 18+)에서 부드러운 crossfade */
+    @view-transition {
+      navigation: auto;
+    }
+
+    ::view-transition-old(root),
+    ::view-transition-new(root) {
+      animation-duration: 180ms;
+      animation-timing-function: ease-out;
+    }
+
+    /* 로딩 인디케이터 (fetch 지연 시) */
+    #spa-loading {
+      position: fixed;
+      top: 2px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: transparent;
+      z-index: 9999;
+      pointer-events: none;
+    }
+
+    #spa-loading.active::after {
+      content: '';
+      display: block;
+      height: 100%;
+      background: #275DB2;
+      animation: spa-progress 1.2s ease-in-out infinite;
+    }
+
+    @keyframes spa-progress {
+      0% {
+        width: 0;
+        margin-left: 0;
+      }
+
+      50% {
+        width: 60%;
+        margin-left: 20%;
+      }
+
+      100% {
+        width: 0;
+        margin-left: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="spa-root">
+    <div id="spa-loading"></div>
+    <div id="spa-content"></div>
+  </div>
+
+  <script>
+    (() => {
+      const ROUTES = {
+        '/': '1_Projects_Dashboard.html',
+        '/dashboard': '2_Projects_ProjectName_Dashboard.html',
+        '/itb': '3_Projects_ProjectName_ITB.html',
+        '/irs': '4_Projects_ProjectName_IRS.html',
+        '/design-criteria': '4a_Projects_ProjectName_DesignCriteria.html',
+        '/mps': '4b_Projects_ProjectName_MPS.html',
+        '/pnid': '5_Projects_ProjectName_PnID.html',
+        '/compare': '6_Projects_ProjectName_Compare.html',
+        '/rev-history': '7_Projects_ProjectName_RevHistory.html',
+        '/templates': '8_Templates.html',
+        '/projects/new': '9_Projects_Form.html',
+        '/projects/edit': '9_Projects_Form.html',
+        '/bot': '10_Bot.html',
+      };
+      const FILE_TO_ROUTE = Object.fromEntries(
+        Object.entries(ROUTES).map(([r, f]) => [f, r])
+      );
+
+      const $content = document.getElementById('spa-content');
+      const $root = document.getElementById('spa-root');
+      const $loading = document.getElementById('spa-loading');
+      const cache = new Map();
+      // Track injected page-specific <style> and <script> nodes so we can remove on next nav
+      let injected = [];
+      // Cleanup queue — pages push functions here (e.g., clearTimeout) so their async
+      // side-effects don't leak across navigation. Flushed at the start of each swap().
+      window.__spaOnUnload = [];
+
+      function resolveRoute() {
+        // hash는 "#/irs?state=ai-failed" 형태를 허용. path와 query 분리해서 path만 ROUTES 매칭.
+        const rawHash = location.hash.replace(/^#/, '') || '/';
+        const [path, query = ''] = rawHash.split('?');
+        const p = path || '/';
+        if (ROUTES[p]) return { route: p, query };
+        // also accept direct file name via hash
+        for (const [route, file] of Object.entries(ROUTES)) {
+          if (p === '/' + file || p === file) return { route, query };
+        }
+        return { route: '/', query: '' };
+      }
+
+      function fileForHref(href) {
+        if (!href) return null;
+        try {
+          const url = new URL(href, location.href);
+          if (url.origin !== location.origin) return null;
+          // URL.pathname은 non-ASCII를 percent-encoding 상태로 반환 —
+          // ROUTES 키가 한글 파일명(예: "6_Projects_ProjectName_Compare.html")이므로 디코딩 후 매칭.
+          const file = decodeURIComponent(url.pathname.split('/').pop());
+          return ROUTES[FILE_TO_ROUTE[file]] ? file : null;
+        } catch { return null; }
+      }
+
+      async function fetchPage(file) {
+        if (cache.has(file)) return cache.get(file);
+        // no-store: 로컬 개발 중 페이지 수정이 즉시 반영되도록 브라우저 HTTP 캐시 우회.
+        // (shell의 메모리 Map 캐시는 세션 내 전환 속도용으로 그대로 유지)
+        const res = await fetch(encodeURI(file), { cache: 'no-store' });
+        if (!res.ok) throw new Error(`Failed to fetch ${file}: ${res.status}`);
+        const html = await res.text();
+        const doc = new DOMParser().parseFromString(html, 'text/html');
+        const parsed = {
+          title: doc.title,
+          bodyHTML: doc.body.innerHTML, // full body
+          styles: [...doc.querySelectorAll('style')].map(s => s.textContent),
+          scripts: [...doc.querySelectorAll('body script:not([src])')].map(s => s.textContent),
+          externalScripts: [...doc.querySelectorAll('body script[src]')].map(s => s.src).filter(s => !/lucide/i.test(s)),
+        };
+        cache.set(file, parsed);
+        return parsed;
+      }
+
+      function removeInjected() {
+        injected.forEach(n => n.remove());
+        injected = [];
+      }
+
+      // 페이지별 CSS 내 body/html 셀렉터를 shell 컨테이너 기준으로 rewrite.
+      // 페이지 간 전역 body 배경/폰트 규칙이 누수되지 않도록 격리한다.
+      function rewriteScope(css) {
+        return css
+          .replace(/(^|[\s,}])html\s*,\s*body\s*\{/g, '$1#spa-content {')
+          .replace(/(^|[\s,}])body\s*\{/g, '$1#spa-content {')
+          .replace(/(^|[\s,}])html\s*\{/g, '$1#spa-root {');
+      }
+
+      function injectStyles(styles) {
+        styles.forEach(css => {
+          const el = document.createElement('style');
+          el.textContent = rewriteScope(css);
+          el.dataset.spa = '1';
+          document.head.appendChild(el);
+          injected.push(el);
+        });
+      }
+
+      // 각 페이지의 인라인 스크립트를 IIFE로 래핑해 top-level const/let 재선언 충돌을 막는다.
+      function runScripts(scripts) {
+        scripts.forEach(code => {
+          const el = document.createElement('script');
+          el.textContent = '(function(){\n' + code + '\n})();';
+          el.dataset.spa = '1';
+          document.body.appendChild(el);
+          injected.push(el);
+        });
+      }
+
+      async function navigate(route, { push = true, query = '' } = {}) {
+        const file = ROUTES[route];
+        if (!file) return navigate('/', { push: false });
+        // 쿼리 문자열은 "?..." 형태로 정규화. 각 페이지의 resolveInitialState()가
+        // location.href 매칭으로 ?state=, ?failReason=, ?blockedBy= 등을 읽는다.
+        const normQuery = query ? (query.startsWith('?') ? query : '?' + query) : '';
+
+        // URL을 페이지 스크립트 실행 전에 갱신 — resolveInitialState()가 location.href에서
+        // ?state=, ?failReason= 등을 읽으려면 swap()보다 먼저 pushState가 필요.
+        const targetHash = '#' + route + normQuery;
+        if (push && targetHash !== location.hash) {
+          history.pushState({ route, query: normQuery }, '', targetHash);
+        }
+
+        $loading.classList.add('active');
+        const supportsVT = typeof document.startViewTransition === 'function';
+        if (!supportsVT) $content.classList.add('fading');
+        try {
+          const data = await fetchPage(file);
+
+          const swap = () => {
+            // Flush per-page cleanup callbacks (cancel timers, detach listeners, etc.)
+            // before tearing down the previous page's DOM/scripts.
+            while (window.__spaOnUnload.length) {
+              try { window.__spaOnUnload.pop()(); } catch (e) { console.error(e); }
+            }
+            removeInjected();
+            $content.innerHTML = data.bodyHTML;
+            injectStyles(data.styles);
+            if (data.title) document.title = data.title;
+            wireLinks($content);
+            runScripts(data.scripts);
+            if (window.lucide) window.lucide.createIcons();
+          };
+
+          if (supportsVT) {
+            await document.startViewTransition(swap).finished.catch(() => { });
+          } else {
+            // Firefox 등 미지원 브라우저: opacity fade 잠깐 보이고 교체
+            await new Promise(r => setTimeout(r, 80));
+            swap();
+          }
+
+          window.scrollTo(0, 0);
+          const scrollable = $content.querySelector('.content-area, main');
+          if (scrollable) scrollable.scrollTop = 0;
+        } catch (err) {
+          console.error(err);
+          $content.innerHTML = `<div style="padding:32px;color:#A04545">페이지 로드 실패: ${err.message}</div>`;
+        } finally {
+          $content.classList.remove('fading');
+          $loading.classList.remove('active');
+          $root.classList.add('ready');
+        }
+      }
+
+      // href → { route, query } 또는 null. hash(#/route?q=x) 및 상대 파일(legacy)을 모두 지원.
+      function resolveHref(href) {
+        if (!href) return null;
+        try {
+          const u = new URL(href, location.href);
+          if (u.origin !== location.origin) return null;
+          // 1) hash-based: "index.html#/dashboard?state=review" or "#/dashboard"
+          if (u.hash) {
+            const raw = u.hash.replace(/^#/, '');
+            const [path, query = ''] = raw.split('?');
+            if (ROUTES[path]) return { route: path, query: query ? '?' + query : '' };
+          }
+          // 2) legacy 상대 파일명 href (fallback — 이후 호환)
+          const file = decodeURIComponent(u.pathname.split('/').pop());
+          const route = FILE_TO_ROUTE[file];
+          if (route) return { route, query: u.search || '' };
+        } catch { }
+        return null;
+      }
+
+      function wireLinks(scope) {
+        const anchors = scope.querySelectorAll('a[href]');
+        anchors.forEach(a => {
+          if (a.dataset.spaWired) return;
+          const href = a.getAttribute('href');
+          const resolved = resolveHref(href);
+          if (!resolved) return;
+          a.dataset.spaWired = '1';
+          a.addEventListener('click', (e) => {
+            // allow cmd/ctrl-click for new tab
+            if (e.metaKey || e.ctrlKey || e.shiftKey || e.button === 1) return;
+            e.preventDefault();
+            navigate(resolved.route, { query: resolved.query });
+          });
+        });
+      }
+
+      window.addEventListener('popstate', () => {
+        const { route, query } = resolveRoute();
+        navigate(route, { push: false, query });
+      });
+
+      // Kick off
+      const initial = resolveRoute();
+      navigate(initial.route, { push: false, query: initial.query });
+    })();
+  </script>
+</body>
+
+</html>

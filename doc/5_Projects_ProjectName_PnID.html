@@ -1,0 +1,1600 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EPC PE AI Platform</title>
+  <link rel="icon" type="image/png" href="reference/logo.png">
+  <link
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+    rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --primary-900: #081E3A;
+      --primary-800: #0F2E57;
+      --primary-700: #173F73;
+      --primary-600: #1F4E91;
+      --primary-500: #275DB2;
+      --primary-400: #4A7BC7;
+      --primary-300: #7FA2D9;
+      --primary-200: #B2C7E8;
+      --primary-100: #D4DFEE;
+      --primary-50: #EEF2F9;
+      --gray-900: #0D1117;
+      --gray-800: #1C2230;
+      --gray-700: #2E3A4E;
+      --gray-600: #4A5568;
+      --gray-500: #6B7A8F;
+      --gray-400: #94A3B8;
+      --gray-300: #CBD5E1;
+      --gray-200: #E2E8F0;
+      --gray-100: #F1F5F9;
+      --gray-50: #F8FAFC;
+      --success: #3A8C6E;
+      --warning: #B07D3A;
+      --error: #A04545;
+      --info: #3A6A96;
+      --success-bg: #E8F3EE;
+    }
+
+    html,
+    body {
+      font-family: 'IBM Plex Sans KR', sans-serif;
+      color: var(--gray-700);
+      background: var(--gray-100);
+      font-size: 14px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      height: 100vh;
+      overflow-y: hidden;
+      overflow-x: auto;
+      min-width: 1100px;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button {
+      font-family: inherit;
+      cursor: pointer;
+      border: none;
+      background: none;
+    }
+
+    .mono {
+      font-family: 'IBM Plex Mono', monospace;
+    }
+
+    .top-band {
+      height: 2px;
+      background: var(--primary-500);
+    }
+
+    .app-header {
+      width: 100%;
+      min-width: 100%;
+      height: 52px;
+      background: #fff;
+      border-bottom: 1px solid var(--gray-200);
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      padding: 0 24px;
+      position: sticky;
+      top: 2px;
+      z-index: 99;
+    }
+
+    .hdr-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .hdr-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .hdr-logo img {
+      height: 28px;
+      width: auto;
+      display: block;
+    }
+
+    .hdr-sysname {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--gray-800);
+      letter-spacing: -0.01em;
+    }
+
+    .hdr-tabs {
+      display: flex;
+      gap: 4px;
+    }
+
+    .hdr-tab {
+      height: 52px;
+      display: inline-flex;
+      align-items: center;
+      padding: 0 18px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--gray-500);
+      border-bottom: 2px solid transparent;
+      transition: color .15s, border-color .15s;
+    }
+
+    .hdr-tab:hover {
+      color: var(--gray-700);
+    }
+
+    .hdr-tab.active {
+      color: var(--primary-500);
+      font-weight: 600;
+      border-bottom-color: var(--primary-500);
+    }
+
+    .hdr-right {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    .notif-bell {
+      width: 32px;
+      height: 32px;
+      border-radius: 4px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: #fff;
+      color: var(--gray-700);
+      border: 1px solid transparent;
+      position: relative;
+      transition: background .15s, border-color .15s;
+    }
+
+    .notif-bell:hover {
+      background: var(--gray-50);
+      border-color: var(--gray-200);
+    }
+
+    .notif-bell svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .notif-bell .badge {
+      position: absolute;
+      top: -4px; right: -4px;
+      min-width: 18px; height: 18px;
+      padding: 0 5px;
+      border-radius: 9px;
+      background: var(--primary-500);
+      color: #fff;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px; font-weight: 500;
+      display: inline-flex; align-items: center; justify-content: center;
+      border: 2px solid #fff;
+      line-height: 1;
+    }
+    .notif-bell .badge.pulse::after {
+      content: ''; position: absolute; inset: -2px;
+      border-radius: 50%;
+      background: var(--primary-500);
+      opacity: 0.3;
+      animation: notif-pulse 2s infinite;
+    }
+    @keyframes notif-pulse {
+      0% { transform: scale(1); opacity: 0.4; }
+      100% { transform: scale(1.6); opacity: 0; }
+    }
+
+    .btn {
+      height: 36px;
+      padding: 0 14px;
+      border-radius: 4px;
+      font-size: 13px;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background .15s, border-color .15s, color .15s;
+      border: 1px solid transparent;
+      white-space: nowrap;
+    }
+
+    .btn i {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+    }
+
+    .btn.btn-primary {
+      background: var(--primary-500);
+      color: #fff;
+    }
+
+    .btn.btn-primary:hover {
+      background: var(--primary-600);
+    }
+
+    .btn.btn-secondary {
+      background: #fff;
+      border-color: var(--gray-300);
+      color: var(--gray-700);
+    }
+
+    .btn.btn-secondary:hover {
+      background: var(--gray-50);
+    }
+
+    .btn:disabled,
+    .btn.is-disabled {
+      opacity: 0.4;
+      pointer-events: none;
+    }
+
+    /* legend-bar 내부 버튼 — 32px/12px로 축소하여 pill(28px)과 위계 유지 */
+    .legend-bar .btn {
+      height: 32px;
+      padding: 0 12px;
+      font-size: 12px;
+    }
+
+    .legend-bar .btn i {
+      width: 14px;
+      height: 14px;
+    }
+
+    .project-bar {
+      width: 100%;
+      min-width: 100%;
+      height: 72px;
+      background: #fff;
+      border-bottom: 1px solid var(--gray-200);
+      display: flex;
+      align-items: center;
+      padding: 0 32px;
+      gap: 24px;
+    }
+
+    .proj-name-block {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      min-width: 0;
+      flex: 1;
+    }
+
+    .proj-name {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--gray-800);
+      line-height: 1.2;
+      letter-spacing: -0.01em;
+    }
+
+    .proj-meta {
+      font-size: 13px;
+      color: var(--gray-600);
+      word-spacing: 0.2em;
+      letter-spacing: 0.01em;
+      display: flex;
+      gap: 12px;
+    }
+
+    .proj-meta-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .proj-meta-label {
+      color: var(--gray-400);
+      font-weight: 500;
+    }
+
+    .proj-meta .mono {
+      font-family: 'IBM Plex Mono', monospace;
+      color: var(--gray-700);
+    }
+
+    .proj-meta-sep::before {
+      content: '·';
+      color: var(--gray-400);
+      margin: 0 4px;
+    }
+
+    .subtab-bar {
+      width: 100%;
+      min-width: 100%;
+      height: 44px;
+      background: #fff;
+      border-bottom: 1px solid var(--gray-200);
+      display: flex;
+      padding: 0 32px;
+      align-items: stretch;
+    }
+
+    .subtab {
+      height: 44px;
+      display: inline-flex;
+      align-items: center;
+      padding: 0 20px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--gray-500);
+      border-bottom: 2px solid transparent;
+      transition: color .15s, border-color .15s;
+    }
+
+    .subtab:first-child {
+      padding-left: 0;
+    }
+
+    .subtab:hover {
+      color: var(--gray-700);
+    }
+
+    .subtab.active {
+      color: var(--primary-500);
+      border-bottom-color: var(--primary-500);
+    }
+
+    .legend-bar {
+      width: 100%;
+      min-width: 100%;
+      height: 48px;
+      background: var(--gray-50);
+      border-bottom: 1px solid var(--gray-200);
+      padding: 0 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .legend-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex: 1;
+      min-width: 0;
+      overflow: hidden;
+    }
+
+    .legend-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .legend-anchors {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      min-width: 0;
+      overflow: hidden;
+    }
+
+    .legend-anchor {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      height: 28px;
+      padding: 0 12px 0 10px;
+      border-radius: 999px;
+      background: var(--primary-50);
+      color: var(--primary-700);
+      font-size: 12px;
+      font-weight: 600;
+      font-family: 'IBM Plex Sans KR', sans-serif;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .legend-anchor .icon {
+      width: 14px;
+      height: 14px;
+      color: var(--primary-500);
+      stroke-width: 2;
+      flex-shrink: 0;
+    }
+
+    .legend-anchor-more {
+      background: var(--gray-100);
+      color: var(--gray-600);
+    }
+
+    /* Extract option cards in modal */
+    .extract-options {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .extract-option {
+      padding: 14px 16px;
+      border-radius: 4px;
+      border: 1px solid var(--gray-200);
+      background: #fff;
+      text-align: left;
+      cursor: pointer;
+      transition: border-color .15s, background .15s;
+    }
+
+    .extract-option:hover {
+      border-color: var(--gray-400);
+    }
+
+    .extract-option.is-selected {
+      border-color: var(--primary-500);
+      background: var(--primary-50);
+    }
+
+    .extract-option-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--gray-800);
+      margin-bottom: 4px;
+    }
+
+    .extract-option.is-selected .extract-option-title {
+      color: var(--primary-700);
+    }
+
+    .extract-option-desc {
+      font-size: 12px;
+      color: var(--gray-500);
+    }
+
+    /* ═══ Modal ═══ */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(13, 17, 23, 0.45);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .modal-backdrop.is-open { display: flex; }
+    .modal-panel {
+      background: #fff;
+      border-radius: 6px;
+      width: 100%;
+      max-width: 520px;
+      max-height: calc(100vh - 48px);
+      box-shadow: 0 20px 40px rgba(13, 17, 23, 0.2);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .modal-header {
+      padding: 18px 22px 14px;
+      border-bottom: 1px solid var(--gray-200);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .modal-title { font-size: 18px; font-weight: 600; color: var(--gray-800); }
+    .modal-close {
+      width: 28px; height: 28px; border-radius: 4px;
+      color: var(--gray-500); display: inline-flex; align-items: center; justify-content: center;
+      background: none; border: none; cursor: pointer; transition: background .15s, color .15s;
+    }
+    .modal-close:hover { background: var(--gray-100); color: var(--gray-800); }
+    .modal-close i, .modal-close svg { width: 24px; height: 24px; }
+    .modal-body { padding: 18px 22px; overflow-y: auto; flex: 1; }
+    .modal-footer {
+      padding: 14px 22px 18px;
+      border-top: 1px solid var(--gray-100);
+      display: flex; justify-content: flex-end; gap: 8px;
+    }
+    .modal-field + .modal-field { margin-top: 14px; }
+    .modal-label { display: block; font-size: 13px; font-weight: 500; color: var(--gray-700); margin-bottom: 6px; }
+    .modal-hint { margin-top: 10px; font-size: 12px; color: var(--gray-500); line-height: 1.5; }
+
+    .file-drop {
+      display: block;
+      border: 1.5px dashed var(--gray-300);
+      border-radius: 4px;
+      padding: 16px;
+      text-align: center;
+      color: var(--gray-500);
+      font-size: 13px;
+      cursor: pointer;
+      transition: border-color .15s, background .15s;
+    }
+    .file-drop:hover { border-color: var(--primary-500); background: var(--primary-50); color: var(--primary-700); }
+    .file-drop.has-file { border-color: var(--primary-500); background: var(--primary-50); color: var(--primary-700); font-weight: 500; }
+    .file-drop input[type="file"] { display: none; }
+
+    .upload-file-list {
+      margin-top: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .upload-file-item {
+      font-size: 12px;
+      color: var(--gray-700);
+      padding: 6px 10px;
+      background: var(--gray-50);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .upload-file-item .remove-file {
+      color: var(--gray-400);
+      cursor: pointer;
+      background: none;
+      border: none;
+      font-size: 14px;
+    }
+    .upload-file-item .remove-file:hover { color: var(--error); }
+
+    /* ═══ Empty state (도면 업로드 전) ═══ */
+    .diagram-empty {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--gray-100);
+    }
+
+    .diagram-empty-inner {
+      text-align: center;
+    }
+
+    .diagram-empty-icon {
+      width: 48px;
+      height: 48px;
+      color: var(--gray-400);
+      margin-bottom: 16px;
+    }
+
+    .diagram-empty-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--gray-700);
+      margin-bottom: 6px;
+    }
+
+    .diagram-empty-desc {
+      font-size: 13px;
+      color: var(--gray-500);
+    }
+
+
+    /* ═══ Diagram views container ═══ */
+    .diagram-views {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .diagram-views.mode-thumbnail {
+      flex-direction: row;
+    }
+
+
+    /* ═══ Thumbnail sidebar ═══ */
+    .dwg-sidebar {
+      width: 200px;
+      background: #fff;
+      border-right: 1px solid var(--gray-200);
+      overflow-y: auto;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+    }
+    .dwg-thumb-list {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+    .sidebar-hint {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--gray-500);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      padding: 4px 0 10px;
+    }
+    .sidebar-hint-sub {
+      display: block;
+      font-size: 10px;
+      font-weight: 400;
+      color: var(--gray-400);
+      margin-top: 2px;
+    }
+    .dwg-thumb {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid var(--gray-200);
+      border-radius: 4px;
+      background: #fff;
+      cursor: pointer;
+      text-align: left;
+      transition: border-color .15s, background .15s;
+    }
+    .dwg-thumb:hover { border-color: var(--gray-400); }
+    .dwg-thumb:focus { outline: none; }
+    .dwg-thumb.is-active { border-color: var(--primary-500); background: var(--primary-50); }
+    .dwg-thumb-label { font-size: 12px; font-weight: 600; color: var(--gray-700); }
+    .dwg-thumb-sub { font-size: 10px; color: var(--gray-500); }
+    .dwg-thumb.is-active .dwg-thumb-label { color: var(--primary-700); }
+    .dwg-thumb-img {
+      width: 100%;
+      height: 48px;
+      background-size: cover;
+      background-position: center;
+      background-color: var(--gray-50);
+      border-radius: 2px;
+      margin-bottom: 6px;
+    }
+    .dwg-thumb-info { display: flex; flex-direction: column; gap: 2px; }
+    .thumb-group-label {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--gray-500);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      padding: 10px 0 4px;
+    }
+    .thumb-group-label:first-child { padding-top: 0; }
+    .dwg-thumb-dirs {
+      font-size: 10px;
+      color: var(--gray-400);
+      margin-top: 4px;
+      font-family: 'IBM Plex Mono', monospace;
+    }
+    .dwg-thumb.is-active .dwg-thumb-dirs { color: var(--primary-500); }
+
+
+
+    /* ═══ P&ID Page-specific ═══ */
+    .content-area {
+      height: calc(100vh - 2px - 52px - 72px - 44px - 49px);
+      background: var(--gray-100);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* Diagram views: 썸네일 + 도면 가로 배치 */
+    .diagram-views {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      flex-direction: row;
+      overflow: hidden;
+    }
+
+    /* 우측 도면 영역 */
+    .diagram-main {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      background: #fff;
+      overflow: hidden;
+    }
+
+    .diagram-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 32px;
+      border-bottom: 1px solid var(--gray-100);
+      flex-shrink: 0;
+    }
+
+    .diagram-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--gray-800);
+    }
+
+    .diagram-sub {
+      font-size: 12px;
+      color: var(--gray-500);
+      font-family: 'IBM Plex Mono', monospace;
+    }
+
+    .pnid-svg {
+      flex: 1;
+      width: 100%;
+      display: block;
+      background:
+        linear-gradient(var(--gray-100) 1px, transparent 1px) 0 0 / 20px 20px,
+        linear-gradient(90deg, var(--gray-100) 1px, transparent 1px) 0 0 / 20px 20px,
+        #fff;
+    }
+
+    /* Extraction Result Panel */
+    .result-panel {
+      background: #fff;
+      border-top: 1px solid var(--gray-200);
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height .35s ease-out;
+      flex-shrink: 0;
+    }
+
+    .result-panel.open {
+      max-height: 380px;
+    }
+
+    .result-head {
+      padding: 14px 32px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--gray-200);
+    }
+
+    .result-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--gray-800);
+    }
+
+    .result-close {
+      width: 28px; height: 28px;
+      border-radius: 4px;
+      display: inline-flex; align-items: center; justify-content: center;
+      background: none; border: none; cursor: pointer;
+      color: var(--gray-500);
+      transition: background .15s, color .15s;
+    }
+    .result-close:hover { background: var(--gray-100); color: var(--gray-800); }
+    .result-close i { width: 24px; height: 24px; }
+
+
+    .result-table-wrap {
+      max-height: 320px;
+      overflow: auto;
+    }
+
+    .result-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .result-table thead th {
+      background: var(--gray-50);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--gray-600);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      padding: 10px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--gray-200);
+      white-space: nowrap;
+      position: sticky;
+      top: 0;
+    }
+
+    .result-table thead th:first-child {
+      padding-left: 32px;
+    }
+
+    .result-table thead th:last-child {
+      padding-right: 32px;
+    }
+
+    .result-table tbody td {
+      font-size: 13px;
+      color: var(--gray-700);
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--gray-100);
+      vertical-align: top;
+      line-height: 1.5;
+    }
+
+    .result-table tbody td:first-child {
+      padding-left: 32px;
+    }
+
+    .result-table tbody td:last-child {
+      padding-right: 32px;
+    }
+
+    .result-table tbody tr:hover {
+      background: var(--gray-50);
+    }
+
+    .tag-no,
+    .tag-loc {
+      font-family: 'IBM Plex Mono', monospace;
+    }
+
+    .tag-type {
+      display: inline-flex;
+      align-items: center;
+      font-size: 12px;
+      font-weight: 500;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: var(--gray-100);
+      color: var(--gray-700);
+    }
+
+    .tag-type.valve {
+      background: #E5EEF7;
+      color: var(--info);
+    }
+
+    .tag-type.pump {
+      background: var(--success-bg);
+      color: var(--success);
+    }
+
+    .tag-type.vessel {
+      background: #F1E8D6;
+      color: var(--warning);
+    }
+
+    .tag-type.instrument {
+      background: var(--primary-100);
+      color: var(--primary-500);
+    }
+
+    /* Spinner */
+    .spinner {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-top-color: #fff;
+      animation: spin .7s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="top-band"></div>
+
+  <header class="app-header">
+    <div class="hdr-left">
+      <a href="index.html#/" class="hdr-logo">
+        <img src="reference/logo.png" alt="EPC PE Platform">
+        <span class="hdr-sysname">EPC PE AI-Platform</span>
+      </a>
+    </div>
+    <nav class="hdr-tabs">
+      <a href="index.html#/" class="hdr-tab active">Projects</a>
+      <a href="index.html#/templates" class="hdr-tab">Templates</a>
+      <a href="index.html#/bot" class="hdr-tab">AI Q&amp;A</a>
+    </nav>
+    <div class="hdr-right">
+      <button class="notif-bell" aria-label="Notifications">
+        <i data-lucide="bell"></i>
+        <span class="badge pulse">3</span>
+      </button>
+    </div>
+  </header>
+
+  <div class="project-bar">
+    <div class="proj-name-block">
+      <div class="proj-name">Saudi ARAMCO Jafurah Gas Plant Phase 2</div>
+      <div class="proj-meta">
+        <span class="proj-meta-item"><span class="proj-meta-label">계약번호</span><span
+            class="mono">JA-2025-078</span></span>
+        <span class="proj-meta-item proj-meta-sep"><span class="proj-meta-label">계약기간</span><span class="mono">2025.03 —
+            2027.08</span></span>
+        <span class="proj-meta-item proj-meta-sep"><span class="proj-meta-label">발주처</span>Saudi ARAMCO</span>
+      </div>
+    </div>
+  </div>
+
+  <nav class="subtab-bar">
+    <a href="index.html#/dashboard" class="subtab" style="display: none;">Dashboard</a>
+    <a href="index.html#/itb" class="subtab">독소조항</a>
+    <a href="index.html#/irs" class="subtab">IRS</a>
+    <a href="index.html#/design-criteria" class="subtab">Design Criteria</a>
+    <a href="index.html#/mps" class="subtab">MPS</a>
+    <a href="index.html#/pnid" class="subtab active" style="display: none;">P&amp;ID</a>
+    <a href="index.html#/compare" class="subtab" style="display: none;">문서비교</a>
+    <a href="index.html#/rev-history" class="subtab" style="display: none;" hidden>ITB 이력</a>
+  </nav>
+
+  <div class="legend-bar">
+    <div class="legend-left">
+      <span class="legend-anchors" id="file-anchors">
+        <span class="legend-anchor"><i data-lucide="file" class="icon"></i><span class="anchor-text">49개 도면 로드됨</span></span>
+      </span>
+    </div>
+    <div class="legend-right">
+      <button class="btn btn-secondary" id="btn-structure">도면 연결 구조</button>
+      <button class="btn btn-secondary" id="btn-upload-dwg">도면 업로드</button>
+      <button class="btn btn-secondary" id="btn-show-result" style="display:none;">결과 보기</button>
+      <button class="btn btn-primary" id="btn-extract">
+        <span id="extract-label">오류 추출</span>
+      </button>
+    </div>
+  </div>
+
+  <main class="content-area">
+
+    <!-- Empty state: 도면 업로드 전 -->
+    <div class="diagram-empty" id="diagram-empty" style="display:none;">
+      <div class="diagram-empty-inner">
+        <div class="diagram-empty-title">P&ID 도면을 업로드하세요</div>
+        <div class="diagram-empty-desc">DWG 또는 PDF 파일을 업로드하면 AI가 심볼과 라인을 인식합니다.</div>
+      </div>
+    </div>
+
+    <!-- Diagram views -->
+    <div class="diagram-views" id="diagram-views">
+
+      <!-- 좌측 썸네일 사이드바 -->
+      <aside class="dwg-sidebar" id="dwg-thumbnail-sidebar" style="display: none;">
+        <div class="sidebar-hint">
+          <span>도면 연결 순서</span>
+          <span class="sidebar-hint-sub">상하좌우 키보드로 이동</span>
+        </div>
+        <div class="dwg-thumb-list" id="dwg-thumb-list">
+          <!-- JS로 렌더링 -->
+        </div>
+      </aside>
+
+      <!-- 우측 도면 영역 -->
+      <div class="diagram-main" id="diagram-main">
+        <div class="diagram-header">
+          <div>
+            <div class="diagram-title">Inlet Separation &amp; Manifold — Unit 100</div>
+            <div class="diagram-sub">Drawing No. PID-JAF-100-001 · Rev B · Scale 1:50</div>
+          </div>
+          <div class="diagram-sub">DWG Size: A1 · 2026-04-10</div>
+        </div>
+
+        <div class="pnid-svg" id="pnid-display"></div>
+        <!-- SVG 도면 제거: PNG 이미지로 대체 (JS에서 background-image 설정) -->
+
+        <!-- Extraction Result Panel -->
+        <div class="result-panel" id="result-panel">
+          <div class="result-head">
+            <div class="result-title" id="result-title">오류 추출 결과 (11)</div>
+            <button class="result-close" id="btn-close-result"><i data-lucide="x"></i></button>
+          </div>
+          <div class="result-table-wrap">
+            <table class="result-table">
+              <thead>
+                <tr>
+                  <th style="width: 60px;">#</th>
+                  <th style="width: 140px;">태그명</th>
+                  <th style="width: 130px;">타입</th>
+                  <th>위치 / Service</th>
+                  <th style="width: 140px;">도면 좌표</th>
+                </tr>
+              </thead>
+              <tbody id="result-tbody">
+                <!-- rows injected by JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div><!-- /diagram-main -->
+
+    </div><!-- /diagram-views -->
+
+  </main>
+
+  <!-- Modal: 구조 참고 -->
+  <div class="modal-backdrop" id="modal-structure" aria-hidden="true">
+    <div class="modal-panel" role="dialog" aria-labelledby="modal-structure-title" style="max-width: 820px; max-height: 90vh; overflow: hidden;">
+      <div class="modal-header">
+        <div class="modal-title" id="modal-structure-title">도면 연결 구조 (49개)</div>
+        <button type="button" class="modal-close" data-modal-close><i data-lucide="x"></i></button>
+      </div>
+      <div class="modal-body" style="padding: 24px; overflow-y: auto; max-height: calc(90vh - 120px);">
+        <svg class="structure-map" viewBox="0 0 780 590" xmlns="http://www.w3.org/2000/svg" style="width:780px; height:590px; min-width:780px;">
+          <defs>
+            <marker id="arr" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+              <path d="M0,0 L6,3 L0,6" fill="none" stroke="#94A3B8" stroke-width="1"/>
+            </marker>
+          </defs>
+
+          <!-- ═══ Fuel Gas ═══ -->
+          <text x="10" y="16" font-size="11" font-weight="600" fill="#B07D3A">Fuel Gas</text>
+          <rect x="10" y="24" width="130" height="30" rx="4" fill="#F6E8CD" stroke="#B07D3A" stroke-width="1"/>
+          <text x="75" y="43" text-anchor="middle" font-size="9" fill="#2E3A4E">Fuel Gas System</text>
+          <line x1="140" y1="39" x2="160" y2="39" stroke="#94A3B8" stroke-width="1" marker-end="url(#arr)"/>
+          <rect x="160" y="24" width="130" height="30" rx="4" fill="#F6E8CD" stroke="#CBD5E1"/>
+          <text x="225" y="43" text-anchor="middle" font-size="9" fill="#2E3A4E">GT Fuel Gas Heater</text>
+
+          <!-- ═══ Water Systems ═══ -->
+          <text x="10" y="76" font-size="11" font-weight="600" fill="#3A6A96">Water Systems</text>
+          <rect x="10" y="84" width="130" height="30" rx="4" fill="#E5EEF7" stroke="#3A6A96" stroke-width="1"/>
+          <text x="75" y="103" text-anchor="middle" font-size="9" fill="#2E3A4E">Raw Water Supply</text>
+          <line x1="140" y1="99" x2="160" y2="99" stroke="#94A3B8" stroke-width="1" marker-end="url(#arr)"/>
+          <rect x="160" y="84" width="130" height="30" rx="4" fill="#E5EEF7" stroke="#CBD5E1"/>
+          <text x="225" y="103" text-anchor="middle" font-size="9" fill="#2E3A4E">DM Water Storage</text>
+          <line x1="290" y1="99" x2="310" y2="99" stroke="#94A3B8" stroke-width="1" marker-end="url(#arr)"/>
+          <rect x="310" y="84" width="130" height="30" rx="4" fill="#E5EEF7" stroke="#CBD5E1"/>
+          <text x="375" y="103" text-anchor="middle" font-size="9" fill="#2E3A4E">Plant Drain</text>
+          <line x1="75" y1="114" x2="75" y2="124" stroke="#94A3B8" stroke-width="1" marker-end="url(#arr)"/>
+          <rect x="10" y="124" width="130" height="30" rx="4" fill="#E5EEF7" stroke="#CBD5E1"/>
+          <text x="75" y="143" text-anchor="middle" font-size="9" fill="#2E3A4E">Potable Water</text>
+          <rect x="460" y="84" width="130" height="30" rx="4" fill="#E5EEF7" stroke="#CBD5E1"/>
+          <text x="525" y="103" text-anchor="middle" font-size="9" fill="#2E3A4E">Closed Cooling Water</text>
+
+          <!-- ═══ Steam & Condensate ═══ -->
+          <text x="10" y="176" font-size="11" font-weight="600" fill="#275DB2">Steam &amp; Condensate</text>
+          <rect x="10" y="184" width="100" height="30" rx="4" fill="#EEF2F9" stroke="#275DB2" stroke-width="1"/>
+          <text x="60" y="203" text-anchor="middle" font-size="9" fill="#2E3A4E">Feedwater</text>
+          <line x1="110" y1="199" x2="125" y2="199" stroke="#94A3B8" stroke-width="1" marker-end="url(#arr)"/>
+          <rect x="125" y="184" width="90" height="30" rx="4" fill="#EEF2F9" stroke="#CBD5E1"/>
+          <text x="170" y="203" text-anchor="middle" font-size="9" fill="#2E3A4E">HHP Steam</text>
+          <line x1="215" y1="199" x2="230" y2="199" stroke="#94A3B8" stroke-width="1" marker-end="url(#arr)"/>
+          <rect x="230" y="184" width="90" height="30" rx="4" fill="#EEF2F9" stroke="#CBD5E1"/>
+          <text x="275" y="203" text-anchor="middle" font-size="9" fill="#2E3A4E">HP Steam</text>
+          <line x1="320" y1="199" x2="335" y2="199" stroke="#94A3B8" stroke-width="1" marker-end="url(#arr)"/>
+          <rect x="335" y="184" width="90" height="30" rx="4" fill="#EEF2F9" stroke="#CBD5E1"/>
+          <text x="380" y="203" text-anchor="middle" font-size="9" fill="#2E3A4E">LP Steam</text>
+          <line x1="60" y1="214" x2="60" y2="224" stroke="#94A3B8" stroke-width="1" marker-end="url(#arr)"/>
+          <rect x="10" y="224" width="100" height="30" rx="4" fill="#EEF2F9" stroke="#CBD5E1"/>
+          <text x="60" y="243" text-anchor="middle" font-size="9" fill="#2E3A4E">Aux Steam</text>
+          <line x1="60" y1="254" x2="60" y2="264" stroke="#94A3B8" stroke-width="1" marker-end="url(#arr)"/>
+          <rect x="10" y="264" width="100" height="30" rx="4" fill="#EEF2F9" stroke="#CBD5E1"/>
+          <text x="60" y="283" text-anchor="middle" font-size="9" fill="#2E3A4E">Condensate</text>
+          <line x1="110" y1="279" x2="125" y2="279" stroke="#94A3B8" stroke-width="1" marker-end="url(#arr)"/>
+          <rect x="125" y="264" width="90" height="30" rx="4" fill="#EEF2F9" stroke="#CBD5E1"/>
+          <text x="170" y="283" text-anchor="middle" font-size="9" fill="#2E3A4E">CPP</text>
+          <rect x="230" y="264" width="100" height="30" rx="4" fill="#EEF2F9" stroke="#CBD5E1"/>
+          <text x="280" y="283" text-anchor="middle" font-size="9" fill="#2E3A4E">Steam Drain</text>
+
+          <!-- ═══ GTG Interconnecting ═══ -->
+          <text x="460" y="176" font-size="11" font-weight="600" fill="#4A5568">GTG Interconnecting</text>
+          <rect x="460" y="184" width="130" height="30" rx="4" fill="#F1F5F9" stroke="#4A5568" stroke-width="1"/>
+          <text x="525" y="203" text-anchor="middle" font-size="9" fill="#2E3A4E">Fire Fighting</text>
+          <line x1="590" y1="199" x2="610" y2="199" stroke="#94A3B8" stroke-width="1" marker-end="url(#arr)"/>
+          <rect x="610" y="184" width="130" height="30" rx="4" fill="#F1F5F9" stroke="#CBD5E1"/>
+          <text x="675" y="203" text-anchor="middle" font-size="9" fill="#2E3A4E">Air Processing</text>
+          <line x1="525" y1="214" x2="525" y2="224" stroke="#94A3B8" stroke-width="1" marker-end="url(#arr)"/>
+          <rect x="460" y="224" width="130" height="30" rx="4" fill="#F1F5F9" stroke="#CBD5E1"/>
+          <text x="525" y="243" text-anchor="middle" font-size="9" fill="#2E3A4E">Water Wash</text>
+          <line x1="675" y1="214" x2="675" y2="224" stroke="#94A3B8" stroke-width="1" marker-end="url(#arr)"/>
+          <rect x="610" y="224" width="130" height="30" rx="4" fill="#F1F5F9" stroke="#CBD5E1"/>
+          <text x="675" y="243" text-anchor="middle" font-size="9" fill="#2E3A4E">Lube Oil / H2 Seal</text>
+          <line x1="525" y1="254" x2="525" y2="264" stroke="#94A3B8" stroke-width="1" marker-end="url(#arr)"/>
+          <rect x="460" y="264" width="130" height="30" rx="4" fill="#F1F5F9" stroke="#CBD5E1"/>
+          <text x="525" y="283" text-anchor="middle" font-size="9" fill="#2E3A4E">Gen H2 Seal Oil</text>
+          <rect x="610" y="264" width="130" height="30" rx="4" fill="#F1F5F9" stroke="#CBD5E1"/>
+          <text x="675" y="283" text-anchor="middle" font-size="9" fill="#2E3A4E">Instrument Air</text>
+
+          <!-- ═══ Utilities ═══ -->
+          <text x="10" y="320" font-size="11" font-weight="600" fill="#3A8C6E">Utilities</text>
+          <rect x="10" y="328" width="110" height="30" rx="4" fill="#E8F3EE" stroke="#3A8C6E" stroke-width="1"/>
+          <text x="65" y="347" text-anchor="middle" font-size="9" fill="#2E3A4E">Chemical Dosing IF</text>
+          <line x1="120" y1="343" x2="135" y2="343" stroke="#94A3B8" stroke-width="1" marker-end="url(#arr)"/>
+          <rect x="135" y="328" width="110" height="30" rx="4" fill="#E8F3EE" stroke="#CBD5E1"/>
+          <text x="190" y="347" text-anchor="middle" font-size="9" fill="#2E3A4E">Chemical Dosing</text>
+          <rect x="260" y="328" width="110" height="30" rx="4" fill="#E8F3EE" stroke="#CBD5E1"/>
+          <text x="315" y="347" text-anchor="middle" font-size="9" fill="#2E3A4E">Compressed Air</text>
+          <line x1="370" y1="343" x2="385" y2="343" stroke="#94A3B8" stroke-width="1" marker-end="url(#arr)"/>
+          <rect x="385" y="328" width="110" height="30" rx="4" fill="#E8F3EE" stroke="#CBD5E1"/>
+          <text x="440" y="347" text-anchor="middle" font-size="9" fill="#2E3A4E">Instrument Air</text>
+          <rect x="510" y="328" width="100" height="30" rx="4" fill="#E8F3EE" stroke="#CBD5E1"/>
+          <text x="560" y="347" text-anchor="middle" font-size="9" fill="#2E3A4E">N2 Gas</text>
+          <line x1="315" y1="358" x2="315" y2="368" stroke="#94A3B8" stroke-width="1" marker-end="url(#arr)"/>
+          <rect x="260" y="368" width="110" height="30" rx="4" fill="#E8F3EE" stroke="#CBD5E1"/>
+          <text x="315" y="387" text-anchor="middle" font-size="9" fill="#2E3A4E">Service Air</text>
+          <rect x="10" y="368" width="110" height="30" rx="4" fill="#E8F3EE" stroke="#CBD5E1"/>
+          <text x="65" y="387" text-anchor="middle" font-size="9" fill="#2E3A4E">ACC Steam/Cond</text>
+          <line x1="120" y1="383" x2="135" y2="383" stroke="#94A3B8" stroke-width="1" marker-end="url(#arr)"/>
+          <rect x="135" y="368" width="110" height="30" rx="4" fill="#E8F3EE" stroke="#CBD5E1"/>
+          <text x="190" y="387" text-anchor="middle" font-size="9" fill="#2E3A4E">ACC Air/Cleaning</text>
+          <rect x="385" y="368" width="110" height="30" rx="4" fill="#E8F3EE" stroke="#CBD5E1"/>
+          <text x="440" y="387" text-anchor="middle" font-size="9" fill="#2E3A4E">CW Supply</text>
+          <line x1="495" y1="383" x2="510" y2="383" stroke="#94A3B8" stroke-width="1" marker-end="url(#arr)"/>
+          <rect x="510" y="368" width="110" height="30" rx="4" fill="#E8F3EE" stroke="#CBD5E1"/>
+          <text x="565" y="387" text-anchor="middle" font-size="9" fill="#2E3A4E">Cooling Tower</text>
+          <line x1="620" y1="383" x2="635" y2="383" stroke="#94A3B8" stroke-width="1" marker-end="url(#arr)"/>
+          <rect x="635" y="368" width="110" height="30" rx="4" fill="#E8F3EE" stroke="#CBD5E1"/>
+          <text x="690" y="387" text-anchor="middle" font-size="9" fill="#2E3A4E">CW Return</text>
+
+          <!-- ═══ STG Steam-Water ═══ -->
+          <text x="10" y="424" font-size="11" font-weight="600" fill="#173F73">STG Steam-Water</text>
+          <rect x="10" y="432" width="80" height="26" rx="3" fill="#D4DFEE" stroke="#173F73" stroke-width="1"/>
+          <text x="50" y="449" text-anchor="middle" font-size="8" fill="#2E3A4E">Legend</text>
+          <line x1="90" y1="445" x2="100" y2="445" stroke="#94A3B8" stroke-width="1" marker-end="url(#arr)"/>
+          <rect x="100" y="432" width="80" height="26" rx="3" fill="#D4DFEE" stroke="#CBD5E1"/>
+          <text x="140" y="449" text-anchor="middle" font-size="8" fill="#2E3A4E">LBA</text>
+          <line x1="180" y1="445" x2="190" y2="445" stroke="#94A3B8" stroke-width="1" marker-end="url(#arr)"/>
+          <rect x="190" y="432" width="80" height="26" rx="3" fill="#D4DFEE" stroke="#CBD5E1"/>
+          <text x="230" y="449" text-anchor="middle" font-size="8" fill="#2E3A4E">LBD</text>
+          <line x1="270" y1="445" x2="280" y2="445" stroke="#94A3B8" stroke-width="1" marker-end="url(#arr)"/>
+          <rect x="280" y="432" width="80" height="26" rx="3" fill="#D4DFEE" stroke="#CBD5E1"/>
+          <text x="320" y="449" text-anchor="middle" font-size="8" fill="#2E3A4E">QFB/QFC</text>
+          <line x1="320" y1="458" x2="320" y2="468" stroke="#94A3B8" stroke-width="1" marker-end="url(#arr)"/>
+          <rect x="280" y="468" width="80" height="26" rx="3" fill="#D4DFEE" stroke="#CBD5E1"/>
+          <text x="320" y="485" text-anchor="middle" font-size="8" fill="#2E3A4E">MAA/MKA</text>
+          <text x="370" y="485" text-anchor="start" font-size="8" fill="#94A3B8">+ 5 more ↓</text>
+
+          <!-- ═══ STG Hydraulic ═══ -->
+          <text x="460" y="424" font-size="11" font-weight="600" fill="#173F73">STG Hydraulic &amp; Monitoring</text>
+          <rect x="460" y="432" width="80" height="26" rx="3" fill="#D4DFEE" stroke="#173F73" stroke-width="1"/>
+          <text x="500" y="449" text-anchor="middle" font-size="8" fill="#2E3A4E">HP Legend</text>
+          <line x1="540" y1="445" x2="550" y2="445" stroke="#94A3B8" stroke-width="1" marker-end="url(#arr)"/>
+          <rect x="550" y="432" width="80" height="26" rx="3" fill="#D4DFEE" stroke="#CBD5E1"/>
+          <text x="590" y="449" text-anchor="middle" font-size="8" fill="#2E3A4E">Supply</text>
+          <line x1="630" y1="445" x2="640" y2="445" stroke="#94A3B8" stroke-width="1" marker-end="url(#arr)"/>
+          <rect x="640" y="432" width="80" height="26" rx="3" fill="#D4DFEE" stroke="#CBD5E1"/>
+          <text x="680" y="449" text-anchor="middle" font-size="8" fill="#2E3A4E">Actuators</text>
+          <line x1="680" y1="458" x2="680" y2="468" stroke="#94A3B8" stroke-width="1" marker-end="url(#arr)"/>
+          <rect x="640" y="468" width="80" height="26" rx="3" fill="#D4DFEE" stroke="#CBD5E1"/>
+          <text x="680" y="485" text-anchor="middle" font-size="8" fill="#2E3A4E">Vibration</text>
+          <line x1="680" y1="494" x2="680" y2="504" stroke="#94A3B8" stroke-width="1" marker-end="url(#arr)"/>
+          <rect x="640" y="504" width="80" height="26" rx="3" fill="#D4DFEE" stroke="#CBD5E1"/>
+          <text x="680" y="521" text-anchor="middle" font-size="8" fill="#2E3A4E">Generator</text>
+
+          <!-- ═══ STG Lube Oil ═══ -->
+          <text x="460" y="548" font-size="11" font-weight="600" fill="#173F73">STG Lube Oil</text>
+          <rect x="460" y="555" width="80" height="26" rx="3" fill="#D4DFEE" stroke="#CBD5E1"/>
+          <text x="500" y="572" text-anchor="middle" font-size="8" fill="#2E3A4E">Legend</text>
+          <line x1="540" y1="568" x2="550" y2="568" stroke="#94A3B8" stroke-width="1" marker-end="url(#arr)"/>
+          <rect x="550" y="555" width="80" height="26" rx="3" fill="#D4DFEE" stroke="#CBD5E1"/>
+          <text x="590" y="572" text-anchor="middle" font-size="8" fill="#2E3A4E">IOS</text>
+          <line x1="630" y1="568" x2="640" y2="568" stroke="#94A3B8" stroke-width="1" marker-end="url(#arr)"/>
+          <rect x="640" y="555" width="80" height="26" rx="3" fill="#D4DFEE" stroke="#CBD5E1"/>
+          <text x="680" y="572" text-anchor="middle" font-size="8" fill="#2E3A4E">TG</text>
+
+          <!-- ═══ HRSG ═══ -->
+          <text x="10" y="516" font-size="11" font-weight="600" fill="#A04545">HRSG</text>
+          <rect x="10" y="524" width="130" height="30" rx="4" fill="#F4DCDC" stroke="#A04545" stroke-width="1"/>
+          <text x="75" y="543" text-anchor="middle" font-size="9" fill="#2E3A4E">Duct Burner</text>
+          <line x1="140" y1="539" x2="160" y2="539" stroke="#94A3B8" stroke-width="1" marker-end="url(#arr)"/>
+          <rect x="160" y="524" width="130" height="30" rx="4" fill="#F4DCDC" stroke="#CBD5E1"/>
+          <text x="225" y="543" text-anchor="middle" font-size="9" fill="#2E3A4E">SCR</text>
+        </svg>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-modal-close>닫기</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: 도면 업로드 -->
+  <div class="modal-backdrop" id="modal-upload" aria-hidden="true">
+    <div class="modal-panel" role="dialog" aria-labelledby="modal-upload-title">
+      <div class="modal-header">
+        <div class="modal-title" id="modal-upload-title">도면 업로드</div>
+        <button type="button" class="modal-close" data-modal-close><i data-lucide="x"></i></button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-field">
+          <label class="modal-label">P&ID 도면 파일 선택</label>
+          <label class="file-drop" id="file-drop-dwg">
+            <i data-lucide="upload" style="width: 20px; height: 20px; margin-bottom: 6px; display: block; margin-left: auto; margin-right: auto;"></i>
+            <span id="file-drop-text">클릭 또는 드래그하여 DWG/PDF 파일 선택</span>
+            <input type="file" id="upload-dwg" accept=".dwg,.pdf" multiple>
+          </label>
+        </div>
+        <div class="upload-file-list" id="upload-file-list"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-modal-close>취소</button>
+        <button type="button" class="btn btn-primary is-disabled" id="btn-upload-submit">업로드</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: 오류 추출 옵션 -->
+  <div class="modal-backdrop" id="modal-extract" aria-hidden="true">
+    <div class="modal-panel" role="dialog" aria-labelledby="modal-extract-title">
+      <div class="modal-header">
+        <div class="modal-title" id="modal-extract-title">오류 추출</div>
+        <button type="button" class="modal-close" data-modal-close><i data-lucide="x"></i></button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-field">
+          <label class="modal-label">검색 깊이 선택</label>
+          <div class="extract-options">
+            <button class="extract-option is-selected" data-depth="light">
+              <div class="extract-option-title">Light</div>
+              <div class="extract-option-desc">빠른 검색 · 주요 심볼 및 라인번호 오류만 추출</div>
+            </button>
+            <button class="extract-option" data-depth="deep">
+              <div class="extract-option-title">Deep</div>
+              <div class="extract-option-desc">정밀 검색 · 연결 탐지 포함, 시간 소요 큼</div>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-modal-close>취소</button>
+        <button type="button" class="btn btn-primary" id="btn-run-extract">추출 시작</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+
+    // ═══ 49개 도면 데이터 + 연결 관계 ═══
+    const DRAWINGS = [
+      // Fuel Gas (EK)
+      { id: 0, file: 'JCP2-XG02-02EK-110035_P&ID FUEL GAS SYSTEM_REV.0', title: 'Fuel Gas System', group: 'fuel', rev: '0', right: 1 },
+      { id: 1, file: 'JCP2-XG02-02EKC-110034_P&ID GT FUEL GAS PERFORMANCE HEATER SYSTEM REV.1', title: 'GT Fuel Gas Performance Heater', group: 'fuel', rev: '1', left: 0 },
+      // Water Systems (GB, GHC, GKB, GMA, PGB)
+      { id: 2, file: 'JCP2-XG02-02GB-110036_P&ID RAW WATER SUPPLY SYSTEM_REV.2', title: 'Raw Water Supply', group: 'water', rev: '2', right: 3, down: 4 },
+      { id: 3, file: 'JCP2-XG02-02GHC-110016_Rev.1_P&ID DM WATER STORAGE & DISTRIBUTION SYSTEM', title: 'DM Water Storage & Distribution', group: 'water', rev: '1', left: 2, right: 5 },
+      { id: 4, file: 'JCP2-XG02-02GKB-110037_Rev.1_P&ID POTABLE WATER SYSTEM', title: 'Potable Water', group: 'water', rev: '1', up: 2 },
+      { id: 5, file: 'JCP2-XG02-02GMA-110043_P&ID PLANT DRAIN SYSTEM_REV.1', title: 'Plant Drain', group: 'water', rev: '1', left: 3 },
+      { id: 6, file: 'JCP2-XG02-02PGB-110015_ P&ID CLOSED COOLING WATER SYSTEM_REV.0', title: 'Closed Cooling Water', group: 'water', rev: '0' },
+      // Steam & Condensate (LA, LBA, LBG, LC, LD, LFC)
+      { id: 7, file: 'JCP2-XG02-02LA-110011_P&ID FEEDWATER SYSTEM_REV.1', title: 'Feedwater System', group: 'steam', rev: '1', right: 8, down: 11 },
+      { id: 8, file: 'JCP2-XG02-02LBA-110003-P&ID HHP STEAM SYSTEM_Rev C', title: 'HHP Steam', group: 'steam', rev: 'C', left: 7, right: 9 },
+      { id: 9, file: 'JCP2-XG02-02LBA-110004_P&ID HP STEAM SYSTEM_Rev C', title: 'HP Steam', group: 'steam', rev: 'C', left: 8, right: 10 },
+      { id: 10, file: 'JCP2-XG02-02LBA-110006_P&ID LP STEAM SYSTEM_Rev C', title: 'LP Steam', group: 'steam', rev: 'C', left: 9 },
+      { id: 11, file: 'JCP2-XG02-02LBG-110014_P&ID AUXILIARY STEAM SYSTEM_Rev C', title: 'Auxiliary Steam', group: 'steam', rev: 'C', up: 7, down: 12 },
+      { id: 12, file: 'JCP2-XG02-02LC-110010_P&ID CONDENSATE SYSTEM_REV.0', title: 'Condensate System', group: 'steam', rev: '0', up: 11, right: 13 },
+      { id: 13, file: 'JCP2-XG02-02LD-120001_P&ID_CPP_REV.0', title: 'CPP', group: 'steam', rev: '0', left: 12 },
+      { id: 14, file: 'JCP2-XG02-02LFC-110009_P&ID STEAM DRAIN SYSTEM_Rev C', title: 'Steam Drain', group: 'steam', rev: 'C' },
+      // GTG Interconnecting (MB)
+      { id: 15, file: 'JCP2-XG02-02MB-110044_Rev.1_GTG_P&ID GT INTERCONNECTING WATERMIST FIRE FIGHTING SYSTEM', title: 'GTG Watermist Fire Fighting', group: 'gtg', rev: '1', right: 16, down: 17 },
+      { id: 16, file: 'JCP2-XG02-02MB-110077_Rev.1_GTG_P&ID GT INTERCONNECTING AIR PROCESSING', title: 'GTG Air Processing', group: 'gtg', rev: '1', left: 15, right: 18 },
+      { id: 17, file: 'JCP2-XG02-02MB-110078_Rev.1_GTG_P&ID GT INTERCONNECTING WATER WASH', title: 'GTG Water Wash', group: 'gtg', rev: '1', up: 15, down: 19 },
+      { id: 18, file: 'JCP2-XG02-02MB-110079_Rev.1_GTG_P&ID GT INTERCONNECTING LUBE OIL & HYDROGEN SEAL OIL', title: 'GTG Lube Oil & H2 Seal', group: 'gtg', rev: '1', left: 16, right: 20 },
+      { id: 19, file: 'JCP2-XG02-02MB-110080_Rev.2_GTG_P&ID GT INTERCONNECTING GENERATOR HYDROGEN SEAL OIL', title: 'GTG Generator H2 Seal Oil', group: 'gtg', rev: '2', up: 17 },
+      { id: 20, file: 'JCP2-XG02-02MB-110081_Rev.0_GTG_P&ID GT Interconnecting Instrument Air System', title: 'GTG Instrument Air', group: 'gtg', rev: '0', left: 18 },
+      // Utilities (QC, QFA, QFB, QJA, QLC, SCB)
+      { id: 21, file: 'JCP2-XG02-02QC-110048_CHEMICAL DOSING SYSTEM INTERFACE P&ID_REV.2', title: 'Chemical Dosing Interface', group: 'utility', rev: '2', right: 22 },
+      { id: 22, file: 'JCP2-XG02-02QC-120001 CHEMICAL DOSING SYSTEM_P&ID REV.0', title: 'Chemical Dosing', group: 'utility', rev: '0', left: 21 },
+      { id: 23, file: 'JCP2-XG02-02QFA-110039_COMPRESSED AIR SYSTEM P&ID_REV.0', title: 'Compressed Air', group: 'utility', rev: '0', right: 24, down: 28 },
+      { id: 24, file: 'JCP2-XG02-02QFB-110040_INSTRUMENT AIR SYSTEM_REV.0', title: 'Instrument Air', group: 'utility', rev: '0', left: 23 },
+      { id: 25, file: 'JCP2-XG02-02QJA-110042_N2 GAS SYSTEM_P&ID_REV.0', title: 'N2 Gas System', group: 'utility', rev: '0' },
+      { id: 26, file: 'JCP2-XG02-02QLC-120602_Air Cooled Condenser_Steam and Condensate Sytem P&ID_REV.B', title: 'ACC Steam & Condensate', group: 'utility', rev: 'B', right: 27 },
+      { id: 27, file: 'JCP2-XG02-02QLC-120603_Air Cooled Condenser_Air Take Off and Cleaning System P&ID_REV.B', title: 'ACC Air Take Off & Cleaning', group: 'utility', rev: 'B', left: 26 },
+      { id: 28, file: 'JCP2-XG02-02SCB-110041_SERVICE AIR SYSTEM_REV.0', title: 'Service Air', group: 'utility', rev: '0', up: 23 },
+      // STG Steam-Water (20MAA)
+      { id: 29, file: 'JCP2-XG02-20MAA-220006_P&ID STEAM-WATER-LEGEND_Rev.B', title: 'Steam-Water Legend', group: 'stg', rev: 'B', right: 30 },
+      { id: 30, file: 'JCP2-XG02-20MAA-220009_P&ID STEAM-WATER-LBA_Rev.B', title: 'Steam-Water LBA', group: 'stg', rev: 'B', left: 29, right: 31 },
+      { id: 31, file: 'JCP2-XG02-20MAA-220010_P&ID STEAM-WATER-LBD_Rev.B', title: 'Steam-Water LBD', group: 'stg', rev: 'B', left: 30, right: 32 },
+      { id: 32, file: 'JCP2-XG02-20MAA-220013_P&ID STEAM-WATER-QFB, QFC_Rev.B', title: 'Steam-Water QFB/QFC', group: 'stg', rev: 'B', left: 31, down: 33 },
+      { id: 33, file: 'JCP2-XG02-20MAA-220014_P&ID STEAM-WATER-MAA, MKA, LCE 12_Rev.B', title: 'Steam-Water MAA/MKA', group: 'stg', rev: 'B', up: 32, down: 34 },
+      { id: 34, file: 'JCP2-XG02-20MAA-220015_P&ID STEAM-WATER-MAG, MAL 22_Rev.B', title: 'Steam-Water MAG/MAL 22', group: 'stg', rev: 'B', up: 33, down: 35 },
+      { id: 35, file: 'JCP2-XG02-20MAA-220016_P&ID STEAM-WATER-MAL 12_Rev.B', title: 'Steam-Water MAL 12', group: 'stg', rev: 'B', up: 34, down: 36 },
+      { id: 36, file: 'JCP2-XG02-20MAA-220017_P&ID STEAM-WATER-MAM_Rev.B', title: 'Steam-Water MAM', group: 'stg', rev: 'B', up: 35, down: 37 },
+      { id: 37, file: 'JCP2-XG02-20MAA-220018_P&ID STEAM-WATER-LBW, MAW LCE 2-2_Rev.B', title: 'Steam-Water LBW/MAW', group: 'stg', rev: 'B', up: 36, down: 38 },
+      { id: 38, file: 'JCP2-XG02-20MAA-220019_P&ID STEAM-WATER-MAV, MAX, MKJ, PGA, PGB_Rev.B', title: 'Steam-Water MAV/MAX/MKJ', group: 'stg', rev: 'B', up: 37 },
+      // STG Hydraulic & Monitoring (20MAA 220023~)
+      { id: 39, file: 'JCP2-XG02-20MAA-220023_STG-P&ID HIGH PRESSURE HYDRAULIC - LEGENDS_Rev.B', title: 'STG HP Hydraulic Legend', group: 'stg_mech', rev: 'B', right: 40 },
+      { id: 40, file: 'JCP2-XG02-20MAA-220024_STG-P&ID HIGH PRESSURE HYDRAULIC-SUPPLY UNIT_Rev.B', title: 'STG HP Hydraulic Supply', group: 'stg_mech', rev: 'B', left: 39, right: 41 },
+      { id: 41, file: 'JCP2-XG02-20MAA-220025_STG-P&ID HIGH PRESSURE HYDRAULIC-ACTUATORS_Rev.B', title: 'STG HP Hydraulic Actuators', group: 'stg_mech', rev: 'B', left: 40, down: 42 },
+      { id: 42, file: 'JCP2-XG02-20MAA-220026_STG-P&ID VIBRATION MONITORING SYSTEM_Rev.C', title: 'STG Vibration Monitoring', group: 'stg_mech', rev: 'C', up: 41, down: 43 },
+      { id: 43, file: 'JCP2-XG02-20MAA-260027_STG-P&ID GENERATOR_Rev.0', title: 'STG Generator', group: 'stg_mech', rev: '0', up: 42 },
+      // STG Lube Oil (20MAV)
+      { id: 44, file: 'JCP2-XG02-20MAV-220020_STG-P&ID LUBRICATION OIL-LEGEND_Rev.B', title: 'STG Lube Oil Legend', group: 'stg_lube', rev: 'B', right: 45 },
+      { id: 45, file: 'JCP2-XG02-20MAV-220021_STG-P&ID LUBRICATION OIL-IOS_Rev.B', title: 'STG Lube Oil IOS', group: 'stg_lube', rev: 'B', left: 44, right: 46 },
+      { id: 46, file: 'JCP2-XG02-20MAV-220022_STG-P&ID LUBRICATION OIL-TG_Rev.0', title: 'STG Lube Oil TG', group: 'stg_lube', rev: '0', left: 45 },
+      // HRSG
+      { id: 47, file: 'JCP2-XG02-21HHA-111357_Rev.B_HRSG_P&ID FOR DUCT BURNER', title: 'HRSG Duct Burner', group: 'hrsg', rev: 'B', right: 48 },
+      { id: 48, file: 'JCP2-XG02-21HSA-111335_Rev.0_HRSG_P&ID FOR SCR', title: 'HRSG SCR', group: 'hrsg', rev: '0', left: 47 },
+    ];
+
+    const GROUP_LABELS = { fuel: 'Fuel Gas', water: 'Water Systems', steam: 'Steam & Condensate', gtg: 'GTG Interconnecting', utility: 'Utilities', stg: 'STG Steam-Water', stg_mech: 'STG Hydraulic & Monitoring', stg_lube: 'STG Lube Oil', hrsg: 'HRSG' };
+
+    // ═══ DOM ═══
+    const diagramViews = document.getElementById('diagram-views');
+    const dwgThumbnailSidebar = document.getElementById('dwg-thumbnail-sidebar');
+    const diagramMain = document.getElementById('diagram-main');
+    const thumbList = document.getElementById('dwg-thumb-list');
+    let currentIdx = 0;
+
+    // ═══ 썸네일 렌더링 ═══
+    function renderThumbnails() {
+      let lastGroup = '';
+      let html = '';
+      DRAWINGS.forEach((d, i) => {
+        if (d.group !== lastGroup) {
+          lastGroup = d.group;
+          html += `<div class="thumb-group-label">${GROUP_LABELS[d.group]}</div>`;
+        }
+        const active = i === currentIdx ? ' is-active' : '';
+        const dirs = [];
+        if (d.up !== undefined) dirs.push('↑');
+        if (d.down !== undefined) dirs.push('↓');
+        if (d.left !== undefined) dirs.push('←');
+        if (d.right !== undefined) dirs.push('→');
+        const thumbPath = 'pnid/thumb/' + encodeURIComponent(d.file.replace(/&/g, '_') + '.pdf.png');
+        html += `<button class="dwg-thumb${active}" data-idx="${i}">
+          <div class="dwg-thumb-img" style="background-image:url('${thumbPath}')"></div>
+          <div class="dwg-thumb-info">
+            <div class="dwg-thumb-label">${d.title}</div>
+            <div class="dwg-thumb-sub">Rev ${d.rev}${dirs.length ? ' · ' + dirs.join(' ') : ''}</div>
+          </div>
+        </button>`;
+      });
+      thumbList.innerHTML = html;
+      thumbList.querySelectorAll('.dwg-thumb').forEach(t => {
+        t.addEventListener('click', () => selectDrawing(Number(t.dataset.idx)));
+      });
+    }
+
+    function selectDrawing(idx) {
+      currentIdx = idx;
+      const d = DRAWINGS[idx];
+      const titleEl = diagramMain.querySelector('.diagram-title');
+      const subEl = diagramMain.querySelector('.diagram-sub');
+      if (titleEl) titleEl.textContent = d.title;
+      if (subEl) subEl.textContent = `${d.file.split('_')[0]} · Rev ${d.rev}`;
+
+      // 본문 이미지 교체
+      const svg = diagramMain.querySelector('.pnid-svg');
+      if (svg) {
+        const imgPath = 'pnid/full/' + encodeURIComponent(d.file.replace(/&/g, '_') + '.pdf.png');
+        svg.style.background = `url('${imgPath}') center/contain no-repeat var(--gray-50)`;
+      }
+
+      // 썸네일 활성 업데이트
+      thumbList.querySelectorAll('.dwg-thumb').forEach(t => t.classList.toggle('is-active', Number(t.dataset.idx) === idx));
+      // 이전 focus 해제
+      if (document.activeElement && document.activeElement.classList.contains('dwg-thumb')) {
+        document.activeElement.blur();
+      }
+      const activeThumb = thumbList.querySelector('.dwg-thumb.is-active');
+      if (activeThumb) activeThumb.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    }
+
+    // ═══ 키보드 방향키 — 연결 관계 기반 이동 ═══
+    document.addEventListener('keydown', (e) => {
+      if (!['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.key)) return;
+      if (diagramViews.style.display === 'none') return;
+      e.preventDefault();
+      e.stopPropagation();
+      const d = DRAWINGS[currentIdx];
+      let next = null;
+      if (e.key === 'ArrowUp' && d.up !== undefined) next = d.up;
+      else if (e.key === 'ArrowDown' && d.down !== undefined) next = d.down;
+      else if (e.key === 'ArrowLeft' && d.left !== undefined) next = d.left;
+      else if (e.key === 'ArrowRight' && d.right !== undefined) next = d.right;
+      if (next !== null) selectDrawing(next);
+    });
+
+    // ═══ 구조 참고 모달 ═══
+    const modalStructure = document.getElementById('modal-structure');
+    document.getElementById('btn-structure').addEventListener('click', () => {
+      modalStructure.classList.add('is-open');
+      modalStructure.setAttribute('aria-hidden', 'false');
+    });
+    modalStructure.querySelectorAll('[data-modal-close]').forEach(b => b.addEventListener('click', () => {
+      modalStructure.classList.remove('is-open');
+      modalStructure.setAttribute('aria-hidden', 'true');
+    }));
+    modalStructure.addEventListener('click', e => { if (e.target === modalStructure) { modalStructure.classList.remove('is-open'); modalStructure.setAttribute('aria-hidden', 'true'); } });
+
+    // ═══ 초기 상태: 49개 도면 이미 로딩됨 ═══
+    const emptyEl = document.getElementById('diagram-empty');
+    if (emptyEl) emptyEl.style.display = 'none';
+    renderThumbnails();
+    selectDrawing(0);
+
+    // ═══ Upload modal ═══
+    const modalUpload = document.getElementById('modal-upload');
+    const uploadInput = document.getElementById('upload-dwg');
+    const fileDropDwg = document.getElementById('file-drop-dwg');
+    const fileDropText = document.getElementById('file-drop-text');
+    const uploadFileList = document.getElementById('upload-file-list');
+    const btnUploadSubmit = document.getElementById('btn-upload-submit');
+    let uploadFiles = [];
+
+    function openUploadModal() {
+      modalUpload.classList.add('is-open');
+      modalUpload.setAttribute('aria-hidden', 'false');
+    }
+    function closeUploadModal() {
+      modalUpload.classList.remove('is-open');
+      modalUpload.setAttribute('aria-hidden', 'true');
+    }
+
+    document.getElementById('btn-upload-dwg').addEventListener('click', openUploadModal);
+    modalUpload.querySelectorAll('[data-modal-close]').forEach(b => b.addEventListener('click', closeUploadModal));
+    modalUpload.addEventListener('click', e => { if (e.target === modalUpload) closeUploadModal(); });
+
+    uploadInput.addEventListener('change', () => {
+      const newFiles = Array.from(uploadInput.files);
+      uploadFiles = [...uploadFiles, ...newFiles];
+      renderUploadList();
+    });
+
+    function renderUploadList() {
+      uploadFileList.innerHTML = uploadFiles.map((f, i) => `
+        <div class="upload-file-item">
+          <span>${f.name}</span>
+          <button class="remove-file" data-idx="${i}">&times;</button>
+        </div>
+      `).join('');
+      uploadFileList.querySelectorAll('.remove-file').forEach(btn => {
+        btn.addEventListener('click', () => {
+          uploadFiles.splice(Number(btn.dataset.idx), 1);
+          renderUploadList();
+        });
+      });
+      btnUploadSubmit.classList.toggle('is-disabled', uploadFiles.length === 0);
+      if (uploadFiles.length > 0) {
+        fileDropText.textContent = `${uploadFiles.length}개 파일 선택됨`;
+        fileDropDwg.classList.add('has-file');
+      } else {
+        fileDropText.textContent = '클릭 또는 드래그하여 DWG/PDF 파일 선택';
+        fileDropDwg.classList.remove('has-file');
+      }
+    }
+
+    btnUploadSubmit.addEventListener('click', () => {
+      if (uploadFiles.length === 0) return;
+      closeUploadModal();
+      renderFileCount(uploadFiles.length);
+      // 오류 추출 버튼 활성화
+      btnExtract.classList.remove('is-disabled');
+      // empty state 숨기고 도면 표시
+      document.getElementById('diagram-empty').style.display = 'none';
+      document.getElementById('diagram-views').style.display = '';
+      uploadFiles = [];
+      renderUploadList();
+    });
+
+    function renderFileCount(count) {
+      const anchorsEl = document.getElementById('file-anchors');
+      anchorsEl.innerHTML = `<span class="legend-anchor"><i data-lucide="file" class="icon"></i><span class="anchor-text">${count}개 도면</span></span>`;
+      lucide.createIcons();
+    }
+
+    // ═══ Extract modal ═══
+    const modalExtract = document.getElementById('modal-extract');
+    const extractOptions = modalExtract.querySelectorAll('.extract-option');
+    const btnRunExtract = document.getElementById('btn-run-extract');
+    let searchDepth = 'light';
+
+    function openExtractModal() {
+      modalExtract.classList.add('is-open');
+      modalExtract.setAttribute('aria-hidden', 'false');
+    }
+    function closeExtractModal() {
+      modalExtract.classList.remove('is-open');
+      modalExtract.setAttribute('aria-hidden', 'true');
+    }
+
+    extractOptions.forEach(opt => {
+      opt.addEventListener('click', () => {
+        extractOptions.forEach(o => o.classList.remove('is-selected'));
+        opt.classList.add('is-selected');
+        searchDepth = opt.dataset.depth;
+      });
+    });
+
+    modalExtract.querySelectorAll('[data-modal-close]').forEach(b => b.addEventListener('click', closeExtractModal));
+    modalExtract.addEventListener('click', e => { if (e.target === modalExtract) closeExtractModal(); });
+
+    btnRunExtract.addEventListener('click', () => {
+      closeExtractModal();
+      runExtraction();
+    });
+
+    const btnExtract = document.getElementById('btn-extract');
+    const extractLabel = document.getElementById('extract-label');
+    const resultPanel = document.getElementById('result-panel');
+    const resultTbody = document.getElementById('result-tbody');
+
+    const mockResults = [
+      { tag: 'V-101', type: 'vessel', typeLabel: '용기', loc: 'Inlet KO Drum', coord: 'A-3' },
+      { tag: 'V-102', type: 'vessel', typeLabel: '용기', loc: 'Slug Catcher (Horizontal)', coord: 'C-3' },
+      { tag: 'V-103', type: 'vessel', typeLabel: '용기', loc: 'Gas Scrubber', coord: 'E-3' },
+      { tag: 'P-101', type: 'pump', typeLabel: '펌프', loc: 'Condensate Pump A (Main)', coord: 'D-5' },
+      { tag: 'P-102', type: 'pump', typeLabel: '펌프', loc: 'Condensate Pump B (Standby)', coord: 'D-6' },
+      { tag: 'V-10101', type: 'valve', typeLabel: '밸브', loc: 'Feed Inlet Gate Valve · 14"', coord: 'A-3' },
+      { tag: 'V-10103', type: 'valve', typeLabel: '밸브', loc: 'Slug Catcher Inlet · 12"', coord: 'C-3' },
+      { tag: 'PT-101', type: 'instrument', typeLabel: '계장', loc: 'Pressure Transmitter · Feed Line', coord: 'B-2' },
+      { tag: 'LT-102', type: 'instrument', typeLabel: '계장', loc: 'Level Transmitter · Slug Catcher', coord: 'C-2' },
+      { tag: 'PIC-103', type: 'instrument', typeLabel: '계장', loc: 'Pressure Indicator Controller · V-103', coord: 'E-2' },
+      { tag: 'FE-201', type: 'instrument', typeLabel: '계장', loc: 'Flow Element · Condensate Line', coord: 'C-5' }
+    ];
+
+    function renderResults() {
+      resultTbody.innerHTML = mockResults.map((r, i) => `
+      <tr>
+        <td class="mono">${String(i + 1).padStart(2, '0')}</td>
+        <td><span class="tag-no">${r.tag}</span></td>
+        <td><span class="tag-type ${r.type}">${r.typeLabel}</span></td>
+        <td>${r.loc}</td>
+        <td class="tag-loc">${r.coord}</td>
+      </tr>
+    `).join('');
+      document.getElementById('result-title').textContent = `오류 추출 결과 (${mockResults.length})`;
+    }
+
+    btnExtract.addEventListener('click', () => {
+      if (btnExtract.classList.contains('is-disabled')) return;
+      openExtractModal();
+    });
+
+    function runExtraction() {
+      btnExtract.classList.add('is-disabled');
+      const spinner = document.createElement('span');
+      spinner.className = 'spinner';
+      spinner.id = 'extract-spinner';
+      btnExtract.insertBefore(spinner, extractLabel);
+      extractLabel.textContent = '오류 추출 중...';
+
+      const delay = searchDepth === 'deep' ? 4000 : 2000;
+      setTimeout(() => {
+        const s = document.getElementById('extract-spinner');
+        if (s) s.remove();
+        extractLabel.textContent = '오류 재추출';
+        btnExtract.classList.remove('is-disabled');
+
+        renderResults();
+        resultPanel.classList.add('open');
+        document.getElementById('btn-show-result').style.display = 'none';
+      }, delay);
+    }
+
+    // ═══ Result panel 닫기/열기 ═══
+    const btnCloseResult = document.getElementById('btn-close-result');
+    const btnShowResult = document.getElementById('btn-show-result');
+
+    btnCloseResult.addEventListener('click', () => {
+      resultPanel.classList.remove('open');
+      btnShowResult.style.display = '';
+    });
+
+    btnShowResult.addEventListener('click', () => {
+      resultPanel.classList.add('open');
+      btnShowResult.style.display = 'none';
+    });
+  </script>
+
+<script>
+  // Role 기반 탭 가시성 — 모든 페이지 공통
+  (function () {
+    var role = localStorage.getItem('userRole') || 'member';
+    document.querySelectorAll('.hdr-tab[href*="templates"]').forEach(function (el) {
+      el.style.display = (role === 'admin') ? '' : 'none';
+    });
+    document.querySelectorAll('.hdr-tab[href*="/bot"]').forEach(function (el) {
+      el.style.display = (role === 'admin') ? 'none' : '';
+    });
+  })();
+</script>
+</body>
+
+</html>
