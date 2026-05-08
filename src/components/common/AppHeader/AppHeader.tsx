@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Bell } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { TopLoadingBar } from '@/components/common/TopLoadingBar'
 
 type NavItem = {
   label: string
@@ -22,7 +23,9 @@ export const AppHeader = () => {
   const pathname = usePathname()
 
   return (
-    <header className="sticky top-0 z-[99] grid h-[52px] shrink-0 grid-cols-[1fr_auto_1fr] items-center border-b border-[var(--gray-200)] bg-card px-6">
+    <>
+      <TopLoadingBar />
+      <header className="sticky top-0.5 z-[99] grid h-[52px] shrink-0 grid-cols-[1fr_auto_1fr] items-center border-b border-[var(--gray-200)] bg-card px-6">
       <Link href="/" className="flex items-center gap-2.5">
         <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[var(--primary-500)] text-sm font-bold text-white">
           D
@@ -32,7 +35,7 @@ export const AppHeader = () => {
         </span>
       </Link>
 
-      <nav className="flex items-center">
+      <nav className="flex items-center gap-1">
         {NAV_ITEMS.map((item) => {
           const isActive = item.isActive(pathname)
           return (
@@ -60,12 +63,13 @@ export const AppHeader = () => {
         >
           <Bell size={16} />
           {NOTIFICATION_COUNT > 0 && (
-            <span className="absolute -right-1 -top-1 inline-flex h-[18px] min-w-[18px] items-center justify-center rounded-[9px] border-2 border-white bg-[var(--primary-500)] px-[5px] font-mono text-[10px] font-medium leading-none text-white">
+            <span className="absolute -right-1 -top-1 inline-flex h-[18px] min-w-[18px] items-center justify-center rounded-[9px] border-2 border-white bg-[var(--primary-500)] px-[5px] font-mono text-[10px] font-medium leading-none text-white after:absolute after:inset-[-2px] after:rounded-full after:bg-[var(--primary-500)] after:opacity-30 after:[animation:notif-pulse_2s_infinite] after:content-['']">
               {NOTIFICATION_COUNT}
             </span>
           )}
         </button>
       </div>
     </header>
+    </>
   )
 }
