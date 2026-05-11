@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation'
-import { MOCK_PROJECTS } from '@/features/project-detail/data/mock-project'
-import { ProjectInfoBar } from '@/features/project-detail/components/ProjectInfoBar'
-import { ProjectTabBar } from '@/features/project-detail/components/ProjectTabBar'
+import { MOCK_PROJECTS } from '@/features/project-workspace/data/mock-project'
+import { ProjectInfoBar } from '@/features/project-workspace/components/ProjectInfoBar'
+import { ProjectTabBar } from '@/features/project-workspace/components/ProjectTabBar'
 
 export default async function ProjectLayout({
   children,
