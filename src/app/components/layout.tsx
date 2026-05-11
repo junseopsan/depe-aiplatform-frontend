@@ -1,4 +1,4 @@
-import { ComponentDocsSidebar } from '@/features/component-docs/components/ComponentDocsSidebar'
+import { ComponentDocsSidebar } from '@/features/design-system/components/ComponentDocsSidebar'
 
 export default function ComponentsLayout({
   children,

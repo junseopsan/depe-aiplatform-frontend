@@ -43,7 +43,7 @@ export const PdfViewerPreview = () => {
       {/* Viewer */}
       <UiPdfViewer
         key={searchText}
-        src="/pdf/test_file.pdf"
+        src="https://mozilla.github.io/pdf.js/web/compressed.tracemonkey-pldi-09.pdf"
         searchText={searchText || undefined}
         className="h-[600px]"
       />
