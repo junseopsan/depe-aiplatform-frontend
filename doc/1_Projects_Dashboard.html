@@ -1,0 +1,2181 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EPC PE AI Platform</title>
+  <link rel="icon" type="image/png" href="reference/logo.png">
+  <link
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+    rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    /* ══════════════════════════════════════════════════════════════════
+     EPC PE AI-Platform — 공통 디자인 토큰 & 기반 스타일
+     (모든 페이지가 동일한 블록을 공유한다)
+     ══════════════════════════════════════════════════════════════════ */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      /* Brand Primary */
+      --primary-900: #081E3A;
+      --primary-800: #0F2E57;
+      --primary-700: #173F73;
+      --primary-600: #1F4E91;
+      --primary-500: #275DB2;
+      --primary-400: #4A7BC7;
+      --primary-300: #7FA2D9;
+      --primary-200: #B2C7E8;
+      --primary-100: #D4DFEE;
+      --primary-50: #EEF2F9;
+      /* Neutral */
+      --gray-900: #0D1117;
+      --gray-800: #1C2230;
+      --gray-700: #2E3A4E;
+      --gray-600: #4A5568;
+      --gray-500: #6B7A8F;
+      --gray-400: #94A3B8;
+      --gray-300: #CBD5E1;
+      --gray-200: #E2E8F0;
+      --gray-100: #F1F5F9;
+      --gray-50: #F8FAFC;
+      /* Semantic */
+      --success: #3A8C6E;
+      --warning: #B07D3A;
+      --error: #A04545;
+      --info: #3A6A96;
+      --success-bg: #E8F3EE;
+      --warning-bg: #F6E8CD;
+      --error-bg: #F4DCDC;
+      /* Accent */
+      --accent-gold: #D4A017;
+      /* Workspace alias */
+      --matrix-bg: var(--gray-100);
+      --matrix-border: var(--gray-200);
+      --matrix-cell-bg: #fff;
+      --matrix-header-bg: var(--gray-50);
+    }
+
+    html,
+    body {
+      font-family: 'IBM Plex Sans KR', sans-serif;
+      color: var(--gray-700);
+      background: var(--gray-100);
+      font-size: 14px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      min-width: 1100px;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button {
+      font-family: inherit;
+      cursor: pointer;
+      border: none;
+      background: none;
+    }
+
+    input,
+    select,
+    textarea {
+      font-family: inherit;
+    }
+
+    .mono {
+      font-family: 'IBM Plex Mono', monospace;
+    }
+
+    /* ── ① Top Band (2px) ────────────────────────────────────────── */
+    .top-band {
+      height: 2px;
+      background: var(--primary-500);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    /* ── ② Header (52px) ─────────────────────────────────────────── */
+    .app-header {
+      width: 100%;
+      min-width: 100%;
+      height: 52px;
+      background: #fff;
+      border-bottom: 1px solid var(--gray-200);
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      padding: 0 24px;
+      position: sticky;
+      top: 2px;
+      z-index: 99;
+    }
+
+    .hdr-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .hdr-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .hdr-logo img {
+      height: 28px;
+      width: auto;
+      display: block;
+    }
+
+    .hdr-sysname {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--gray-800);
+      letter-spacing: -0.01em;
+    }
+
+    .hdr-tabs {
+      display: flex;
+      gap: 4px;
+    }
+
+    .hdr-tab {
+      height: 52px;
+      display: inline-flex;
+      align-items: center;
+      padding: 0 18px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--gray-500);
+      border-bottom: 2px solid transparent;
+      transition: color .15s, border-color .15s;
+    }
+
+    .hdr-tab:hover {
+      color: var(--gray-700);
+    }
+
+    .hdr-tab.active {
+      color: var(--primary-500);
+      font-weight: 600;
+      border-bottom-color: var(--primary-500);
+    }
+
+    .hdr-right {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    /* Dev role toggle (시연용) */
+    .role-toggle {
+      display: inline-flex; height: 28px;
+      border: 1px solid var(--gray-300); border-radius: 4px;
+      overflow: hidden; background: #fff;
+    }
+    .role-toggle button {
+      padding: 0 10px; font-size: 11px; font-weight: 500;
+      color: var(--gray-500); background: #fff;
+      transition: background .15s, color .15s;
+    }
+    .role-toggle button.is-active {
+      background: var(--primary-50); color: var(--primary-700); font-weight: 600;
+    }
+
+    .notif-bell {
+      width: 32px;
+      height: 32px;
+      border-radius: 4px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: #fff;
+      color: var(--gray-700);
+      border: 1px solid transparent;
+      position: relative;
+      transition: background .15s, border-color .15s;
+    }
+
+    .notif-bell:hover {
+      background: var(--gray-50);
+      border-color: var(--gray-200);
+    }
+
+    .notif-bell svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .notif-bell .badge {
+      position: absolute;
+      top: -4px; right: -4px;
+      min-width: 18px; height: 18px;
+      padding: 0 5px;
+      border-radius: 9px;
+      background: var(--primary-500);
+      color: #fff;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px; font-weight: 500;
+      display: inline-flex; align-items: center; justify-content: center;
+      border: 2px solid #fff;
+      line-height: 1;
+    }
+    .notif-bell .badge.pulse::after {
+      content: ''; position: absolute; inset: -2px;
+      border-radius: 50%;
+      background: var(--primary-500);
+      opacity: 0.3;
+      animation: notif-pulse 2s infinite;
+    }
+    @keyframes notif-pulse {
+      0% { transform: scale(1); opacity: 0.4; }
+      100% { transform: scale(1.6); opacity: 0; }
+    }
+
+    /* ── Buttons (공통) ──────────────────────────────────────────── */
+    .btn {
+      height: 36px;
+      padding: 0 14px;
+      border-radius: 4px;
+      font-size: 13px;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background .15s, border-color .15s, color .15s;
+      border: 1px solid transparent;
+      white-space: nowrap;
+    }
+
+    .btn i,
+    .btn svg {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+    }
+
+    .btn.btn-primary {
+      background: var(--primary-500);
+      color: #fff;
+    }
+
+    .btn.btn-primary:hover {
+      background: var(--primary-600);
+    }
+
+    .btn.btn-secondary {
+      background: #fff;
+      border-color: var(--gray-300);
+      color: var(--gray-700);
+    }
+
+    .btn.btn-secondary:hover {
+      background: var(--gray-50);
+    }
+
+    .btn:disabled,
+    .btn.is-disabled {
+      opacity: 0.4;
+      pointer-events: none;
+    }
+
+    .btn-sm {
+      height: 28px;
+      padding: 0 10px;
+      font-size: 12px;
+      border-radius: 4px;
+    }
+
+    .btn-sm i {
+      width: 14px;
+      height: 14px;
+    }
+
+    /* ── Filter Chip ──────────────────────────────────────────────── */
+    .chip {
+      height: 28px;
+      padding: 0 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--gray-700);
+      background: #fff;
+      border: 1px solid var(--gray-300);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background .15s, border-color .15s;
+    }
+
+    .chip:hover {
+      background: var(--gray-50);
+    }
+
+    .chip.active {
+      background: var(--primary-50);
+      border-color: var(--primary-500);
+      color: var(--primary-700);
+    }
+
+    .chip .chip-count {
+      color: var(--gray-500);
+      font-weight: 600;
+    }
+
+    .chip.active .chip-count {
+      color: var(--primary-700);
+    }
+
+    /* ── Modal (AI 생성 지시 모달과 동일 스펙) ──────────────────── */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(13, 17, 23, 0.45);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .modal-backdrop.is-open {
+      display: flex;
+    }
+
+    .modal-panel {
+      background: #fff;
+      border-radius: 6px;
+      width: 100%;
+      max-width: 520px;
+      max-height: calc(100vh - 48px);
+      box-shadow: 0 20px 40px rgba(13, 17, 23, 0.2);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .modal-header {
+      padding: 18px 22px 14px;
+      border-bottom: 1px solid var(--gray-200);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .modal-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--gray-800);
+      margin: 0;
+    }
+
+    .modal-close {
+      width: 28px;
+      height: 28px;
+      border-radius: 4px;
+      color: var(--gray-500);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: none;
+      border: none;
+      cursor: pointer;
+      transition: background .15s, color .15s;
+    }
+
+    .modal-close:hover {
+      background: var(--gray-100);
+      color: var(--gray-800);
+    }
+
+    .modal-close i,
+    .modal-close svg {
+      width: 24px;
+      height: 24px;
+    }
+
+    .modal-body {
+      padding: 18px 22px;
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    .modal-footer {
+      padding: 14px 22px 18px;
+      border-top: 1px solid var(--gray-100);
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    .modal-field + .modal-field { margin-top: 14px; }
+    .modal-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--gray-700);
+      margin-bottom: 6px;
+    }
+    .modal-hint {
+      margin-top: 10px;
+      font-size: 12px;
+      color: var(--gray-500);
+      line-height: 1.5;
+    }
+    .modal-input, .modal-textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--gray-300);
+      border-radius: 4px;
+      font-family: inherit;
+      font-size: 13px;
+      color: var(--gray-800);
+      outline: none;
+      line-height: 1.55;
+    }
+    .modal-textarea { resize: vertical; min-height: 80px; }
+    .modal-input:focus, .modal-textarea:focus { border-color: var(--primary-500); }
+
+    .file-drop {
+      display: block;
+      border: 1.5px dashed var(--gray-300);
+      border-radius: 4px;
+      padding: 16px;
+      text-align: center;
+      color: var(--gray-500);
+      font-size: 13px;
+      cursor: pointer;
+      transition: border-color .15s, background .15s;
+    }
+    .file-drop:hover { border-color: var(--primary-500); background: var(--primary-50); color: var(--primary-700); }
+    .file-drop.has-file { border-color: var(--primary-500); background: var(--primary-50); color: var(--primary-700); font-weight: 500; }
+    .file-drop input[type="file"] { display: none; }
+
+    /* Toast */
+    .toast-container {
+      position: fixed;
+      bottom: 24px; right: 24px;
+      z-index: 1100;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .toast {
+      background: var(--gray-800);
+      color: #fff;
+      font-size: 13px;
+      padding: 12px 16px;
+      border-radius: 4px;
+      box-shadow: 0 8px 16px rgba(13, 17, 23, 0.2);
+      max-width: 480px;
+      word-break: keep-all;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      animation: toast-in .2s ease-out;
+    }
+    .toast .toast-action {
+      color: var(--primary-300);
+      font-weight: 600;
+      background: none;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+    }
+    @keyframes toast-in {
+      from { transform: translateY(10px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .option-list {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .option-row {
+      padding: 10px 12px;
+      border-radius: 4px;
+      border: 1px solid var(--gray-200);
+      font-size: 13px;
+      color: var(--gray-700);
+      cursor: pointer;
+      background: #fff;
+      text-align: left;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      transition: border-color .15s, background .15s;
+    }
+
+    .option-row:hover {
+      border-color: var(--gray-400);
+    }
+
+    .option-row.is-selected {
+      border-color: var(--primary-500);
+      background: var(--primary-50);
+      color: var(--primary-700);
+      font-weight: 600;
+    }
+
+    .option-row.is-disabled {
+      opacity: 0.4;
+      pointer-events: none;
+    }
+
+    .option-row-meta {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      color: var(--gray-500);
+      font-weight: 400;
+    }
+
+    .option-row.is-selected .option-row-meta {
+      color: var(--primary-700);
+    }
+
+    .role-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .role-chip {
+      padding: 12px 8px;
+      border-radius: 4px;
+      border: 1px solid var(--gray-200);
+      background: #fff;
+      color: var(--gray-700);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: border-color .15s, background .15s;
+    }
+
+    .role-chip:hover {
+      border-color: var(--gray-400);
+    }
+
+    .role-chip.is-selected {
+      border-color: var(--primary-500);
+      background: var(--primary-50);
+      color: var(--primary-700);
+    }
+
+    /* ── Inputs ──────────────────────────────────────────────────── */
+    .input,
+    .select {
+      height: 36px;
+      padding: 0 12px;
+      border-radius: 4px;
+      font-size: 13px;
+      color: var(--gray-700);
+      background: #fff;
+      border: 1px solid var(--gray-300);
+      transition: border-color .15s;
+    }
+
+    .input:focus,
+    .select:focus {
+      outline: none;
+      border-color: var(--primary-500);
+    }
+
+    .input::placeholder {
+      color: var(--gray-400);
+    }
+
+    .input-search {
+      padding-left: 34px;
+      background-image: none;
+    }
+
+    .input-wrap {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .input-wrap .input-icon {
+      position: absolute;
+      left: 10px;
+      color: var(--gray-400);
+      width: 16px;
+      height: 16px;
+      pointer-events: none;
+    }
+
+    /* ── Custom Select (년도 드롭다운) ─────────────────────────── */
+    .custom-select-trigger {
+      height: 36px;
+      padding: 0 36px 0 12px;
+      border-radius: 4px;
+      font-size: 13px;
+      color: var(--gray-700);
+      background: #fff;
+      border: 1px solid var(--gray-300);
+      display: inline-flex;
+      align-items: center;
+      justify-content: flex-start;
+      width: 100%;
+      text-align: left;
+      transition: border-color .15s;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .custom-select.is-open .custom-select-trigger {
+      border-color: var(--primary-500);
+    }
+
+    .custom-select-trigger .chev {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 14px;
+      height: 14px;
+      color: var(--gray-500);
+      pointer-events: none;
+      transition: transform .15s;
+    }
+
+    .custom-select.is-open .custom-select-trigger .chev {
+      transform: translateY(-50%) rotate(180deg);
+    }
+
+    .custom-select {
+      position: relative;
+      display: inline-block;
+      z-index: 10;
+    }
+
+    .custom-select.is-open {
+      z-index: 200;
+    }
+
+    .custom-select-panel {
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 0;
+      right: 0;
+      background: #fff;
+      border: 1px solid var(--gray-200);
+      border-radius: 4px;
+      padding: 4px;
+      z-index: 200;
+      display: none;
+      max-height: 240px;
+      overflow-y: auto;
+      box-shadow: 0 4px 12px rgba(13, 17, 23, 0.08);
+    }
+
+    .custom-select.is-open .custom-select-panel {
+      display: block;
+    }
+
+    .custom-select-option {
+      height: 32px;
+      padding: 0 10px;
+      border-radius: 4px;
+      font-size: 13px;
+      color: var(--gray-700);
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      transition: background .15s, color .15s;
+    }
+
+    .custom-select-option:hover {
+      background: var(--gray-50);
+    }
+
+    .custom-select-option.is-selected {
+      background: var(--primary-50);
+      color: var(--primary-700);
+      font-weight: 600;
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+     Page-specific: 1_Projects_Dashboard
+     ══════════════════════════════════════════════════════════════ */
+    .page-wrap {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 32px;
+    }
+
+    /* Page header */
+    .page-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 28px;
+    }
+
+    .page-header-left h1 {
+      font-size: 28px;
+      font-weight: 600;
+      color: var(--gray-800);
+      line-height: 1.25;
+      margin-bottom: 4px;
+    }
+
+    .page-header-left .page-subtitle {
+      font-size: 13px;
+      color: var(--gray-500);
+    }
+
+    .page-header-right {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    /* Stat Cards */
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+    .stat-grid.is-admin {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .stat-card {
+      background: #fff;
+      border: 1px solid var(--gray-200);
+      border-radius: 4px;
+      padding: 18px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      transition: border-color .15s, background .15s;
+      text-align: left;
+      font-family: inherit;
+      color: inherit;
+    }
+
+    .stat-card.is-filter {
+      cursor: pointer;
+    }
+
+    .stat-card.is-filter:hover {
+      border-color: var(--gray-400);
+    }
+
+    .stat-card.is-filter.is-active {
+      border-color: var(--primary-500);
+      background: var(--primary-50);
+      box-shadow: inset 0 0 0 1px var(--primary-500);
+    }
+
+    .stat-card.is-filter.is-active .stat-label {
+      color: var(--primary-500);
+    }
+
+    .stat-card.is-filter.is-active .stat-value {
+      color: var(--primary-500);
+      font-weight: 700;
+    }
+
+    .stat-label {
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--gray-700);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .stat-value {
+      font-size: 32px;
+      font-weight: 600;
+      color: var(--gray-800);
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+    }
+
+    .my-role-link {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--primary-700);
+      background: none;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .my-role-link:hover {
+      color: var(--primary-500);
+      text-decoration: underline;
+    }
+
+    .my-role-badge {
+      height: 22px;
+      padding: 0 8px;
+      border-radius: 999px;
+      background: var(--primary-50);
+      color: var(--primary-700);
+      font-size: 11px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: border-color .15s;
+    }
+
+    .my-role-badge:hover {
+      border-color: var(--primary-500);
+    }
+
+    /* Project Grid */
+    .section-title-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .section-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--gray-700);
+    }
+
+    .section-sub {
+      font-size: 12px;
+      color: var(--gray-500);
+    }
+
+    .project-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .project-grid.is-empty {
+      display: block;
+      padding: 48px 0;
+      text-align: center;
+      color: var(--gray-500);
+      font-size: 13px;
+      border: 1px dashed var(--gray-300);
+      border-radius: 4px;
+      margin-bottom: 16px;
+    }
+
+    .load-more-row {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 32px;
+    }
+
+    .project-card {
+      background: #fff;
+      border: 1px solid var(--gray-200);
+      border-radius: 4px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      transition: border-color .15s, transform .15s;
+      color: inherit;
+      position: relative;
+    }
+
+    .project-card:hover {
+      border-color: var(--primary-500);
+      transform: translateY(-1px);
+    }
+
+    .card-star {
+      position: absolute;
+      top: 17px;
+      right: 12px;
+      width: 28px;
+      height: 28px;
+      border-radius: 4px;
+      background: none;
+      border: none;
+      color: var(--gray-400);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background .15s, color .15s;
+      z-index: 2;
+    }
+
+    .card-overflow {
+      position: absolute;
+      top: 17px;
+      right: 12px;
+      width: 28px;
+      height: 28px;
+      border-radius: 4px;
+      background: none;
+      border: none;
+      color: var(--gray-400);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background .15s, color .15s;
+      z-index: 2;
+    }
+
+    .card-overflow:hover {
+      background: var(--gray-50);
+      color: var(--gray-700);
+    }
+
+    .card-overflow svg { width: 16px; height: 16px; }
+
+    .card-menu {
+      position: absolute;
+      top: 48px;
+      right: 12px;
+      min-width: 140px;
+      background: #fff;
+      border: 1px solid var(--gray-200);
+      border-radius: 4px;
+      padding: 4px;
+      box-shadow: 0 8px 20px rgba(13, 17, 23, 0.1);
+      z-index: 10;
+      display: none;
+    }
+
+    .card-menu.is-open { display: block; }
+
+    .card-menu-item {
+      display: block;
+      width: 100%;
+      padding: 8px 12px;
+      border-radius: 4px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--gray-700);
+      text-align: left;
+      background: none;
+      border: none;
+      cursor: pointer;
+      transition: background .15s, color .15s;
+    }
+
+    .card-menu-item:hover { background: var(--gray-50); }
+    .card-menu-item.is-danger { color: var(--error); }
+    .card-menu-item.is-danger:hover { background: rgba(160, 69, 69, 0.08); }
+
+    .card-star:hover {
+      background: var(--gray-50);
+      color: var(--accent-gold);
+    }
+
+    .card-star.is-active {
+      color: var(--accent-gold);
+    }
+
+    .card-star svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .card-star.is-active svg {
+      fill: var(--accent-gold);
+    }
+
+    .card-name {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--gray-800);
+      line-height: 1.4;
+      max-width: 370px;
+      padding-right: 36px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-bottom: 4px;
+    }
+
+    .card-divider {
+      height: 1px;
+      background: var(--gray-200);
+    }
+
+    .card-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .card-meta-row {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--gray-600);
+      word-spacing: 0.2em;
+      letter-spacing: 0.01em;
+    }
+
+    .card-meta-label {
+      color: var(--gray-400);
+      width: 58px;
+      flex-shrink: 0;
+      font-weight: 500;
+    }
+
+    .card-meta-value {
+      font-family: 'IBM Plex Mono', monospace;
+      color: var(--gray-700);
+    }
+
+    .card-progress {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .progress-bar {
+      flex: 1;
+      height: 4px;
+      background: var(--gray-200);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--primary-500);
+      transition: width .3s;
+    }
+
+    .progress-fill.done {
+      background: var(--primary-500);
+    }
+
+    .progress-value {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--gray-700);
+      min-width: 40px;
+      text-align: right;
+    }
+
+    .card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    .card-stats {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--gray-400);
+    }
+
+    .card-stats b {
+      font-family: 'IBM Plex Mono', monospace;
+      color: var(--gray-700);
+      font-weight: 400;
+      margin-left: 8px;
+    }
+
+    /* Bottom Analytics */
+    .analytics-grid {
+      display: grid;
+      grid-template-columns: 1.3fr 1.3fr 1fr;
+      grid-template-rows: auto auto;
+      gap: 16px;
+    }
+
+    .analytics-card.donut-card {
+      grid-row: 1 / span 2;
+      grid-column: 3;
+    }
+
+    .analytics-card {
+      background: #fff;
+      border: 1px solid var(--gray-200);
+      border-radius: 4px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      min-height: 220px;
+    }
+
+    .analytics-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .analytics-title {
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--gray-700);
+    }
+
+    .analytics-sub {
+      font-size: 13px;
+      color: var(--gray-500);
+      margin-top: 2px;
+    }
+
+    .analytics-body {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .chart-svg {
+      width: 100%;
+      height: 160px;
+      display: block;
+    }
+
+    .chart-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      font-size: 13px;
+      color: var(--gray-600);
+      justify-content: center;
+    }
+
+    .chart-legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .chart-legend-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .donut-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      width: 100%;
+    }
+
+    .donut-value {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--gray-800);
+      line-height: 1;
+      position: absolute;
+    }
+
+    .donut-svg {
+      position: relative;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ① Top Band -->
+  <div class="top-band"></div>
+
+  <!-- ② Header -->
+  <header class="app-header">
+    <div class="hdr-left">
+      <a href="index.html#/" class="hdr-logo">
+        <img src="reference/logo.png" alt="EPC PE Platform">
+        <span class="hdr-sysname">EPC PE AI-Platform</span>
+      </a>
+    </div>
+    <nav class="hdr-tabs">
+      <a href="index.html#/" class="hdr-tab active">Projects</a>
+      <a href="index.html#/templates" class="hdr-tab">Templates</a>
+      <a href="index.html#/bot" class="hdr-tab">AI Q&amp;A</a>
+    </nav>
+    <div class="hdr-right">
+      <div class="role-toggle" aria-label="권한 전환 (시연용)">
+        <button type="button" data-role="member">Member</button>
+        <button type="button" data-role="admin">Admin</button>
+      </div>
+      <button class="notif-bell" aria-label="Notifications">
+        <i data-lucide="bell"></i>
+        <span class="badge pulse">3</span>
+      </button>
+    </div>
+  </header>
+
+  <main class="page-wrap">
+
+    <!-- Page Header -->
+    <div class="page-header">
+      <div class="page-header-left">
+        <h1>Dashboard</h1>
+        <div class="page-subtitle">진행 중인 프로젝트 현황과 작업 통계를 한눈에 확인하세요</div>
+      </div>
+      <div class="page-header-right">
+        <div class="input-wrap">
+          <i data-lucide="search" class="input-icon"></i>
+          <input class="input input-search" id="search-input" placeholder="이름 또는 계약번호로 검색" style="width: 240px;">
+        </div>
+        <div class="custom-select" id="year-select" style="width: 150px;">
+          <button type="button" class="custom-select-trigger" aria-haspopup="listbox" aria-expanded="false">
+            <span class="custom-select-value">2026년 진행</span>
+            <i data-lucide="chevron-down" class="chev"></i>
+          </button>
+          <ul class="custom-select-panel" role="listbox">
+            <li class="custom-select-option is-selected" role="option" data-value="2026">2026년 진행</li>
+            <li class="custom-select-option" role="option" data-value="2025">2025년 진행</li>
+            <li class="custom-select-option" role="option" data-value="2024">2024년 진행</li>
+            <li class="custom-select-option" role="option" data-value="2023">2023년 진행</li>
+          </ul>
+        </div>
+        <button class="btn btn-primary" id="btn-new-project">
+          <i data-lucide="plus"></i>
+          새 프로젝트 추가
+        </button>
+      </div>
+    </div>
+
+    <!-- Stat Cards (Total/Ended/Running = 필터, My = 정보) -->
+    <div class="stat-grid" role="tablist" aria-label="프로젝트 필터">
+      <div class="stat-card is-filter is-active" role="tab" tabindex="0" aria-selected="true" data-filter="total">
+        <div class="stat-label">Total Projects</div>
+        <div class="stat-value" data-count="total">0</div>
+      </div>
+      <div class="stat-card is-filter" role="tab" tabindex="0" aria-selected="false" data-filter="ended">
+        <div class="stat-label">Ended Projects</div>
+        <div class="stat-value" data-count="ended">0</div>
+      </div>
+      <div class="stat-card is-filter" role="tab" tabindex="0" aria-selected="false" data-filter="running">
+        <div class="stat-label">Running Projects</div>
+        <div class="stat-value" data-count="running">0</div>
+      </div>
+      <div class="stat-card is-filter" id="stat-card-mine" role="tab" tabindex="0" aria-selected="false" data-filter="mine">
+        <div class="stat-label">
+          <span>My Project</span>
+          <span id="my-role-slot"></span>
+        </div>
+        <div class="stat-value" data-count="mine">0</div>
+      </div>
+    </div>
+
+    <!-- Project Grid -->
+    <div class="section-title-row">
+      <div class="section-title">프로젝트 목록</div>
+      <div class="section-sub">최근 업데이트 순</div>
+    </div>
+    <div class="project-grid" id="project-grid"></div>
+    <div class="load-more-row" id="load-more-row" style="display: none;">
+      <button type="button" class="btn btn-secondary" id="btn-load-more">더보기</button>
+    </div>
+
+    <!-- Analytics Section -->
+    <div class="section-title-row" style="display: none;">
+      <div class="section-title">조직 작업 지표</div>
+      <div class="section-sub">최근 90일</div>
+    </div>
+    <div class="analytics-grid" style="display: none;">
+
+      <!-- 단계별 작업 소요 시간 (세로 바 · 단계별 · min/avg/max 범위) -->
+      <div class="analytics-card">
+        <div class="analytics-head">
+          <div>
+            <div class="analytics-title">단계별 작업 소요 시간</div>
+            <div class="analytics-sub">min · avg · max (일) · 단계</div>
+          </div>
+        </div>
+        <div class="analytics-body">
+          <!--
+            Y축: 0~300일 (상세설계 편차 강조 위해 확장)
+            X축 4 단계: 견적(80) / 기본설계(160) / 상세설계(240) / Vendor 선정(320)
+            viewBox 360×160, plot area: x=40~348, y=18~130 (112px = 300일)
+            y 변환: y = 130 - (value / 300) * 112
+          -->
+          <svg class="chart-svg" viewBox="0 0 360 160" preserveAspectRatio="none">
+            <!-- gridlines + y-ticks (0/100/200/300일) -->
+            <g stroke="#E2E8F0">
+              <line x1="40" y1="18"  x2="348" y2="18"  stroke-dasharray="2 3" />
+              <line x1="40" y1="55"  x2="348" y2="55"  stroke-dasharray="2 3" />
+              <line x1="40" y1="93"  x2="348" y2="93"  stroke-dasharray="2 3" />
+              <line x1="40" y1="130" x2="348" y2="130" />
+            </g>
+            <g font-family="IBM Plex Mono" font-size="10" fill="#94A3B8" text-anchor="end">
+              <text x="36" y="22">300</text>
+              <text x="36" y="58">200</text>
+              <text x="36" y="96">100</text>
+              <text x="36" y="133">0</text>
+            </g>
+
+            <!-- 견적 (min 5, avg 14, max 30) · x=80 -->
+            <g>
+              <rect x="66" y="118.80" width="28" height="9.33" rx="2" fill="#D4DFEE" />
+              <line x1="64" y1="124.77" x2="96" y2="124.77" stroke="#275DB2" stroke-width="2" />
+              <text x="100" y="128" font-family="IBM Plex Mono" font-size="12" font-weight="600" fill="#275DB2">14</text>
+              <text x="80" y="114" font-family="IBM Plex Mono" font-size="10" fill="#94A3B8" text-anchor="middle">30</text>
+              <text x="80" y="138" font-family="IBM Plex Mono" font-size="10" fill="#94A3B8" text-anchor="middle">5</text>
+            </g>
+
+            <!-- 기본설계 (min 45, avg 75, max 115) · x=160 -->
+            <g>
+              <rect x="146" y="87.07" width="28" height="26.13" rx="2" fill="#D4DFEE" />
+              <line x1="144" y1="102" x2="176" y2="102" stroke="#275DB2" stroke-width="2" />
+              <text x="180" y="106" font-family="IBM Plex Mono" font-size="12" font-weight="600" fill="#275DB2">75</text>
+              <text x="160" y="82" font-family="IBM Plex Mono" font-size="10" fill="#94A3B8" text-anchor="middle">115</text>
+              <text x="160" y="124" font-family="IBM Plex Mono" font-size="10" fill="#94A3B8" text-anchor="middle">45</text>
+            </g>
+
+            <!-- 상세설계 (min 100, avg 170, max 280) · x=240 — 극단 편차 -->
+            <g>
+              <rect x="226" y="25.47" width="28" height="67.2" rx="2" fill="#D4DFEE" />
+              <line x1="224" y1="66.53" x2="256" y2="66.53" stroke="#275DB2" stroke-width="2" />
+              <text x="260" y="70" font-family="IBM Plex Mono" font-size="12" font-weight="600" fill="#275DB2">170</text>
+              <text x="240" y="21" font-family="IBM Plex Mono" font-size="10" fill="#94A3B8" text-anchor="middle">280</text>
+              <text x="240" y="102" font-family="IBM Plex Mono" font-size="10" fill="#94A3B8" text-anchor="middle">100</text>
+            </g>
+
+            <!-- Vendor 선정 (min 20, avg 35, max 60) · x=320 -->
+            <g>
+              <rect x="306" y="107.60" width="28" height="14.93" rx="2" fill="#D4DFEE" />
+              <line x1="304" y1="116.93" x2="336" y2="116.93" stroke="#275DB2" stroke-width="2" />
+              <text x="340" y="120" font-family="IBM Plex Mono" font-size="12" font-weight="600" fill="#275DB2">35</text>
+              <text x="320" y="103" font-family="IBM Plex Mono" font-size="10" fill="#94A3B8" text-anchor="middle">60</text>
+              <text x="320" y="133" font-family="IBM Plex Mono" font-size="10" fill="#94A3B8" text-anchor="middle">20</text>
+            </g>
+
+            <!-- x-axis category labels -->
+            <g font-family="IBM Plex Sans KR" font-size="11" fill="#6B7A8F" text-anchor="middle">
+              <text x="80"  y="150">견적</text>
+              <text x="160" y="150">기본설계</text>
+              <text x="240" y="150">상세설계</text>
+              <text x="320" y="150">Vendor 선정</text>
+            </g>
+          </svg>
+        </div>
+        <div class="chart-legend">
+          <span class="chart-legend-item"><span class="chart-legend-dot" style="background: #D4DFEE;"></span>min ~ max</span>
+          <span class="chart-legend-item"><span class="chart-legend-dot" style="background: #275DB2;"></span>avg</span>
+        </div>
+      </div>
+
+      <!-- 단계별 작업 누적 소요 시간 (꺾은선 · 단계별 avg 누적) -->
+      <div class="analytics-card">
+        <div class="analytics-head">
+          <div>
+            <div class="analytics-title">단계별 작업 누적 소요 시간</div>
+            <div class="analytics-sub">avg 누적 (일) · 단계</div>
+          </div>
+        </div>
+        <div class="analytics-body">
+          <!--
+            Y축: 0~350일 (설계 1년 ≈ 365일 감각 반영)
+            X축: 단계별 차트와 동일한 4개 단계 좌표 공유 (x=80/160/240/320)
+            누적: 14 → 104 → 254 → 289
+          -->
+          <svg class="chart-svg" viewBox="0 0 360 160" preserveAspectRatio="none">
+            <!-- gridlines + y-ticks (0/100/200/300/350) -->
+            <g stroke="#E2E8F0">
+              <line x1="40" y1="18"  x2="348" y2="18"  stroke-dasharray="2 3" />
+              <line x1="40" y1="50"  x2="348" y2="50"  stroke-dasharray="2 3" />
+              <line x1="40" y1="66"  x2="348" y2="66"  stroke-dasharray="2 3" />
+              <line x1="40" y1="98"  x2="348" y2="98"  stroke-dasharray="2 3" />
+              <line x1="40" y1="130" x2="348" y2="130" />
+            </g>
+            <g font-family="IBM Plex Mono" font-size="10" fill="#94A3B8" text-anchor="end">
+              <text x="36" y="22">350</text>
+              <text x="36" y="54">250</text>
+              <text x="36" y="70">200</text>
+              <text x="36" y="102">100</text>
+              <text x="36" y="133">0</text>
+            </g>
+
+            <!-- Area fill -->
+            <path d="M 80 125.52 L 160 101.52 L 240 47.12 L 320 35.92 L 320 130 L 80 130 Z"
+              fill="#D4DFEE" opacity="0.35" />
+
+            <!-- Cumulative line -->
+            <path d="M 80 125.52 L 160 101.52 L 240 47.12 L 320 35.92"
+              fill="none" stroke="#275DB2" stroke-width="2" />
+
+            <!-- Dots + 누적값 라벨 -->
+            <g fill="#275DB2">
+              <circle cx="80"  cy="125.52" r="3.5" />
+              <circle cx="160" cy="101.52" r="3.5" />
+              <circle cx="240" cy="47.12"  r="3.5" />
+              <circle cx="320" cy="35.92"  r="3.5" />
+            </g>
+            <g font-family="IBM Plex Mono" font-size="12" font-weight="600" fill="#275DB2" text-anchor="middle">
+              <text x="80"  y="118">14</text>
+              <text x="160" y="94">89</text>
+              <text x="240" y="40">259</text>
+              <text x="320" y="28">294</text>
+            </g>
+
+            <!-- x-axis category labels (단계별 차트와 동일) -->
+            <g font-family="IBM Plex Sans KR" font-size="11" fill="#6B7A8F" text-anchor="middle">
+              <text x="80"  y="150">견적</text>
+              <text x="160" y="150">기본설계</text>
+              <text x="240" y="150">상세설계</text>
+              <text x="320" y="150">Vendor 선정</text>
+            </g>
+          </svg>
+        </div>
+        <div class="chart-legend" aria-hidden="true" style="visibility: hidden;">
+          <span class="chart-legend-item"><span class="chart-legend-dot"></span>spacer</span>
+        </div>
+      </div>
+
+      <!-- 문서별 Rev pair 소요 시간 (min/avg/max) — sourceDocuments 기반 -->
+      <div class="analytics-card">
+        <div class="analytics-head">
+          <div>
+            <div class="analytics-title">문서별 Rev 발행 소요 시간</div>
+            <div class="analytics-sub">선행 문서 Rev 발행 → 본 문서 Rev 발행 · min · avg · max (일)</div>
+          </div>
+        </div>
+        <div class="analytics-body">
+          <!-- Y축 0~30일 · X축 IRS/DC/MPS -->
+          <svg class="chart-svg" viewBox="0 0 360 160" preserveAspectRatio="none">
+            <g stroke="#E2E8F0">
+              <line x1="40" y1="18"  x2="348" y2="18"  stroke-dasharray="2 3" />
+              <line x1="40" y1="55"  x2="348" y2="55"  stroke-dasharray="2 3" />
+              <line x1="40" y1="93"  x2="348" y2="93"  stroke-dasharray="2 3" />
+              <line x1="40" y1="130" x2="348" y2="130" />
+            </g>
+            <g font-family="IBM Plex Mono" font-size="10" fill="#94A3B8" text-anchor="end">
+              <text x="36" y="22">30</text>
+              <text x="36" y="58">20</text>
+              <text x="36" y="96">10</text>
+              <text x="36" y="133">0</text>
+            </g>
+
+            <!-- IRS (min 3, avg 9, max 18) · x=110 -->
+            <g>
+              <rect x="96" y="62.8" width="28" height="56" rx="2" fill="#D4DFEE" />
+              <line x1="94" y1="96.4" x2="126" y2="96.4" stroke="#275DB2" stroke-width="2" />
+              <text x="130" y="100" font-family="IBM Plex Mono" font-size="12" font-weight="600" fill="#275DB2">9</text>
+              <text x="110" y="58" font-family="IBM Plex Mono" font-size="10" fill="#94A3B8" text-anchor="middle">18</text>
+              <text x="110" y="128" font-family="IBM Plex Mono" font-size="10" fill="#94A3B8" text-anchor="middle">3</text>
+            </g>
+            <text x="110" y="148" font-family="IBM Plex Sans KR" font-size="11" fill="#6B7A8F" text-anchor="middle">IRS</text>
+
+            <!-- DC (min 7, avg 15, max 28) · x=200 -->
+            <g>
+              <rect x="186" y="25.47" width="28" height="78.4" rx="2" fill="#D4DFEE" />
+              <line x1="184" y1="74" x2="216" y2="74" stroke="#275DB2" stroke-width="2" />
+              <text x="220" y="78" font-family="IBM Plex Mono" font-size="12" font-weight="600" fill="#275DB2">15</text>
+              <text x="200" y="21" font-family="IBM Plex Mono" font-size="10" fill="#94A3B8" text-anchor="middle">28</text>
+              <text x="200" y="113" font-family="IBM Plex Mono" font-size="10" fill="#94A3B8" text-anchor="middle">7</text>
+            </g>
+            <text x="200" y="148" font-family="IBM Plex Sans KR" font-size="11" fill="#6B7A8F" text-anchor="middle">DC</text>
+
+            <!-- MPS (min 5, avg 12, max 24) · x=290 -->
+            <g>
+              <rect x="276" y="40.4" width="28" height="70.93" rx="2" fill="#D4DFEE" />
+              <line x1="274" y1="85.2" x2="306" y2="85.2" stroke="#275DB2" stroke-width="2" />
+              <text x="310" y="89" font-family="IBM Plex Mono" font-size="12" font-weight="600" fill="#275DB2">12</text>
+              <text x="290" y="36" font-family="IBM Plex Mono" font-size="10" fill="#94A3B8" text-anchor="middle">24</text>
+              <text x="290" y="120" font-family="IBM Plex Mono" font-size="10" fill="#94A3B8" text-anchor="middle">5</text>
+            </g>
+            <text x="290" y="148" font-family="IBM Plex Sans KR" font-size="11" fill="#6B7A8F" text-anchor="middle">MPS</text>
+          </svg>
+        </div>
+        <div class="chart-legend">
+          <span class="chart-legend-item"><span class="chart-legend-dot" style="background: #D4DFEE;"></span>min ~ max</span>
+          <span class="chart-legend-item"><span class="chart-legend-dot" style="background: #275DB2;"></span>avg</span>
+        </div>
+      </div>
+
+      <!-- 문서별 평균 Rev 반복 횟수 — 재작업 빈도 지표 -->
+      <div class="analytics-card">
+        <div class="analytics-head">
+          <div>
+            <div class="analytics-title">문서별 평균 Rev 반복 횟수</div>
+            <div class="analytics-sub">프로젝트당 평균 발행 횟수 · 재작업 빈도 지표</div>
+          </div>
+        </div>
+        <div class="analytics-body">
+          <!-- Y축 0~4회, plot y=18~130 (112px=4) -->
+          <svg class="chart-svg" viewBox="0 0 360 160" preserveAspectRatio="none">
+            <g stroke="#E2E8F0">
+              <line x1="40" y1="18"  x2="348" y2="18"  stroke-dasharray="2 3" />
+              <line x1="40" y1="46"  x2="348" y2="46"  stroke-dasharray="2 3" />
+              <line x1="40" y1="74"  x2="348" y2="74"  stroke-dasharray="2 3" />
+              <line x1="40" y1="102" x2="348" y2="102" stroke-dasharray="2 3" />
+              <line x1="40" y1="130" x2="348" y2="130" />
+            </g>
+            <g font-family="IBM Plex Mono" font-size="10" fill="#94A3B8" text-anchor="end">
+              <text x="36" y="22">4</text>
+              <text x="36" y="50">3</text>
+              <text x="36" y="78">2</text>
+              <text x="36" y="106">1</text>
+              <text x="36" y="133">0</text>
+            </g>
+
+            <!-- IRS 2.3회 · y = 130 - (2.3/4)*112 = 65.6 · bar height = 130-65.6 = 64.4 -->
+            <g>
+              <rect x="96" y="65.6" width="28" height="64.4" rx="2" fill="#275DB2" />
+              <text x="110" y="60" font-family="IBM Plex Mono" font-size="12" font-weight="600" fill="#275DB2" text-anchor="middle">2.3</text>
+            </g>
+            <text x="110" y="148" font-family="IBM Plex Sans KR" font-size="11" fill="#6B7A8F" text-anchor="middle">IRS</text>
+
+            <!-- DC 1.8회 · y = 130 - (1.8/4)*112 = 79.6 · h = 50.4 -->
+            <g>
+              <rect x="186" y="79.6" width="28" height="50.4" rx="2" fill="#275DB2" />
+              <text x="200" y="74" font-family="IBM Plex Mono" font-size="12" font-weight="600" fill="#275DB2" text-anchor="middle">1.8</text>
+            </g>
+            <text x="200" y="148" font-family="IBM Plex Sans KR" font-size="11" fill="#6B7A8F" text-anchor="middle">DC</text>
+
+            <!-- MPS 1.4회 · y = 130 - (1.4/4)*112 = 90.8 · h = 39.2 -->
+            <g>
+              <rect x="276" y="90.8" width="28" height="39.2" rx="2" fill="#275DB2" />
+              <text x="290" y="85" font-family="IBM Plex Mono" font-size="12" font-weight="600" fill="#275DB2" text-anchor="middle">1.4</text>
+            </g>
+            <text x="290" y="148" font-family="IBM Plex Sans KR" font-size="11" fill="#6B7A8F" text-anchor="middle">MPS</text>
+          </svg>
+        </div>
+        <div class="chart-legend" aria-hidden="true" style="visibility: hidden;">
+          <span class="chart-legend-item"><span class="chart-legend-dot"></span>spacer</span>
+        </div>
+      </div>
+
+      <!-- ITB 독소조항 검토 일치율 (Donut) · grid col3 세로 span -->
+      <div class="analytics-card donut-card" style="display: none;">
+        <div class="analytics-head">
+          <div>
+            <div class="analytics-title">ITB 독소조항 검토 일치율</div>
+            <div class="analytics-sub">AI vs 담당자 검토</div>
+          </div>
+        </div>
+        <div class="analytics-body">
+          <div style="position: relative; width: 140px; height: 140px;">
+            <svg viewBox="0 0 120 120" width="140" height="140">
+              <circle cx="60" cy="60" r="50" fill="none" stroke="#E2E8F0" stroke-width="12" />
+              <circle cx="60" cy="60" r="50" fill="none" stroke="#275DB2" stroke-width="12" stroke-dasharray="298.45"
+                stroke-dashoffset="14.92" transform="rotate(-90 60 60)" stroke-linecap="round" />
+            </svg>
+            <div
+              style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+              <div
+                style="font-family: 'IBM Plex Mono', monospace; font-size: 28px; font-weight: 600; color: var(--gray-800); line-height: 1;">
+                95%</div>
+              <div style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: var(--gray-500); margin-top: 4px;">950 / 1000</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Modal: 새 프로젝트 추가 / 수정 (공용) -->
+  <div class="modal-backdrop" id="modal-project" aria-hidden="true">
+    <div class="modal-panel" role="dialog" aria-labelledby="modal-project-title">
+      <div class="modal-header">
+        <div class="modal-title" id="modal-project-title">새 프로젝트 추가</div>
+        <button type="button" class="modal-close" data-modal-close><i data-lucide="x"></i></button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-field">
+          <label class="modal-label" for="proj-name">프로젝트 이름 <span style="color: var(--error);">*</span></label>
+          <input class="modal-input" id="proj-name" placeholder="예: Saudi ARAMCO Jafurah Gas Plant Phase 2">
+        </div>
+        <div class="modal-field">
+          <label class="modal-label" for="proj-contract">계약번호 <span style="color: var(--error);">*</span></label>
+          <input class="modal-input" id="proj-contract" placeholder="예: JA-2025-078">
+        </div>
+        <div class="modal-field" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+          <div>
+            <label class="modal-label" for="proj-start">계약 시작 <span style="color: var(--error);">*</span></label>
+            <input class="modal-input" id="proj-start" type="month">
+          </div>
+          <div>
+            <label class="modal-label" for="proj-end">계약 종료 <span style="color: var(--error);">*</span></label>
+            <input class="modal-input" id="proj-end" type="month">
+          </div>
+        </div>
+        <div class="modal-field">
+          <label class="modal-label" for="proj-itb">수행 ITB 파일 (선택)</label>
+          <label class="file-drop" id="proj-file-drop">
+            <i data-lucide="upload" style="width: 20px; height: 20px; margin-bottom: 6px; display: block; margin-left: auto; margin-right: auto;"></i>
+            <span id="proj-file-text">클릭 또는 드래그하여 파일 선택 (.pdf)</span>
+            <input type="file" id="proj-itb" accept=".pdf">
+          </label>
+          <div class="modal-hint">ITB 파일을 첨부하면 프로젝트 상태가 '수행설계'로 자동 전이됩니다.</div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-modal-close>취소</button>
+        <button type="button" class="btn btn-primary is-disabled" id="btn-project-submit">프로젝트 생성</button>
+      </div>
+    </div>
+  </div>
+
+
+
+  <!-- Modal: 내담당 추가 (Workstream 선택) -->
+  <div class="modal-backdrop" id="modal-role" aria-hidden="true">
+    <div class="modal-panel" role="dialog" aria-labelledby="modal-role-title">
+      <div class="modal-header">
+        <div class="modal-title" id="modal-role-title">내담당 추가</div>
+        <button type="button" class="modal-close" data-modal-close><i data-lucide="x"></i></button>
+      </div>
+      <div class="modal-body">
+        <div class="role-grid" id="role-grid"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-modal-close>취소</button>
+        <button type="button" class="btn btn-primary is-disabled" id="btn-role-save">저장</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Project list — mock data + 필터 + 6개씩 더보기
+    (function () {
+      const PAGE_SIZE = 6;
+      const PROJECTS = [
+        { name: 'Saudi ARAMCO Jafurah Gas Plant Phase 2',        contract: 'JA-2025-078',       period: '2025.03 — 2027.08', progress: 45,  status: 'running', docs: 124, members: 0, mine: false },
+        { name: 'UAE ADNOC Hail & Ghasha Sour Gas Project',      contract: 'ADN-2024-142',      period: '2024.09 — 2026.12', progress: 72,  status: 'running', docs: 287, members: 0, mine: false },
+        { name: 'Qatar NFE Ethane Cracker Package',              contract: 'QP-NFE-2025-011',   period: '2025.06 — 2028.03', progress: 22,  status: 'running', docs: 56,  members: 0, mine: false },
+        { name: 'Kuwait Al-Zour Refinery Expansion',             contract: 'KNP-2023-087',      period: '2023.01 — 2025.12', progress: 100, status: 'ended',   docs: 412, members: 0, mine: false },
+        { name: 'Oman Duqm Integrated Refinery Project',         contract: 'ORPIC-2024-055',    period: '2024.04 — 2026.09', progress: 58,  status: 'running', docs: 198, members: 0, mine: false },
+        { name: 'Malaysia Petronas PRefChem Revamp Phase 1',     contract: 'PETR-2025-023',     period: '2025.02 — 2026.11', progress: 34,  status: 'running', docs: 89,  members: 0, mine: false },
+        { name: 'Singapore Jurong LNG Terminal Expansion',       contract: 'SJL-2024-031',      period: '2024.07 — 2026.06', progress: 66,  status: 'running', docs: 142, members: 0, mine: false },
+        { name: 'Indonesia Balikpapan Refinery Modernization',   contract: 'PRTM-2023-094',     period: '2023.05 — 2025.10', progress: 100, status: 'ended',   docs: 356, members: 0, mine: false },
+        { name: 'Vietnam Long Son Petrochemical Complex',        contract: 'LSP-2024-017',      period: '2024.11 — 2027.02', progress: 18,  status: 'running', docs: 47,  members: 0, mine: false },
+        { name: 'Egypt ERC Mostorod Hydrocracker Unit',          contract: 'ERC-2022-063',      period: '2022.08 — 2025.04', progress: 100, status: 'ended',   docs: 289, members: 0, mine: false },
+        { name: 'Iraq Basra Gas Company Phase 3',                contract: 'BGC-2025-008',      period: '2025.04 — 2028.09', progress: 12,  status: 'running', docs: 31,  members: 0, mine: false },
+        { name: 'Algeria Hassi R’Mel Gas Processing Upgrade', contract: 'SONA-2024-072', period: '2024.01 — 2026.07', progress: 54, status: 'running', docs: 167, members: 0, mine: false },
+      ];
+
+      const grid = document.getElementById('project-grid');
+      const loadMoreRow = document.getElementById('load-more-row');
+      const loadMoreBtn = document.getElementById('btn-load-more');
+      const filterButtons = document.querySelectorAll('.stat-card.is-filter');
+
+      let currentFilter = 'total';
+      let visibleCount = PAGE_SIZE;
+      let currentYear = 2026;
+      let currentQuery = '';
+      let currentRole = localStorage.getItem('userRole') || 'member'; // admin | member
+
+      // period "YYYY.MM — YYYY.MM" 파싱 → {startYear, endYear}
+      function getYears(p) {
+        const m = p.period.match(/(\d{4})[.\s]\d{2}\s*[—\-–]\s*(\d{4})[.\s]\d{2}/);
+        if (!m) return null;
+        return { start: Number(m[1]), end: Number(m[2]) };
+      }
+      function isActiveInYear(p, year) {
+        const y = getYears(p);
+        if (!y) return true;
+        return y.start <= year && year <= y.end;
+      }
+
+      function matchQuery(p) {
+        if (!currentQuery) return true;
+        const q = currentQuery.toLowerCase();
+        return p.name.toLowerCase().includes(q) || p.contract.toLowerCase().includes(q);
+      }
+
+      function updateCounts() {
+        const base    = PROJECTS.filter(p => !p.archived && isActiveInYear(p, currentYear) && matchQuery(p));
+        const total   = base.length;
+        const ended   = base.filter(p => p.status === 'ended').length;
+        const running = base.filter(p => p.status === 'running').length;
+        const mine    = base.filter(p => p.mine).length;
+        document.querySelector('[data-count="total"]').textContent   = total;
+        document.querySelector('[data-count="ended"]').textContent   = ended;
+        document.querySelector('[data-count="running"]').textContent = running;
+        document.querySelector('[data-count="mine"]').textContent    = mine;
+      }
+
+      function getFiltered() {
+        const base = PROJECTS.filter(p => !p.archived && isActiveInYear(p, currentYear) && matchQuery(p));
+        if (currentFilter === 'ended')   return base.filter(p => p.status === 'ended');
+        if (currentFilter === 'running') return base.filter(p => p.status === 'running');
+        if (currentFilter === 'mine')    return base.filter(p => p.mine);
+        return base;
+      }
+
+      function renderCard(p, idx) {
+        const done = p.progress >= 100 ? ' done' : '';
+        const starActive = p.mine ? ' is-active' : '';
+        const memberCount = p.members + (p.mine ? 1 : 0);
+        const qs = new URLSearchParams();
+        if (savedRole) qs.set('workstream', savedRole);
+        if (p.mine)    qs.set('mine', '1');
+        const href = qs.toString()
+          ? `index.html#/itb?${qs.toString()}`
+          : `index.html#/itb`;
+        const cornerWidget = currentRole === 'admin' ? `
+            <button type="button" class="card-overflow" data-settings-idx="${idx}" aria-label="프로젝트 설정">
+              <i data-lucide="settings"></i>
+            </button>` : `
+            <button type="button" class="card-star${starActive}" data-star-idx="${idx}" aria-label="내 프로젝트 토글">
+              <i data-lucide="star"></i>
+            </button>`;
+        return `
+          <a class="project-card" href="${href}">
+            ${cornerWidget}
+            <div class="card-name" title="${p.name}">${p.name}</div>
+            <div class="card-divider"></div>
+            <div class="card-meta">
+              <div class="card-meta-row"><span class="card-meta-label">계약번호</span><span class="card-meta-value">${p.contract}</span></div>
+              <div class="card-meta-row"><span class="card-meta-label">계약기간</span><span class="card-meta-value">${p.period}</span></div>
+            </div>
+            <div class="card-progress">
+              <div class="progress-bar"><div class="progress-fill${done}" style="width: ${p.progress}%;"></div></div>
+              <div class="progress-value">${p.progress}%</div>
+            </div>
+            <div class="card-footer">
+              <div class="card-stats"><span>문서<b>${p.docs}</b></span><span>담당자<b>${memberCount}</b></span></div>
+            </div>
+          </a>`;
+      }
+
+      function render() {
+        const filtered = getFiltered();
+        if (filtered.length === 0) {
+          grid.classList.add('is-empty');
+          grid.innerHTML = '조건에 맞는 프로젝트가 없습니다.';
+          loadMoreRow.style.display = 'none';
+          return;
+        }
+        grid.classList.remove('is-empty');
+        const slice = filtered.slice(0, visibleCount);
+        grid.innerHTML = slice.map(p => renderCard(p, PROJECTS.indexOf(p))).join('');
+        if (window.lucide) window.lucide.createIcons();
+        const remaining = filtered.length - slice.length;
+        if (remaining > 0) {
+          loadMoreRow.style.display = 'flex';
+          loadMoreBtn.textContent = `더보기 (${remaining})`;
+        } else {
+          loadMoreRow.style.display = 'none';
+        }
+      }
+
+      filterButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const f = btn.dataset.filter;
+          if (f === currentFilter) return;
+          currentFilter = f;
+          visibleCount = PAGE_SIZE;
+          filterButtons.forEach(b => {
+            const active = b === btn;
+            b.classList.toggle('is-active', active);
+            b.setAttribute('aria-selected', active ? 'true' : 'false');
+          });
+          render();
+        });
+      });
+
+      loadMoreBtn.addEventListener('click', () => {
+        visibleCount += PAGE_SIZE;
+        render();
+      });
+
+      // 카드 내부 클릭 위임 — 별표 / 설정 버튼
+      grid.addEventListener('click', (e) => {
+        const star = e.target.closest('.card-star');
+        if (star) {
+          e.preventDefault(); e.stopPropagation();
+          const idx = Number(star.dataset.starIdx);
+          PROJECTS[idx].mine = !PROJECTS[idx].mine;
+          updateCounts();
+          render();
+          return;
+        }
+        const settings = e.target.closest('.card-overflow');
+        if (settings) {
+          e.preventDefault(); e.stopPropagation();
+          const idx = Number(settings.dataset.settingsIdx);
+          openEditForm(idx);
+          return;
+        }
+      });
+
+      // ─────── Edit form 진입 ───────
+      function openEditForm(idx) {
+        const p = PROJECTS[idx];
+        // 현재 필드 → form pre-fill 데이터로 변환
+        const [start, end] = (p.period || '').split(' — ').map(s => s ? s.replace(/\./g, '-') + '-01' : '');
+        sessionStorage.setItem('projectFormPrefill', JSON.stringify({
+          type: p.type || '수행',
+          status: p.statusLabel || (p.status === 'ended' ? '완료' : '수행중'),
+          contract: p.contract || '',
+          budgetCode: p.budgetCode || '',
+          name: p.name || '',
+          client: p.client || '',
+          description: p.description || '',
+          start, end,
+          formType: p.formType || '',
+          region: p.region || '',
+          location: p.location || '',
+        }));
+        location.hash = `#/projects/edit?idx=${idx}`;
+      }
+
+      // ─────── 폼 결과 수신 (생성/수정/archive) ───────
+      function consumeFormResult() {
+        const raw = sessionStorage.getItem('projectFormResult');
+        if (!raw) return;
+        sessionStorage.removeItem('projectFormResult');
+        sessionStorage.removeItem('projectFormPrefill');
+        try {
+          const { mode, editIdx, data } = JSON.parse(raw);
+          if (mode === 'new' && data) {
+            const s = (data.start || '').slice(0, 7).replace('-', '.');
+            const e = (data.end || '').slice(0, 7).replace('-', '.');
+            const status = data.status === '완료' ? 'ended' : (data.status === '취소' ? 'canceled' : 'running');
+            PROJECTS.unshift({
+              name: data.name, contract: data.contract, budgetCode: data.budgetCode,
+              client: data.client, description: data.description,
+              period: `${s} — ${e}`, progress: 0, status, statusLabel: data.status,
+              type: data.type, formType: data.formType, region: data.region, location: data.location,
+              docs: 0, members: 0, mine: false, archived: false,
+            });
+            visibleCount = PAGE_SIZE;
+            showToast(`'${data.name}' 프로젝트가 생성되었습니다`);
+          } else if (mode === 'edit' && data && editIdx !== null && PROJECTS[editIdx]) {
+            const s = (data.start || '').slice(0, 7).replace('-', '.');
+            const e = (data.end || '').slice(0, 7).replace('-', '.');
+            const status = data.status === '완료' ? 'ended' : (data.status === '취소' ? 'canceled' : 'running');
+            Object.assign(PROJECTS[editIdx], {
+              name: data.name, contract: data.contract, budgetCode: data.budgetCode,
+              client: data.client, description: data.description,
+              period: `${s} — ${e}`, status, statusLabel: data.status,
+              type: data.type, formType: data.formType, region: data.region, location: data.location,
+            });
+            showToast(`'${data.name}' 프로젝트가 수정되었습니다`);
+          } else if (mode === 'archive' && editIdx !== null && PROJECTS[editIdx]) {
+            const p = PROJECTS[editIdx];
+            p.archived = true;
+            showToast(`'${p.name}' 프로젝트가 Archive 되었습니다`);
+          }
+          updateCounts();
+          render();
+        } catch (err) { console.warn(err); }
+      }
+      consumeFormResult();
+
+      // ─────── 모달 공통 유틸 ───────
+      function openModal(id) {
+        const el = document.getElementById(id);
+        el.classList.add('is-open');
+        el.setAttribute('aria-hidden', 'false');
+      }
+      function closeModal(id) {
+        const el = document.getElementById(id);
+        el.classList.remove('is-open');
+        el.setAttribute('aria-hidden', 'true');
+      }
+      document.querySelectorAll('.modal-backdrop').forEach(bd => {
+        bd.addEventListener('click', e => { if (e.target === bd) closeModal(bd.id); });
+        bd.querySelectorAll('[data-modal-close]').forEach(b => {
+          b.addEventListener('click', () => closeModal(bd.id));
+        });
+      });
+      document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') document.querySelectorAll('.modal-backdrop.is-open').forEach(m => closeModal(m.id));
+      });
+
+      // ─────── 내담당 추가 모달 (Workstream) ───────
+      const WORKSTREAMS = [
+        { code: 'PRC', name: '프로세스' }, { code: 'MEQ', name: '주기기' },
+        { code: 'ELE', name: '전기' },     { code: 'INS', name: '계장' },
+        { code: 'MEC', name: '기계' },     { code: 'WTR', name: '수처리' },
+        { code: 'CIV', name: '토목' },     { code: 'ARC', name: '건축' },
+        { code: 'PIP', name: '배관' },     { code: 'LAY', name: '공간' },
+        { code: 'UTL', name: '설비' },
+      ];
+      const roleGrid = document.getElementById('role-grid');
+      const btnRoleSave = document.getElementById('btn-role-save');
+      const myRoleSlot = document.getElementById('my-role-slot');
+      let pendingRole = null;
+      let savedRole = localStorage.getItem('myRole') || null;
+
+      function getWorkstream(code) {
+        return WORKSTREAMS.find(w => w.code === code) || null;
+      }
+
+      function renderMyRoleSlot() {
+        const ws = getWorkstream(savedRole);
+        if (ws) {
+          myRoleSlot.innerHTML = `
+            <button type="button" class="my-role-badge" data-my-role>
+              ${ws.name}
+            </button>`;
+        } else {
+          myRoleSlot.innerHTML = `<button type="button" class="my-role-link" data-my-role>내담당 추가</button>`;
+        }
+      }
+      // 이벤트 위임 — slot DOM이 재생성돼도 한 번만 바인딩
+      myRoleSlot.addEventListener('click', (e) => {
+        if (!e.target.closest('[data-my-role]')) return;
+        e.stopPropagation();
+        renderRoles();
+        openModal('modal-role');
+      });
+
+      function renderRoles() {
+        pendingRole = savedRole;
+        roleGrid.innerHTML = WORKSTREAMS.map(ws => {
+          const sel = ws.code === pendingRole ? ' is-selected' : '';
+          return `<button type="button" class="role-chip${sel}" data-code="${ws.code}">
+                    ${ws.name}
+                  </button>`;
+        }).join('');
+        btnRoleSave.classList.toggle('is-disabled', !pendingRole);
+      }
+      roleGrid.addEventListener('click', e => {
+        const chip = e.target.closest('.role-chip');
+        if (!chip) return;
+        pendingRole = chip.dataset.code;
+        roleGrid.querySelectorAll('.role-chip').forEach(c => c.classList.toggle('is-selected', c === chip));
+        btnRoleSave.classList.toggle('is-disabled', !pendingRole);
+      });
+      btnRoleSave.addEventListener('click', () => {
+        if (!pendingRole) return;
+        savedRole = pendingRole;
+        localStorage.setItem('myRole', savedRole);
+        renderMyRoleSlot();
+        render();
+        closeModal('modal-role');
+      });
+
+      renderMyRoleSlot();
+
+      // 년도 드롭다운에서 호출
+      window.__onYearChange = function (year) {
+        currentYear = year;
+        visibleCount = PAGE_SIZE;
+        updateCounts();
+        render();
+      };
+
+      // 검색 input
+      const searchInput = document.getElementById('search-input');
+      if (searchInput) {
+        searchInput.addEventListener('input', () => {
+          currentQuery = searchInput.value.trim();
+          visibleCount = PAGE_SIZE;
+          updateCounts();
+          render();
+        });
+      }
+
+      // ─────── Role toggle (dev 스위치) ───────
+      const roleButtons = document.querySelectorAll('.role-toggle button');
+      function applyRole(role) {
+        currentRole = role;
+        localStorage.setItem('userRole', role);
+        roleButtons.forEach(b => b.classList.toggle('is-active', b.dataset.role === role));
+        // [새 프로젝트 추가] 버튼 — member에서는 숨김
+        const btnNew = document.getElementById('btn-new-project');
+        if (btnNew) btnNew.style.display = (role === 'admin') ? '' : 'none';
+        // Templates 탭 — member에서는 숨김 (admin 전용 화면)
+        document.querySelectorAll('.hdr-tab[href*="templates"]').forEach(el => {
+          el.style.display = (role === 'admin') ? '' : 'none';
+        });
+        // Bot 탭 — admin에서는 숨김 (사용자 전용 기능)
+        document.querySelectorAll('.hdr-tab[href*="/bot"]').forEach(el => {
+          el.style.display = (role === 'admin') ? 'none' : '';
+        });
+        // My Project stat-card — admin에서는 숨김 (개인 컨텍스트 필터)
+        const mineCard = document.getElementById('stat-card-mine');
+        if (mineCard) mineCard.style.display = (role === 'admin') ? 'none' : '';
+        // 4열 → 3열 레이아웃 전환
+        document.querySelector('.stat-grid')?.classList.toggle('is-admin', role === 'admin');
+        // admin이 mine 필터 상태였다면 total로 리셋
+        if (role === 'admin' && currentFilter === 'mine') {
+          currentFilter = 'total';
+          document.querySelectorAll('.stat-card.is-filter').forEach(c => {
+            c.classList.toggle('is-active', c.dataset.filter === 'total');
+            c.setAttribute('aria-selected', c.dataset.filter === 'total' ? 'true' : 'false');
+          });
+          visibleCount = PAGE_SIZE;
+        }
+        render();
+      }
+      roleButtons.forEach(b => b.addEventListener('click', () => applyRole(b.dataset.role)));
+      applyRole(currentRole);
+
+      // ─────── Toast ───────
+      const toastContainer = document.getElementById('toast-container');
+      function showToast(message, { duration = 2800, action } = {}) {
+        const el = document.createElement('div');
+        el.className = 'toast';
+        el.innerHTML = `<span>${message}</span>`;
+        if (action) {
+          const btn = document.createElement('button');
+          btn.className = 'toast-action';
+          btn.textContent = action.label;
+          btn.addEventListener('click', () => { action.onClick(); el.remove(); });
+          el.appendChild(btn);
+        }
+        toastContainer.appendChild(el);
+        setTimeout(() => {
+          el.style.transition = 'opacity .2s';
+          el.style.opacity = '0';
+          setTimeout(() => el.remove(), 200);
+        }, duration);
+      }
+
+      // ─────── 새 프로젝트 추가 모달 ───────
+      const projName = document.getElementById('proj-name');
+      const projContract = document.getElementById('proj-contract');
+      const projStart = document.getElementById('proj-start');
+      const projEnd = document.getElementById('proj-end');
+      const projItb = document.getElementById('proj-itb');
+      const projFileDrop = document.getElementById('proj-file-drop');
+      const projFileText = document.getElementById('proj-file-text');
+      const btnProjectSubmit = document.getElementById('btn-project-submit');
+
+      function resetProjectModal() {
+        projName.value = '';
+        projContract.value = '';
+        projStart.value = '';
+        projEnd.value = '';
+        projItb.value = '';
+        projFileText.textContent = '클릭 또는 드래그하여 파일 선택 (.pdf)';
+        projFileDrop.classList.remove('has-file');
+        updateProjectSubmitState();
+      }
+      function updateProjectSubmitState() {
+        const ok = projName.value.trim() && projContract.value.trim() && projStart.value && projEnd.value;
+        btnProjectSubmit.classList.toggle('is-disabled', !ok);
+      }
+      [projName, projContract, projStart, projEnd].forEach(el => el.addEventListener('input', updateProjectSubmitState));
+      projItb.addEventListener('change', () => {
+        const f = projItb.files[0];
+        if (f) {
+          projFileText.textContent = f.name;
+          projFileDrop.classList.add('has-file');
+        } else {
+          projFileText.textContent = '클릭 또는 드래그하여 파일 선택 (.pdf)';
+          projFileDrop.classList.remove('has-file');
+        }
+      });
+      document.getElementById('btn-new-project').addEventListener('click', () => {
+        // 전체 페이지 폼으로 이동 (모달 대신)
+        location.hash = '#/projects/new';
+      });
+      btnProjectSubmit.addEventListener('click', () => {
+        if (btnProjectSubmit.classList.contains('is-disabled')) return;
+        const s = projStart.value.replace('-', '.'); // YYYY-MM → YYYY.MM
+        const e = projEnd.value.replace('-', '.');
+        const hasItb = !!projItb.files[0];
+        const newProject = {
+          name: projName.value.trim(),
+          contract: projContract.value.trim(),
+          period: `${s} — ${e}`,
+          progress: 0,
+          status: hasItb ? 'running' : 'running', // mock에선 running으로 통일 (design status 축 미구현)
+          docs: 0,
+          members: 0,
+          mine: false,
+          archived: false,
+        };
+        PROJECTS.unshift(newProject);
+        visibleCount = PAGE_SIZE;
+        updateCounts();
+        render();
+        closeModal('modal-project');
+        showToast(`'${newProject.name}' 프로젝트가 생성되었습니다`);
+      });
+
+      updateCounts();
+      render();
+    })();
+
+    lucide.createIcons();
+
+    // Custom select (년도 드롭다운)
+    (function () {
+      const select = document.getElementById('year-select');
+      if (!select) return;
+      const trigger = select.querySelector('.custom-select-trigger');
+      const valueEl = select.querySelector('.custom-select-value');
+      const options = select.querySelectorAll('.custom-select-option');
+
+      function close() {
+        select.classList.remove('is-open');
+        trigger.setAttribute('aria-expanded', 'false');
+      }
+      function open() {
+        select.classList.add('is-open');
+        trigger.setAttribute('aria-expanded', 'true');
+      }
+
+      trigger.addEventListener('click', function (e) {
+        e.stopPropagation();
+        if (select.classList.contains('is-open')) close(); else open();
+      });
+
+      options.forEach(function (opt) {
+        opt.addEventListener('click', function () {
+          options.forEach(function (o) { o.classList.remove('is-selected'); });
+          opt.classList.add('is-selected');
+          valueEl.textContent = opt.textContent;
+          const year = Number(opt.dataset.value);
+          if (window.__onYearChange) window.__onYearChange(year);
+          close();
+        });
+      });
+
+      document.addEventListener('click', function (e) {
+        if (!select.contains(e.target)) close();
+      });
+
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') close();
+      });
+    })();
+  </script>
+
+</body>
+
+</html>

@@ -1,0 +1,1882 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EPC PE AI Platform</title>
+  <link rel="icon" type="image/png" href="reference/logo.png">
+  <link
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+    rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <style>
+    /* ═══ 공통 디자인 토큰 & 기반 스타일 ═══ */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --primary-900: #081E3A;
+      --primary-800: #0F2E57;
+      --primary-700: #173F73;
+      --primary-600: #1F4E91;
+      --primary-500: #275DB2;
+      --primary-400: #4A7BC7;
+      --primary-300: #7FA2D9;
+      --primary-200: #B2C7E8;
+      --primary-100: #D4DFEE;
+      --primary-50: #EEF2F9;
+      --gray-900: #0D1117;
+      --gray-800: #1C2230;
+      --gray-700: #2E3A4E;
+      --gray-600: #4A5568;
+      --gray-500: #6B7A8F;
+      --gray-400: #94A3B8;
+      --gray-300: #CBD5E1;
+      --gray-200: #E2E8F0;
+      --gray-100: #F1F5F9;
+      --gray-50: #F8FAFC;
+      --success: #3A8C6E;
+      --warning: #B07D3A;
+      --error: #A04545;
+      --info: #3A6A96;
+      --success-bg: #E8F3EE;
+      --warning-bg: #F6E8CD;
+      --error-bg: #F4DCDC;
+    }
+
+    html,
+    body {
+      font-family: 'IBM Plex Sans KR', sans-serif;
+      color: var(--gray-700);
+      background: var(--gray-100);
+      font-size: 14px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      height: 100vh;
+      overflow-y: hidden;
+      overflow-x: auto;
+      min-width: 1200px;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button {
+      font-family: inherit;
+      cursor: pointer;
+      border: none;
+      background: none;
+    }
+
+    input,
+    select,
+    textarea {
+      font-family: inherit;
+    }
+
+    .mono {
+      font-family: 'IBM Plex Mono', monospace;
+    }
+
+    .top-band {
+      height: 2px;
+      background: var(--primary-500);
+    }
+
+    .app-header {
+      width: 100%;
+      min-width: 100%;
+      height: 52px;
+      background: #fff;
+      border-bottom: 1px solid var(--gray-200);
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      padding: 0 24px;
+      position: sticky;
+      top: 2px;
+      z-index: 99;
+    }
+
+    .hdr-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .hdr-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .hdr-logo img {
+      height: 28px;
+      width: auto;
+      display: block;
+    }
+
+    .hdr-sysname {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--gray-800);
+      letter-spacing: -0.01em;
+    }
+
+    .hdr-tabs {
+      display: flex;
+      gap: 4px;
+    }
+
+    .hdr-tab {
+      height: 52px;
+      display: inline-flex;
+      align-items: center;
+      padding: 0 18px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--gray-500);
+      border-bottom: 2px solid transparent;
+      transition: color .15s, border-color .15s;
+    }
+
+    .hdr-tab:hover {
+      color: var(--gray-700);
+    }
+
+    .hdr-tab.active {
+      color: var(--primary-500);
+      font-weight: 600;
+      border-bottom-color: var(--primary-500);
+    }
+
+    .hdr-right {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    .notif-bell {
+      width: 32px;
+      height: 32px;
+      border-radius: 4px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: #fff;
+      color: var(--gray-700);
+      border: 1px solid transparent;
+      position: relative;
+      transition: background .15s, border-color .15s;
+    }
+
+    .notif-bell:hover {
+      background: var(--gray-50);
+      border-color: var(--gray-200);
+    }
+
+    .notif-bell svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .notif-bell .badge {
+      position: absolute;
+      top: -4px; right: -4px;
+      min-width: 18px; height: 18px;
+      padding: 0 5px;
+      border-radius: 9px;
+      background: var(--primary-500);
+      color: #fff;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px; font-weight: 500;
+      display: inline-flex; align-items: center; justify-content: center;
+      border: 2px solid #fff;
+      line-height: 1;
+    }
+    .notif-bell .badge.pulse::after {
+      content: ''; position: absolute; inset: -2px;
+      border-radius: 50%;
+      background: var(--primary-500);
+      opacity: 0.3;
+      animation: notif-pulse 2s infinite;
+    }
+    @keyframes notif-pulse {
+      0% { transform: scale(1); opacity: 0.4; }
+      100% { transform: scale(1.6); opacity: 0; }
+    }
+
+    .btn {
+      height: 36px;
+      padding: 0 14px;
+      border-radius: 4px;
+      font-size: 13px;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background .15s, border-color .15s, color .15s;
+      border: 1px solid transparent;
+      white-space: nowrap;
+    }
+
+    .btn i {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+    }
+
+    /* legend-bar 내부 버튼은 pill(28px)과의 위계 균형을 위해 축소 — 32px/12px */
+    .legend-bar .btn {
+      height: 32px;
+      padding: 0 12px;
+      font-size: 12px;
+    }
+
+    .legend-bar .btn i {
+      width: 14px;
+      height: 14px;
+    }
+
+    .btn.btn-primary {
+      background: var(--primary-500);
+      color: #fff;
+    }
+
+    .btn.btn-primary:hover {
+      background: var(--primary-600);
+    }
+
+    .btn.btn-secondary {
+      background: #fff;
+      border-color: var(--gray-300);
+      color: var(--gray-700);
+    }
+
+    .btn.btn-secondary:hover {
+      background: var(--gray-50);
+    }
+
+    .btn:disabled,
+    .btn.is-disabled {
+      opacity: 0.4;
+      pointer-events: none;
+    }
+
+    .chip {
+      height: 28px;
+      padding: 0 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--gray-700);
+      background: #fff;
+      border: 1px solid var(--gray-300);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background .15s, border-color .15s;
+      cursor: pointer;
+    }
+
+    .chip:hover {
+      background: var(--gray-50);
+    }
+
+    .chip.active {
+      background: var(--primary-50);
+      border-color: var(--primary-500);
+      color: var(--primary-700);
+    }
+
+    /* State-colored filter chips — active 상태에서는 각 상태의 배경/테두리로 전환
+       (담당자 검토 pill과 동일한 시각 계약: background=상태-bg, border=상태색, text=상태색) */
+    .chip.poison.active {
+      background: var(--error-bg);
+      border-color: var(--error);
+      color: var(--error);
+    }
+
+    .chip.review.active {
+      background: var(--warning-bg);
+      border-color: var(--warning);
+      color: var(--warning);
+    }
+
+    .chip.clear.active {
+      background: var(--gray-100);
+      border-color: var(--gray-600);
+      color: var(--gray-800);
+    }
+
+    .chip .chip-count {
+      color: var(--gray-500);
+      font-weight: 600;
+    }
+
+    .chip.active .chip-count {
+      color: var(--gray-800);
+    }
+
+    .chip.poison.active .chip-count {
+      color: var(--error);
+    }
+
+    .chip.review.active .chip-count {
+      color: var(--warning);
+    }
+
+    /* .chip-group — 관련 칩들 간격을 법령-left gap(14px)보다 좁게 묶음 */
+    .chip-group {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    /* §9.1 Status Dot — 전역 6px 통일 */
+    .chip .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--gray-400);
+      flex-shrink: 0;
+    }
+
+    .chip.poison .dot {
+      background: var(--error);
+    }
+
+    .chip.review .dot {
+      background: var(--warning);
+    }
+
+    .chip.clear .dot {
+      background: var(--gray-400);
+    }
+
+    /* Auto-save status indicator */
+    .save-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--gray-500);
+      transition: color .2s;
+    }
+
+    .save-status-icon {
+      width: 12px;
+      height: 12px;
+      flex-shrink: 0;
+    }
+
+    .save-status-spinner {
+      display: none;
+      width: 12px;
+      height: 12px;
+      border: 1.5px solid var(--primary-100);
+      border-top-color: var(--primary-500);
+      border-radius: 50%;
+      animation: save-spin .8s linear infinite;
+      flex-shrink: 0;
+    }
+
+    .save-status.saving {
+      color: var(--primary-500);
+      font-weight: 600;
+    }
+
+    .save-status.saving .save-status-icon {
+      display: none;
+    }
+
+    .save-status.saving .save-status-spinner {
+      display: inline-block;
+    }
+
+    .save-status.saved {
+      color: var(--primary-500);
+      font-weight: 600;
+    }
+
+    .save-status.error {
+      color: var(--error);
+    }
+
+    @keyframes save-spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* Project Bar */
+    .project-bar {
+      width: 100%;
+      min-width: 100%;
+      height: 72px;
+      background: #fff;
+      border-bottom: 1px solid var(--gray-200);
+      display: flex;
+      align-items: center;
+      padding: 0 32px;
+      gap: 24px;
+    }
+
+    .proj-name-block {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      min-width: 0;
+      flex: 1;
+    }
+
+    .proj-name {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--gray-800);
+      line-height: 1.2;
+      letter-spacing: -0.01em;
+    }
+
+    .proj-meta {
+      font-size: 13px;
+      color: var(--gray-600);
+      word-spacing: 0.2em;
+      letter-spacing: 0.01em;
+      display: flex;
+      gap: 12px;
+    }
+
+    .proj-meta-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .proj-meta-label {
+      color: var(--gray-400);
+      font-weight: 500;
+    }
+
+    .proj-meta .mono {
+      font-family: 'IBM Plex Mono', monospace;
+      color: var(--gray-700);
+    }
+
+    .proj-meta-sep::before {
+      content: '·';
+      color: var(--gray-400);
+      margin: 0 4px;
+    }
+
+    /* Sub-tab */
+    .subtab-bar {
+      width: 100%;
+      min-width: 100%;
+      height: 44px;
+      background: #fff;
+      border-bottom: 1px solid var(--gray-200);
+      display: flex;
+      padding: 0 32px;
+      align-items: stretch;
+    }
+
+    .subtab {
+      height: 44px;
+      display: inline-flex;
+      align-items: center;
+      padding: 0 20px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--gray-500);
+      border-bottom: 2px solid transparent;
+      transition: color .15s, border-color .15s;
+    }
+
+    .subtab:first-child {
+      padding-left: 0;
+    }
+
+    .subtab:hover {
+      color: var(--gray-700);
+    }
+
+    .subtab.active {
+      color: var(--primary-500);
+      border-bottom-color: var(--primary-500);
+    }
+
+    .subtab.inactive-dimmed {
+      opacity: 0.4;
+    }
+
+    /* Legend Bar */
+    .legend-bar {
+      width: 100%;
+      min-width: 100%;
+      height: 48px;
+      background: var(--gray-50);
+      border-bottom: 1px solid var(--gray-200);
+      padding: 0 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .legend-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .legend-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Zone A — 선행 문서 anchor chip 컨테이너. ITB는 자기 자신 1개 */
+    .legend-anchors {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .legend-anchor {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      height: 28px;
+      padding: 0 12px 0 10px;
+      border-radius: 999px;
+      background: var(--primary-50);
+      color: var(--primary-700);
+      font-size: 12px;
+      font-weight: 600;
+      font-family: 'IBM Plex Sans KR', sans-serif;
+    }
+
+    .legend-anchor .icon {
+      width: 14px;
+      height: 14px;
+      color: var(--primary-500);
+      stroke-width: 2;
+      flex-shrink: 0;
+    }
+
+    /* ═══ Page-specific: ITB 2-pane ═══ */
+    .content-area {
+      display: grid;
+      grid-template-columns: 1fr 6px 420px;
+      gap: 0;
+      height: calc(100vh - 2px - 52px - 72px - 44px - 49px);
+      background: #fff;
+      transition: grid-template-columns .2s;
+    }
+
+    .content-area.dragging {
+      transition: none;
+      user-select: none;
+      cursor: col-resize;
+    }
+
+    .content-area.pdf-closed {
+      grid-template-columns: 1fr 0 0;
+    }
+
+    /* Left: Table pane */
+    .table-pane {
+      padding: 20px 24px;
+      overflow: auto;
+    }
+
+    /* Splitter between table and PDF panes */
+    .pane-splitter {
+      background: var(--gray-200);
+      cursor: col-resize;
+      position: relative;
+      transition: background .15s;
+    }
+
+    .pane-splitter:hover,
+    .content-area.dragging .pane-splitter {
+      background: var(--primary-500);
+    }
+
+    .pane-splitter::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: -4px;
+      right: -4px;
+    }
+
+    .content-area.pdf-closed .pane-splitter {
+      display: none;
+    }
+
+    .table-wrap {
+      border: 1px solid var(--gray-200);
+      border-radius: 4px;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    table.data-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .data-table thead th {
+      background: var(--gray-50);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--gray-600);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      padding: 10px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--gray-200);
+      white-space: nowrap;
+    }
+
+    .data-table tbody td {
+      font-size: 13px;
+      color: var(--gray-700);
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--gray-100);
+      vertical-align: top;
+      line-height: 1.5;
+    }
+
+    .data-table tbody tr {
+      cursor: pointer;
+      transition: background .1s;
+    }
+
+    .data-table tbody tr:hover {
+      background: var(--gray-50);
+    }
+
+    .data-table tbody tr.selected {
+      background: var(--primary-50);
+    }
+
+    .data-table tbody tr.selected td:first-child {
+      box-shadow: inset 3px 0 0 var(--primary-500);
+    }
+
+    .data-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    .cell-clause-no {
+      font-family: 'IBM Plex Mono', monospace;
+      font-weight: 600;
+      color: var(--gray-800);
+      white-space: nowrap;
+    }
+
+    .cell-classify {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 12px;
+      font-weight: 500;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: var(--gray-100);
+      color: var(--gray-700);
+      white-space: nowrap;
+    }
+
+    .cell-classify.poison {
+      background: var(--error-bg);
+      color: var(--error);
+    }
+
+    .cell-classify.review {
+      background: var(--warning-bg);
+      color: var(--warning);
+    }
+
+    .cell-classify.clear {
+      background: var(--gray-100);
+      color: var(--gray-600);
+    }
+
+    /* Column 2 — Question + AI analysis (typography hierarchy only) */
+    .cell-main {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      min-width: 0;
+    }
+
+    .cell-question {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--gray-800);
+      line-height: 1.45;
+    }
+
+    .cell-analysis {
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--gray-600);
+      line-height: 1.55;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    /* Column 3 — Keyword chips */
+    .kw-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      align-content: flex-start;
+    }
+
+    .kw-chip {
+      display: inline-flex;
+      align-items: center;
+      height: 22px;
+      padding: 0 8px;
+      border-radius: 999px;
+      background: var(--gray-100);
+      color: var(--gray-700);
+      font-size: 11px;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    /* Column — Reviewer's judgment (3 independent pills) */
+    .review-seg {
+      display: inline-flex;
+      gap: 4px;
+      width: 100%;
+    }
+
+    .review-seg-btn {
+      flex: 1;
+      height: 26px;
+      padding: 0 4px;
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--gray-500);
+      background: #fff;
+      border: 1px solid var(--gray-300);
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: background .15s, color .15s, border-color .15s;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .review-seg-btn:hover {
+      background: var(--gray-50);
+      color: var(--gray-700);
+      border-color: var(--gray-400);
+    }
+
+    .review-seg-btn.active[data-result="poison"] {
+      background: var(--error-bg);
+      color: var(--error);
+      border-color: var(--error);
+      font-weight: 600;
+    }
+
+    .review-seg-btn.active[data-result="normal"] {
+      background: var(--gray-100);
+      color: var(--gray-800);
+      border-color: var(--gray-600);
+      font-weight: 600;
+    }
+
+    .review-seg-btn.active[data-result="hold"] {
+      background: var(--warning-bg);
+      color: var(--warning);
+      border-color: var(--warning);
+      font-weight: 600;
+    }
+
+    /* Column 7 — Note cell (progressive disclosure) */
+    .cell-note {
+      min-width: 0;
+    }
+
+    .cell-note-empty {
+      display: inline-flex;
+      align-items: center;
+      font-size: 12px;
+      color: var(--gray-400);
+      padding: 4px 6px;
+      margin-left: -6px;
+      border-radius: 4px;
+      background: transparent;
+      cursor: pointer;
+      text-decoration: underline dashed var(--gray-300);
+      text-underline-offset: 3px;
+      transition: background .15s, color .15s, text-decoration-color .15s;
+    }
+
+    .cell-note-empty:hover {
+      background: var(--gray-50);
+      color: var(--gray-600);
+      text-decoration-color: var(--gray-500);
+    }
+
+    .cell-note-filled {
+      font-size: 12px;
+      color: var(--gray-700);
+      padding: 4px 6px;
+      border-radius: 4px;
+      cursor: pointer;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      word-break: break-word;
+      transition: background .15s;
+    }
+
+    .cell-note-filled:hover {
+      background: var(--gray-50);
+    }
+
+    .cell-note-editing {
+      width: 100%;
+      min-height: 44px;
+      padding: 6px 8px;
+      border-radius: 4px;
+      border: 1px solid var(--primary-500);
+      background: #fff;
+      font-family: inherit;
+      font-size: 12px;
+      color: var(--gray-700);
+      resize: vertical;
+      outline: none;
+    }
+
+    /* Right: PDF viewer */
+    .pdf-pane {
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      background: var(--gray-100);
+      min-width: 0;
+    }
+
+    .content-area.pdf-closed .pdf-pane {
+      display: none;
+    }
+
+    .pdf-header {
+      height: 44px;
+      background: #fff;
+      border-bottom: 1px solid var(--gray-200);
+      padding: 0 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+
+    .pdf-title {
+      display: flex;
+      align-items: center;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--gray-700);
+    }
+
+    .pdf-close {
+      width: 28px;
+      height: 28px;
+      border-radius: 4px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--gray-500);
+      transition: background .15s, color .15s;
+    }
+
+    .pdf-close:hover {
+      background: var(--gray-100);
+      color: var(--gray-800);
+    }
+
+    .pdf-close i {
+      width: 16px;
+      height: 16px;
+    }
+
+    .pdf-body {
+      flex: 1;
+      overflow: auto;
+      padding: 16px;
+      scroll-behavior: smooth;
+    }
+
+    .pdf-page {
+      background: #fff;
+      border: 1px solid var(--gray-200);
+      border-radius: 4px;
+      margin-bottom: 12px;
+      padding: 32px 28px;
+      font-family: 'Times New Roman', serif;
+      font-size: 11px;
+      line-height: 1.7;
+      color: var(--gray-700);
+      aspect-ratio: 8.5 / 11;
+      position: relative;
+    }
+
+    .pdf-page.highlighted {
+      border-color: var(--primary-500);
+      box-shadow: inset 0 0 0 2px var(--primary-200);
+    }
+
+    .pdf-page-num {
+      position: absolute;
+      top: 10px;
+      right: 14px;
+      font-size: 9px;
+      color: var(--gray-400);
+      font-family: 'IBM Plex Mono', monospace;
+    }
+
+    .pdf-h {
+      font-weight: 700;
+      font-size: 13px;
+      margin: 10px 0 6px;
+      color: var(--gray-800);
+    }
+
+    .pdf-p {
+      margin-bottom: 8px;
+      text-align: justify;
+    }
+
+    .pdf-highlight {
+      background: #FEF3C7;
+      padding: 1px 2px;
+    }
+
+    .pdf-highlight.poison {
+      background: #FECACA;
+    }
+
+    /* PDF reopen button — lives in legend-bar, visible only when PDF pane is closed */
+    #btn-pdf-open {
+      display: none;
+    }
+
+    body.pdf-closed #btn-pdf-open {
+      display: inline-flex;
+    }
+
+    /* ═══ Modal ═══ */
+    .modal-backdrop {
+      position: fixed; inset: 0; z-index: 1000;
+      background: rgba(13, 17, 23, 0.45);
+      display: flex; align-items: center; justify-content: center;
+      padding: 24px;
+    }
+    .modal-backdrop[hidden] { display: none; }
+    .modal-panel {
+      background: #fff; border-radius: 6px;
+      width: 100%; max-width: 520px;
+      box-shadow: 0 20px 40px rgba(13, 17, 23, 0.2);
+      display: flex; flex-direction: column;
+      overflow: hidden;
+    }
+    .modal-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 18px 22px 14px;
+      border-bottom: 1px solid var(--gray-200);
+    }
+    .modal-title { font-size: 18px; font-weight: 600; color: var(--gray-800); margin: 0; }
+    .modal-close {
+      width: 28px; height: 28px; border-radius: 4px;
+      display: inline-flex; align-items: center; justify-content: center;
+      color: var(--gray-500);
+      background: none; border: none; cursor: pointer;
+      transition: background .15s, color .15s;
+    }
+    .modal-close:hover { background: var(--gray-100); color: var(--gray-800); }
+    .modal-close i,
+    .modal-close svg { width: 20px; height: 20px; }
+    .modal-body { padding: 18px 22px; }
+    .modal-footer {
+      display: flex; gap: 8px; justify-content: flex-end;
+      padding: 14px 22px 18px;
+      border-top: 1px solid var(--gray-100);
+    }
+
+    /* 검토 완료 버튼 옆 힌트 */
+    .complete-hint {
+      font-size: 12px;
+      color: var(--gray-500);
+      margin-right: 4px;
+    }
+
+    /* ═══ Tooltip on disabled button wrapper ═══ */
+    .btn-gate {
+      position: relative;
+      display: inline-flex;
+    }
+    .btn-gate[data-tooltip]:hover::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      bottom: calc(100% + 8px);
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--gray-800);
+      color: #fff;
+      font-size: 12px;
+      padding: 6px 10px;
+      border-radius: 4px;
+      white-space: nowrap;
+      pointer-events: none;
+      z-index: 1500;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+    .btn-gate[data-tooltip]:hover::before {
+      content: '';
+      position: absolute;
+      bottom: calc(100% + 2px);
+      left: 50%;
+      transform: translateX(-50%);
+      border: 4px solid transparent;
+      border-top-color: var(--gray-800);
+      z-index: 1500;
+    }
+    /* Rev 발행 직후 주의 환기 glow */
+    @keyframes rev-gate-glow {
+      0%   { box-shadow: 0 0 0 0 rgba(39, 93, 178, 0.45); }
+      50%  { box-shadow: 0 0 0 8px rgba(39, 93, 178, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(39, 93, 178, 0); }
+    }
+    .btn-gate.just-unlocked .btn {
+      animation: rev-gate-glow 1.2s ease-out;
+    }
+
+    /* ═══ Toast ═══ */
+    .toast-container {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 2000;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      pointer-events: none;
+    }
+    .toast {
+      background: var(--gray-800);
+      color: #fff;
+      padding: 10px 16px;
+      border-radius: 6px;
+      font-size: 13px;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18);
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity .2s, transform .2s;
+      max-width: 360px;
+      pointer-events: auto;
+    }
+    .toast.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="top-band"></div>
+
+  <header class="app-header">
+    <div class="hdr-left">
+      <a href="index.html#/" class="hdr-logo">
+        <img src="reference/logo.png" alt="ㅈ글 Platform">
+        <span class="hdr-sysname">EPC PE AI-Platform</span>
+      </a>
+    </div>
+    <nav class="hdr-tabs">
+      <a href="index.html#/" class="hdr-tab active">Projects</a>
+      <a href="index.html#/templates" class="hdr-tab">Templates</a>
+      <a href="index.html#/bot" class="hdr-tab">AI Q&amp;A</a>
+    </nav>
+    <div class="hdr-right">
+      <button class="notif-bell" aria-label="Notifications">
+        <i data-lucide="bell"></i>
+        <span class="badge pulse">3</span>
+      </button>
+    </div>
+  </header>
+
+  <div class="project-bar">
+    <div class="proj-name-block">
+      <div class="proj-name">Saudi ARAMCO Jafurah Gas Plant Phase 2</div>
+      <div class="proj-meta">
+        <span class="proj-meta-item"><span class="proj-meta-label">계약번호</span><span
+            class="mono">JA-2025-078</span></span>
+        <span class="proj-meta-item proj-meta-sep"><span class="proj-meta-label">계약기간</span><span class="mono">2025.03 —
+            2027.08</span></span>
+        <span class="proj-meta-item proj-meta-sep"><span class="proj-meta-label">발주처</span>Saudi ARAMCO</span>
+      </div>
+    </div>
+  </div>
+
+  <nav class="subtab-bar">
+    <a href="index.html#/dashboard" class="subtab" style="display: none;">Dashboard</a>
+    <a href="index.html#/itb" class="subtab active">독소조항</a>
+    <a href="index.html#/irs" class="subtab">IRS</a>
+    <a href="index.html#/design-criteria" class="subtab">Design Criteria</a>
+    <a href="index.html#/mps" class="subtab">MPS</a>
+    <a href="index.html#/pnid" class="subtab" style="display: none;">P&amp;ID</a>
+    <a href="index.html#/compare" class="subtab" style="display: none;">문서비교</a>
+    <a href="index.html#/rev-history" class="subtab" style="display: none;" hidden>ITB 이력</a>
+  </nav>
+
+  <div class="legend-bar">
+    <div class="legend-left">
+      <span class="legend-anchors">
+        <span class="legend-anchor">
+          <i data-lucide="link-2" class="icon"></i>
+          <span class="anchor-text">ITB Rev B · 2026.05.03</span>
+        </span>
+      </span>
+      <div class="chip-group">
+        <div class="chip active" data-filter="all">전체<span class="chip-count">5</span></div>
+        <div class="chip poison" data-filter="poison"><span class="dot"></span>High<span class="chip-count">3</span></div>
+        <div class="chip review" data-filter="review"><span class="dot"></span>Medium<span class="chip-count">1</span>
+        </div>
+        <div class="chip clear" data-filter="clear"><span class="dot"></span>Low<span class="chip-count">1</span></div>
+      </div>
+      <span class="save-status idle" id="save-status" aria-live="polite">
+        <i data-lucide="check" class="save-status-icon"></i><span class="save-status-spinner"
+          aria-hidden="true"></span><span class="save-status-text">저장됨</span>
+      </span>
+    </div>
+    <div class="legend-right">
+      <button class="btn btn-secondary" id="btn-pdf-open" aria-label="PDF 열기">PDF 열기</button>
+      <span class="btn-gate" data-tooltip="Rev 발행 후 사용 가능"><button class="btn btn-secondary is-disabled" id="btn-compare">독소조항 비교</button></span>
+      <span class="btn-gate" data-tooltip="Rev 발행 후 다운로드할 수 있습니다"><button class="btn btn-secondary is-disabled" id="btn-download">다운로드</button></span>
+      <button class="btn btn-primary" id="btn-complete">Rev 발행</button>
+    </div>
+  </div>
+
+  <!-- 독소조항 비교 모달 -->
+  <div class="modal-backdrop" id="compare-modal" hidden aria-hidden="true">
+    <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="compare-title" style="max-width: 560px;">
+      <div class="modal-header">
+        <div class="modal-title" id="compare-title">독소조항 비교</div>
+        <button type="button" class="modal-close" data-compare-close aria-label="닫기">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p style="margin: 0 0 12px; color: var(--gray-600); font-size: 13px;">
+          현재 프로젝트와 비교할 프로젝트를 <b>최대 2개</b>까지 선택하세요.
+        </p>
+        <div id="compare-project-list" style="display: flex; flex-direction: column; gap: 8px; max-height: 360px; overflow-y: auto;"></div>
+        <div id="compare-limit-msg" style="margin-top: 10px; font-size: 12px; color: var(--error); display: none;">
+          최대 2개까지만 선택할 수 있습니다.
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-compare-close>취소</button>
+        <button type="button" class="btn btn-primary is-disabled" id="btn-compare-download">XLSX 다운로드</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2-pane content -->
+  <div class="content-area" id="content-area">
+
+    <!-- Left: Table -->
+    <div class="table-pane">
+      <div class="table-wrap">
+        <table class="data-table" id="clause-table">
+          <thead>
+            <tr>
+              <th style="width: 90px;">조항번호</th>
+              <th style="width: 180px;">키워드</th>
+              <th>AI 검토 내용</th>
+              <th style="width: 82px;">AI 분류</th>
+              <th style="width: 170px;">담당자 검토</th>
+              <th style="width: 180px;">메모</th>
+            </tr>
+          </thead>
+          <tbody id="clause-tbody">
+            <!-- rendered by JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Splitter -->
+    <div class="pane-splitter" id="pane-splitter" role="separator" aria-orientation="vertical"
+      aria-label="Resize panes"></div>
+
+    <!-- Right: PDF viewer -->
+    <aside class="pdf-pane" id="pdf-pane">
+      <div class="pdf-header">
+        <div class="pdf-title">ITB_Jafurah_Contract.pdf</div>
+        <button class="pdf-close" id="pdf-close" aria-label="Close PDF">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+      <div class="pdf-body" id="pdf-body">
+
+        <div class="pdf-page" id="clause-1">
+          <span class="pdf-page-num">p. 14</span>
+          <div class="pdf-h">3. GENERAL OBLIGATIONS OF CONTRACTOR</div>
+          <p class="pdf-p">3.1 The Contractor shall perform the Works in accordance with the Contract and the applicable
+            laws.</p>
+          <div class="pdf-h">3.2 Liability</div>
+          <p class="pdf-p"><span class="pdf-highlight poison">3.2.1 The Contractor shall bear unlimited liability for
+              all damages (including indirect and consequential damages) arising out of or in connection with the
+              performance of this Contract.</span> 계약자는 본 계약의 이행과 관련하여 발생한 모든 손해(간접손해 및 결과적 손해 포함)에 대하여 무한책임을 부담한다.</p>
+          <p class="pdf-p">3.2.2 Notwithstanding the foregoing, the Contractor's liability shall not extend to...</p>
+        </div>
+
+        <div class="pdf-page" id="clause-2">
+          <span class="pdf-page-num">p. 28</span>
+          <div class="pdf-h">5. TERM AND TERMINATION</div>
+          <p class="pdf-p">5.1 This Contract shall commence on the Effective Date and shall continue until the
+            completion of the Works.</p>
+          <div class="pdf-h">5.4 Termination for Convenience</div>
+          <p class="pdf-p"><span class="pdf-highlight poison">5.4.3 The Employer may, at its sole discretion and for any
+              reason whatsoever, terminate this Contract by giving 24 hours' prior written notice to the Contractor,
+              without any obligation to compensate the Contractor.</span></p>
+          <p class="pdf-p">발주처는 어떠한 사유로든 24시간 사전 통지 후 계약을 일방적으로 해지할 수 있으며, 계약자는 이에 대한 보상을 청구할 수 없다.</p>
+        </div>
+
+        <div class="pdf-page" id="clause-3">
+          <span class="pdf-page-num">p. 42</span>
+          <div class="pdf-h">7. DELIVERY AND LIQUIDATED DAMAGES</div>
+          <p class="pdf-p">7.1 The Contractor shall deliver the Works in accordance with the schedule specified in Annex
+            A.</p>
+          <p class="pdf-p"><span class="pdf-highlight">7.1.2 In the event of delay in delivery, the Contractor shall pay
+              liquidated damages at the rate of 0.5% of the Contract Price per day of delay, subject to a maximum of 30%
+              of the Contract Price.</span></p>
+          <p class="pdf-p">인도 지연 시 지연배상금(LD)은 계약금액의 0.5%/일로 하며, 상한은 계약금액의 30%로 한다.</p>
+        </div>
+
+        <div class="pdf-page" id="clause-4">
+          <span class="pdf-page-num">p. 56</span>
+          <div class="pdf-h">9. INTELLECTUAL PROPERTY</div>
+          <p class="pdf-p">9.1 All Background IP shall remain the property of its original owner.</p>
+          <p class="pdf-p"><span class="pdf-highlight poison">9.3.1 All technical data and patent rights developed by
+              the Contractor in the course of this Contract shall be transferred to the Employer at no cost, and the
+              Employer shall be entitled to assign such rights to third parties.</span></p>
+          <p class="pdf-p">계약자의 기술자료 및 특허권은 발주처에 무상으로 이전되며, 발주처는 이를 제3자에게 양도할 수 있다.</p>
+        </div>
+
+        <div class="pdf-page" id="clause-5">
+          <span class="pdf-page-num">p. 71</span>
+          <div class="pdf-h">11. DISPUTE RESOLUTION</div>
+          <p class="pdf-p">11.1 Any dispute arising out of or in connection with this Contract shall be resolved in
+            accordance with this Article 11.</p>
+          <p class="pdf-p">11.2.4 In the event of any dispute, the parties shall first attempt to resolve such dispute
+            through mutual consultation. If the dispute cannot be resolved through consultation, it shall be referred to
+            arbitration under the Rules of Arbitration of the International Chamber of Commerce (ICC).</p>
+          <p class="pdf-p">분쟁 발생 시 양 당사자는 우선 협의를 통해 해결을 시도하며, 협의 불성립 시 ICC 중재에 회부한다.</p>
+        </div>
+
+      </div>
+    </aside>
+
+  </div>
+
+  <script>
+    lucide.createIcons();
+
+    // ══════════════════════════════════════════════════════════════════
+    // ITB 독소조항 검토 — Mock data (운영 시 서버 API에서 수신)
+    // ══════════════════════════════════════════════════════════════════
+    const findings = [
+      {
+        id: 1, clauseNo: '§3.2.1',
+        question: '계약자의 책임 범위가 무한책임인가?',
+        quote: '계약자는 본 계약의 이행과 관련하여 발생한 모든 손해(간접손해 및 결과적 손해 포함)에 대하여 무한책임을 부담한다.',
+        analysis: '본 조항은 간접손해까지 포함하는 무한책임 규정으로, 통상 책임한도(LD Cap) 100~300% 수준의 업계 표준 대비 과도한 리스크를 내포함. 재협상 필요.',
+        keywords: ['무한책임', '간접손해', '결과적 손해', 'Liability Cap 부재'],
+        aiClassify: 'poison', reviewResult: null, reviewNote: '', dirty: false,
+      },
+      {
+        id: 2, clauseNo: '§5.4.3',
+        question: '발주처의 편의에 의한 해지(Termination for Convenience) 조항이 존재하는가?',
+        quote: '발주처는 어떠한 사유로든 24시간 사전 통지 후 계약을 일방적으로 해지할 수 있으며, 계약자는 이에 대한 보상을 청구할 수 없다.',
+        analysis: '24시간 통지 + 무보상 해지권은 국제 표준(FIDIC, NEC) 대비 지나치게 일방적. 이미 집행한 작업에 대한 정산·수익 보장 조항 필요.',
+        keywords: ['편의 해지', '무보상', '24시간 통지'],
+        aiClassify: 'poison', reviewResult: null, reviewNote: '', dirty: false,
+      },
+      {
+        id: 3, clauseNo: '§7.1.2',
+        question: '지연배상금(LD)의 요율과 상한이 합리적인가?',
+        quote: '인도 지연 시 지연배상금(LD)은 계약금액의 0.5%/일로 하며, 상한은 계약금액의 30%로 한다.',
+        analysis: '일별 0.5% · 총 30% 상한은 업계 관행(0.1~0.3%/일, 10~15% 상한) 대비 2~3배 수준. 공기 리스크 평가 후 재협상 필요.',
+        keywords: ['지연배상금', 'LD 과도', '30% 상한'],
+        aiClassify: 'review', reviewResult: null, reviewNote: '', dirty: false,
+      },
+      {
+        id: 4, clauseNo: '§9.3.1',
+        question: '계약자의 지적재산권(IP)이 발주처에 무상 이전되는가?',
+        quote: '계약자의 기술자료 및 특허권은 발주처에 무상으로 이전되며, 발주처는 이를 제3자에게 양도할 수 있다.',
+        analysis: '계약 수행 과정에서 생성된 IP의 무상 이전 + 제3자 양도권은 계약자의 핵심 자산을 박탈. 라이선스 방식 + 이용 범위 제한 조항으로 대체 필요.',
+        keywords: ['IP 무상이전', '특허권', '제3자 양도'],
+        aiClassify: 'poison', reviewResult: null, reviewNote: '', dirty: false,
+      },
+      {
+        id: 5, clauseNo: '§11.2.4',
+        question: '분쟁해결 조항이 공정한 중재 절차를 규정하는가?',
+        quote: '분쟁 발생 시 양 당사자는 우선 협의를 통해 해결을 시도하며, 협의 불성립 시 ICC 중재에 회부한다.',
+        analysis: '협의 우선 + ICC 중재 구조는 국제 계약 표준 조항. 관할·준거법·중재지 등 세부 조건 확인 필요하나 조항 자체는 균형적.',
+        keywords: ['ICC 중재', '협의 우선'],
+        aiClassify: 'clear', reviewResult: null, reviewNote: '', dirty: false,
+      },
+    ];
+
+    // AI 분류 → 검토 결과 초기값 매핑
+    const AI_TO_REVIEW = { poison: 'poison', review: 'hold', clear: 'normal' };
+    findings.forEach(f => { f.reviewResult = AI_TO_REVIEW[f.aiClassify]; });
+
+    const LABEL_CLASSIFY = { poison: 'High', review: 'Medium', clear: 'Low' };
+    const LABEL_REVIEW = { poison: '독소', normal: '일반', hold: '보류' };
+
+    // ── Rendering ───────────────────────────────
+    const tbody = document.getElementById('clause-tbody');
+
+    function escapeHtml(s) {
+      return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    }
+
+    function renderKeywords(kws) {
+      if (!kws || !kws.length) return '';
+      const chips = kws.map(k => `<span class="kw-chip">${escapeHtml(k)}</span>`).join('');
+      return `<div class="kw-chips">${chips}</div>`;
+    }
+
+    function renderReviewSeg(f) {
+      const mk = (res, label) => `
+      <button class="review-seg-btn${f.reviewResult === res ? ' active' : ''}"
+              data-result="${res}" data-finding-id="${f.id}">${label}</button>`;
+      return `<div class="review-seg" data-finding-id="${f.id}">
+      ${mk('poison', '독소')}${mk('normal', '일반')}${mk('hold', '보류')}
+    </div>`;
+    }
+
+    function renderNote(f) {
+      if (f.reviewNote) {
+        return `<div class="cell-note-filled" data-finding-id="${f.id}" title="${escapeHtml(f.reviewNote)}">${escapeHtml(f.reviewNote)}</div>`;
+      }
+      return `<button class="cell-note-empty" data-finding-id="${f.id}">메모 추가</button>`;
+    }
+
+    function renderRow(f) {
+      return `<tr data-clause="${f.id}" data-clause-no="${escapeHtml(f.clauseNo)}" data-classify="${f.aiClassify}">
+      <td><span class="cell-clause-no">${escapeHtml(f.clauseNo)}</span></td>
+      <td>${renderKeywords(f.keywords)}</td>
+      <td>
+        <div class="cell-main">
+          <div class="cell-question">${escapeHtml(f.question)}</div>
+          <div class="cell-analysis">${escapeHtml(f.analysis)}</div>
+        </div>
+      </td>
+      <td><span class="cell-classify ${f.aiClassify}">${LABEL_CLASSIFY[f.aiClassify]}</span></td>
+      <td>${renderReviewSeg(f)}</td>
+      <td class="cell-note">${renderNote(f)}</td>
+    </tr>`;
+    }
+
+    function renderTable() {
+      tbody.innerHTML = findings.map(renderRow).join('');
+      lucide.createIcons();
+      applyFilter(currentFilter);
+    }
+
+    // ── Interaction: row click → PDF scroll ─────────
+    tbody.addEventListener('click', (e) => {
+      // Ignore clicks on interactive controls inside the row
+      if (e.target.closest('.review-seg, .cell-note-empty, .cell-note-filled, .cell-note-editing')) return;
+      const tr = e.target.closest('tr[data-clause]');
+      if (!tr) return;
+      tbody.querySelectorAll('tr').forEach(r => r.classList.remove('selected'));
+      tr.classList.add('selected');
+      const clauseNo = tr.dataset.clauseNo;
+      const target = document.getElementById('clause-' + tr.dataset.clause);
+      if (target) {
+        document.getElementById('content-area').classList.remove('pdf-closed');
+        document.querySelectorAll('.pdf-page').forEach(p => p.classList.remove('highlighted'));
+        target.classList.add('highlighted');
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+
+    // ── Interaction: review segmented ─────────
+    tbody.addEventListener('click', (e) => {
+      const btn = e.target.closest('.review-seg-btn');
+      if (!btn) return;
+      e.stopPropagation();
+      const id = Number(btn.dataset.findingId);
+      const result = btn.dataset.result;
+      const f = findings.find(x => x.id === id);
+      if (!f || f.reviewResult === result) return;
+      f.reviewResult = result;
+      markDirty(id);
+      // Update button states in this seg group
+      btn.parentElement.querySelectorAll('.review-seg-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    });
+
+    // ── Interaction: note progressive disclosure ─────
+    tbody.addEventListener('click', (e) => {
+      const el = e.target.closest('.cell-note-empty, .cell-note-filled');
+      if (!el) return;
+      e.stopPropagation();
+      const id = Number(el.dataset.findingId);
+      const f = findings.find(x => x.id === id);
+      if (!f) return;
+      const td = el.closest('.cell-note');
+      const ta = document.createElement('textarea');
+      ta.className = 'cell-note-editing';
+      ta.value = f.reviewNote;
+      ta.placeholder = '메모 입력 후 Enter로 저장, Shift+Enter로 줄바꿈';
+      td.innerHTML = '';
+      td.appendChild(ta);
+      ta.focus();
+      ta.setSelectionRange(ta.value.length, ta.value.length);
+
+      const commit = () => {
+        const next = ta.value.trim();
+        const changed = next !== f.reviewNote;
+        f.reviewNote = next;
+        td.innerHTML = renderNote(f);
+        if (changed) markDirty(id);
+      };
+      ta.addEventListener('blur', commit);
+      ta.addEventListener('keydown', (ev) => {
+        if (ev.key === 'Enter' && !ev.shiftKey) { ev.preventDefault(); ta.blur(); }
+        if (ev.key === 'Escape') { ta.value = f.reviewNote; ta.blur(); }
+      });
+    });
+
+    // ── Filter chips ────────────────────────────
+    let currentFilter = 'all';
+    const chips = document.querySelectorAll('.chip[data-filter]');
+
+    function applyFilter(filter) {
+      currentFilter = filter;
+      tbody.querySelectorAll('tr').forEach(row => {
+        const cls = row.dataset.classify;
+        row.style.display = (filter === 'all' || cls === filter) ? '' : 'none';
+      });
+    }
+
+    chips.forEach(chip => {
+      chip.addEventListener('click', () => {
+        chips.forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        applyFilter(chip.dataset.filter);
+      });
+    });
+
+    // ── PDF close/open toggle ─────────────────────
+    // legend-bar의 #btn-pdf-open이 열기 컨트롤. PDF 패널 헤더의 X(pdf-close)가 닫기.
+    // body.pdf-closed 클래스로 두 버튼의 가시성 토글 (CSS 규칙).
+    const contentArea = document.getElementById('content-area');
+    const pdfClose = document.getElementById('pdf-close');
+    const btnPdfOpen = document.getElementById('btn-pdf-open');
+
+    pdfClose.addEventListener('click', () => {
+      contentArea.style.gridTemplateColumns = '';
+      contentArea.classList.add('pdf-closed');
+      document.body.classList.add('pdf-closed');
+    });
+
+    btnPdfOpen.addEventListener('click', () => {
+      contentArea.classList.remove('pdf-closed');
+      document.body.classList.remove('pdf-closed');
+      setPdfWidth(lastPdfWidth);
+    });
+
+    // ── Pane splitter ────────────────────────────
+    const splitter = document.getElementById('pane-splitter');
+    const MIN_TABLE = 800;
+    const MIN_PDF = 320;
+    const DEFAULT_PDF = 420;
+    let lastPdfWidth = DEFAULT_PDF;
+
+    function setPdfWidth(px) {
+      lastPdfWidth = px;
+      contentArea.style.gridTemplateColumns = `1fr 6px ${px}px`;
+    }
+
+    splitter.addEventListener('mousedown', (e) => {
+      e.preventDefault();
+      const rect = contentArea.getBoundingClientRect();
+      contentArea.classList.add('dragging');
+      const onMove = (ev) => {
+        const pdfWidth = rect.right - ev.clientX - 3;
+        const tableWidth = rect.width - pdfWidth - 6;
+        if (tableWidth < MIN_TABLE || pdfWidth < MIN_PDF) return;
+        setPdfWidth(Math.round(pdfWidth));
+      };
+      const onUp = () => {
+        contentArea.classList.remove('dragging');
+        document.removeEventListener('mousemove', onMove);
+        document.removeEventListener('mouseup', onUp);
+      };
+      document.addEventListener('mousemove', onMove);
+      document.addEventListener('mouseup', onUp);
+    });
+
+    splitter.addEventListener('dblclick', () => setPdfWidth(DEFAULT_PDF));
+
+    // ── Auto-save + Review completion ────────────
+    const btnDownload = document.getElementById('btn-download');
+    const btnComplete = document.getElementById('btn-complete');
+    const saveStatus = document.getElementById('save-status');
+    const saveStatusText = saveStatus.querySelector('.save-status-text');
+
+    function fmtTime(d) {
+      const hh = String(d.getHours()).padStart(2, '0');
+      const mm = String(d.getMinutes()).padStart(2, '0');
+      return `${hh}:${mm}`;
+    }
+
+    function setSaveStatus(state, text) {
+      saveStatus.className = 'save-status ' + state;
+      saveStatusText.textContent = text;
+    }
+
+    let saveTimer = null;
+
+    // Snapshot of the last "검토 완료" state, captured at completion time.
+    // After completion, any reviewResult/reviewNote change that differs from this
+    // snapshot re-enables the 검토 완료 button so the reviewer can re-confirm.
+    let completedSnapshot = null;
+
+    function currentReviewKey(f) {
+      return (f.reviewResult || '') + '' + (f.reviewNote || '');
+    }
+
+    function snapshotReviewState() {
+      return findings.reduce((acc, f) => { acc[f.id] = currentReviewKey(f); return acc; }, {});
+    }
+
+    function hasDriftedFromSnapshot() {
+      if (!completedSnapshot) return false;
+      return findings.some(f => completedSnapshot[f.id] !== currentReviewKey(f));
+    }
+
+    function reevaluateCompleteButton() {
+      if (!completedSnapshot) return;
+      if (hasDriftedFromSnapshot()) {
+        btnComplete.classList.remove('is-disabled');
+        btnComplete.textContent = 'Rev 발행';
+        // 편집된 상태 → 공식 다운로드/비교 다시 잠금
+        const btnCompareEl = document.getElementById('btn-compare');
+        btnDownload.classList.add('is-disabled');
+        if (btnCompareEl) btnCompareEl.classList.add('is-disabled');
+        document.querySelectorAll('.btn-gate').forEach(el => {
+          if (el.contains(btnDownload)) el.setAttribute('data-tooltip', 'Rev 발행 후 다운로드할 수 있습니다');
+          if (btnCompareEl && el.contains(btnCompareEl)) el.setAttribute('data-tooltip', 'Rev 발행 후 사용 가능');
+        });
+      } else {
+        // Back to exactly the snapshot → keep locked
+        btnComplete.classList.add('is-disabled');
+        btnComplete.textContent = 'Rev 발행됨';
+        btnDownload.classList.remove('is-disabled');
+        const btnCompareEl = document.getElementById('btn-compare');
+        if (btnCompareEl) btnCompareEl.classList.remove('is-disabled');
+        document.querySelectorAll('.btn-gate').forEach(el => el.removeAttribute('data-tooltip'));
+      }
+    }
+
+    function markDirty(findingId) {
+      const f = findings.find(x => x.id === findingId);
+      if (f) f.dirty = true;
+      // Show "편집 중" immediately, debounce actual save
+      setSaveStatus('saving', '저장 중…');
+      clearTimeout(saveTimer);
+      saveTimer = setTimeout(performAutoSave, 800);
+      // Re-evaluate 검토 완료 button against the post-completion snapshot
+      reevaluateCompleteButton();
+    }
+
+    function performAutoSave() {
+      // Mock save: in production this is a PATCH request.
+      // Keep findings.dirty = false after success.
+      findings.forEach(f => { f.dirty = false; });
+      setSaveStatus('saved', `저장됨 · ${fmtTime(new Date())}`);
+    }
+
+    // Completion handler
+    btnComplete.addEventListener('click', () => {
+      if (btnComplete.classList.contains('is-disabled')) return;
+      const unreviewed = findings.filter(f => !f.reviewResult);
+      if (unreviewed.length > 0) {
+        const ok = confirm(`담당자 검토가 선택되지 않은 항목이 ${unreviewed.length}건 있습니다. 그대로 완료하시겠습니까?`);
+        if (!ok) return;
+      }
+      // Flush pending auto-save first
+      clearTimeout(saveTimer);
+      performAutoSave();
+      // Capture the snapshot that "검토 완료" locks in
+      completedSnapshot = snapshotReviewState();
+      // Lock in completion
+      btnComplete.classList.add('is-disabled');
+      btnComplete.textContent = 'Rev 발행됨';
+      btnDownload.classList.remove('is-disabled');
+      const btnCompareEl = document.getElementById('btn-compare');
+      if (btnCompareEl) btnCompareEl.classList.remove('is-disabled');
+      // tooltip 제거 + glow 효과
+      document.querySelectorAll('.btn-gate').forEach(el => {
+        el.removeAttribute('data-tooltip');
+        el.classList.add('just-unlocked');
+        setTimeout(() => el.classList.remove('just-unlocked'), 1400);
+      });
+      setSaveStatus('saved', `Rev 발행 · ${fmtTime(new Date())}`);
+      btnComplete.style.transform = 'scale(0.97)';
+      setTimeout(() => { btnComplete.style.transform = ''; }, 120);
+
+      // 검토 완료 시 XLSX 자동 다운로드
+      downloadReviewXlsx();
+    });
+
+    // 재다운로드 (다운로드 버튼)
+    btnDownload.addEventListener('click', () => {
+      if (btnDownload.classList.contains('is-disabled')) return;
+      downloadReviewXlsx();
+    });
+
+    function downloadReviewXlsx() {
+      if (typeof XLSX === 'undefined') {
+        if (typeof window.__showToast === 'function') window.__showToast('XLSX 라이브러리 로드에 실패했습니다. 잠시 후 다시 시도해주세요.');
+        return;
+      }
+      const REVIEW_LABEL = { poison: '독소', hold: '보류', normal: '일반' };
+      const AI_LABEL = { poison: '독소', review: '검토필요', clear: '일반' };
+      const header = ['#', '조항번호', '질문', '인용문', 'AI 분석', '키워드', 'AI 분류', '담당자 검토', '메모'];
+      const rows = [header];
+      findings.forEach((f, i) => {
+        rows.push([
+          i + 1,
+          f.clauseNo,
+          f.question,
+          f.quote,
+          f.analysis,
+          (f.keywords || []).join(', '),
+          AI_LABEL[f.aiClassify] || f.aiClassify,
+          f.reviewResult ? (REVIEW_LABEL[f.reviewResult] || f.reviewResult) : '-',
+          f.reviewNote || '',
+        ]);
+      });
+      const ws = XLSX.utils.aoa_to_sheet(rows);
+      ws['!cols'] = [
+        { wch: 4 }, { wch: 10 }, { wch: 40 }, { wch: 55 },
+        { wch: 55 }, { wch: 25 }, { wch: 10 }, { wch: 12 }, { wch: 30 }
+      ];
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, 'ITB 독소조항 검토');
+      const today = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+      const filename = `ITB_독소조항_검토_${today}.xlsx`;
+      XLSX.writeFile(wb, filename);
+      if (typeof window.__showToast === 'function') window.__showToast(`${filename} 다운로드를 시작합니다.`);
+    }
+
+    // ── Initial render ────────────────────────
+    renderTable();
+    setSaveStatus('idle', '저장됨');
+
+    // ═══ 독소조항 비교 모달 ═══════════════════════════════════════════════
+    (function() {
+      const CURRENT_PROJECT = 'Saudi ARAMCO Jafurah Gas Plant Phase 2';
+      const COMPARABLE_PROJECTS = [
+        { name: 'UAE ADNOC Hail & Ghasha Sour Gas Project',     contract: 'ADN-2024-142' },
+        { name: 'Qatar NFE Ethane Cracker Package',             contract: 'QP-NFE-2025-011' },
+        { name: 'Kuwait Al-Zour Refinery Expansion',            contract: 'KNP-2023-087' },
+        { name: 'Oman Duqm Integrated Refinery Project',        contract: 'ORPIC-2024-055' },
+        { name: 'Malaysia Petronas PRefChem Revamp Phase 1',    contract: 'PETR-2025-023' },
+        { name: 'Singapore Jurong LNG Terminal Expansion',      contract: 'SJL-2024-031' },
+        { name: 'Indonesia Balikpapan Refinery Modernization',  contract: 'PRTM-2023-094' },
+        { name: 'Vietnam Long Son Petrochemical Complex',       contract: 'LSP-2024-017' },
+        { name: 'Egypt ERC Mostorod Hydrocracker Unit',         contract: 'ERC-2022-063' },
+        { name: 'Iraq Basra Gas Company Phase 3',               contract: 'BGC-2025-008' },
+      ];
+
+      const modal = document.getElementById('compare-modal');
+      const btnOpen = document.getElementById('btn-compare');
+      const btnDownload = document.getElementById('btn-compare-download');
+      const listEl = document.getElementById('compare-project-list');
+      const limitMsg = document.getElementById('compare-limit-msg');
+      const selected = new Set();
+
+      function renderList() {
+        listEl.innerHTML = COMPARABLE_PROJECTS.map((p, i) => `
+          <label style="display: flex; gap: 10px; padding: 10px 12px; border: 1px solid var(--gray-200); border-radius: 4px; cursor: pointer; align-items: flex-start;">
+            <input type="checkbox" data-idx="${i}" style="margin-top: 3px;" />
+            <div style="flex: 1; min-width: 0;">
+              <div style="font-size: 13px; font-weight: 500; color: var(--gray-800);">${p.name}</div>
+              <div class="mono" style="font-size: 11px; color: var(--gray-500); margin-top: 2px;">${p.contract}</div>
+            </div>
+          </label>
+        `).join('');
+        listEl.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+          cb.addEventListener('change', onToggle);
+        });
+      }
+
+      function onToggle(e) {
+        const idx = Number(e.target.dataset.idx);
+        if (e.target.checked) {
+          if (selected.size >= 2) {
+            e.target.checked = false;
+            limitMsg.style.display = 'block';
+            setTimeout(() => { limitMsg.style.display = 'none'; }, 1800);
+            return;
+          }
+          selected.add(idx);
+        } else {
+          selected.delete(idx);
+        }
+        btnDownload.classList.toggle('is-disabled', selected.size === 0);
+      }
+
+      function open() {
+        selected.clear();
+        renderList();
+        btnDownload.classList.add('is-disabled');
+        limitMsg.style.display = 'none';
+        modal.hidden = false;
+        modal.setAttribute('aria-hidden', 'false');
+        if (window.lucide) lucide.createIcons();
+      }
+      function close() {
+        modal.hidden = true;
+        modal.setAttribute('aria-hidden', 'true');
+      }
+
+      btnOpen.addEventListener('click', () => {
+        if (btnOpen.classList.contains('is-disabled')) return;
+        open();
+      });
+      modal.querySelectorAll('[data-compare-close]').forEach(el => el.addEventListener('click', close));
+      modal.addEventListener('click', (e) => { if (e.target === modal) close(); });
+
+      // Mock 독소조항 데이터 — 실제 구현에서는 서버에서 받아옴
+      function buildMockItems(projectName) {
+        const seed = projectName.length;
+        const samples = [
+          { clause: '2.3.1',  keyword: 'LD (Liquidated Damages)',     severity: '독소',     summary: '지연 손해금 상한 미설정' },
+          { clause: '3.1.4',  keyword: 'Warranty Period',             severity: '검토필요', summary: '보증 기간 24개월 (업계 평균 대비 +6개월)' },
+          { clause: '4.2.7',  keyword: 'Governing Law',               severity: '일반',     summary: '준거법 Saudi Arabia' },
+          { clause: '5.6.2',  keyword: 'Change Order Approval',       severity: '독소',     summary: '변경 승인 30일 초과 시 자동 거절' },
+          { clause: '7.1.3',  keyword: 'Payment Terms',               severity: '독소',     summary: '마일스톤 기준 청구, 30일 후 지급' },
+          { clause: '8.4.9',  keyword: 'Force Majeure',               severity: '일반',     summary: '표준 조항' },
+          { clause: '9.2.1',  keyword: 'Confidentiality',             severity: '검토필요', summary: '계약 종료 후 5년간 유효' },
+        ];
+        return samples.map((s, i) => ({ ...s, value: `[${projectName.split(' ')[0]}] ${s.summary} · v${((seed + i) % 5) + 1}` }));
+      }
+
+      function buildComparisonSheet(projects) {
+        const allItems = projects.map(p => buildMockItems(p));
+        const clauseSet = new Set();
+        allItems.forEach(items => items.forEach(it => clauseSet.add(`${it.clause}|${it.keyword}|${it.severity}`)));
+
+        const header = ['조항번호', '키워드', '분류', ...projects];
+        const rows = [header];
+        Array.from(clauseSet).forEach(key => {
+          const [clause, keyword, severity] = key.split('|');
+          const row = [clause, keyword, severity];
+          projects.forEach((p, idx) => {
+            const match = allItems[idx].find(it => it.clause === clause && it.keyword === keyword);
+            row.push(match ? match.value : '-');
+          });
+          rows.push(row);
+        });
+        return rows;
+      }
+
+      btnDownload.addEventListener('click', () => {
+        if (btnDownload.classList.contains('is-disabled')) return;
+        if (typeof XLSX === 'undefined') {
+          if (typeof window.__showToast === 'function') window.__showToast('XLSX 라이브러리 로드에 실패했습니다. 잠시 후 다시 시도해주세요.');
+          return;
+        }
+        const chosenProjects = [CURRENT_PROJECT, ...Array.from(selected).map(i => COMPARABLE_PROJECTS[i].name)];
+        const rows = buildComparisonSheet(chosenProjects);
+
+        const ws = XLSX.utils.aoa_to_sheet(rows);
+        ws['!cols'] = [{ wch: 10 }, { wch: 30 }, { wch: 10 }, ...chosenProjects.map(() => ({ wch: 45 }))];
+
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, '독소조항 비교');
+
+        const today = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+        const filename = `ITB_독소조항_비교_${today}.xlsx`;
+        XLSX.writeFile(wb, filename);
+        if (typeof window.__showToast === 'function') window.__showToast(`${filename} 다운로드를 시작합니다.`);
+        close();
+      });
+    })();
+  </script>
+
+<script>
+  // Role 기반 탭 가시성 — 모든 페이지 공통
+  (function () {
+    var role = localStorage.getItem('userRole') || 'member';
+    document.querySelectorAll('.hdr-tab[href*="templates"]').forEach(function (el) {
+      el.style.display = (role === 'admin') ? '' : 'none';
+    });
+    document.querySelectorAll('.hdr-tab[href*="/bot"]').forEach(function (el) {
+      el.style.display = (role === 'admin') ? 'none' : '';
+    });
+  })();
+</script>
+
+<div class="toast-container" id="toast-container" aria-live="polite"></div>
+<script>
+  (function () {
+    const container = document.getElementById('toast-container');
+    function showToast(message, durationMs = 2800) {
+      const t = document.createElement('div');
+      t.className = 'toast';
+      t.textContent = message;
+      container.appendChild(t);
+      requestAnimationFrame(() => t.classList.add('visible'));
+      setTimeout(() => { t.classList.remove('visible'); setTimeout(() => t.remove(), 220); }, durationMs);
+    }
+    window.__showToast = showToast;
+  })();
+</script>
+</body>
+
+</html>

@@ -1,0 +1,7 @@
+ai-review:
+  stage: test
+  image: python:3.12-slim
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+  script:
+    - python scripts/ai-review.py
