@@ -1,4 +1,4 @@
-import type { Project } from '../types/project-workspace.types'
+import type { Project } from '../types/workspace.types'
 
 type ProjectInfoBarProps = {
   project: Project

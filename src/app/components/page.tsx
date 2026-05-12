@@ -1,4 +1,4 @@
-import { COMPONENT_REGISTRY } from '@/features/design-system/data/registry'
+import { COMPONENT_REGISTRY } from '@/features/design/data/registry'
 
 export default function ComponentsIndexPage() {
   return (

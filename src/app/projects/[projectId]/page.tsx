@@ -1,6 +1,6 @@
-import { LegendAnchor } from '@/features/project-workspace/components/LegendAnchor'
-import { LegendBar } from '@/features/project-workspace/components/LegendBar'
-import { LegendStatusTag } from '@/features/project-workspace/components/LegendStatusTag'
+import { LegendAnchor } from '@/features/workspace/components/LegendAnchor'
+import { LegendBar } from '@/features/workspace/components/LegendBar'
+import { LegendStatusTag } from '@/features/workspace/components/LegendStatusTag'
 
 export default function ProjectPage() {
   return (
