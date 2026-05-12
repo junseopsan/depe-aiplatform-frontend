@@ -2,10 +2,12 @@ import { notFound } from 'next/navigation'
 import { COMPONENT_REGISTRY } from '@/features/design/data/registry'
 import { TablePreview } from '@/features/design/previews/TablePreview'
 import { PdfViewerPreview } from '@/features/design/previews/PdfViewerPreview'
+import { FileUploadPreview } from '@/features/design/previews/FileUploadPreview'
 
 const PREVIEWS: Record<string, React.ComponentType> = {
   table: TablePreview,
   'pdf-viewer': PdfViewerPreview,
+  'file-upload': FileUploadPreview,
 }
 
 export default async function ComponentPage({
