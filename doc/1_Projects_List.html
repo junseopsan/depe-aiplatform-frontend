@@ -1,0 +1,2285 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EPC PE AI Platform — Projects</title>
+  <link rel="icon" type="image/png" href="reference/logo.png">
+  <link
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+    rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --primary-900: #081E3A;
+      --primary-800: #0F2E57;
+      --primary-700: #173F73;
+      --primary-600: #1F4E91;
+      --primary-500: #275DB2;
+      --primary-400: #4A7BC7;
+      --primary-300: #7FA2D9;
+      --primary-200: #B2C7E8;
+      --primary-100: #D4DFEE;
+      --primary-50: #EEF2F9;
+      --gray-900: #0D1117;
+      --gray-800: #1C2230;
+      --gray-700: #2E3A4E;
+      --gray-600: #4A5568;
+      --gray-500: #6B7A8F;
+      --gray-400: #94A3B8;
+      --gray-300: #CBD5E1;
+      --gray-200: #E2E8F0;
+      --gray-100: #F1F5F9;
+      --gray-50: #F8FAFC;
+      --success: #3A8C6E;
+      --warning: #B07D3A;
+      --error: #A04545;
+      --info: #3A6A96;
+      --success-bg: #E8F3EE;
+      --warning-bg: #F6E8CD;
+      --error-bg: #F4DCDC;
+      --accent-gold: #D4A017;
+    }
+
+    html,
+    body {
+      font-family: 'IBM Plex Sans KR', sans-serif;
+      color: var(--gray-700);
+      background: var(--gray-100);
+      font-size: 14px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      min-width: 1100px;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button {
+      font-family: inherit;
+      cursor: pointer;
+      border: none;
+      background: none;
+    }
+
+    input,
+    textarea,
+    select {
+      font-family: inherit;
+    }
+
+    .mono {
+      font-family: 'IBM Plex Mono', monospace;
+    }
+
+    /* Top band + Header (9_Projects_Form 헤더 동일) */
+    .top-band {
+      height: 2px;
+      background: var(--primary-500);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .app-header {
+      width: 100%;
+      min-width: 100%;
+      height: 52px;
+      background: #fff;
+      border-bottom: 1px solid var(--gray-200);
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      padding: 0 24px;
+      position: sticky;
+      top: 2px;
+      z-index: 99;
+    }
+
+    .hdr-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .hdr-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .hdr-logo img {
+      height: 28px;
+      width: auto;
+      display: block;
+    }
+
+    .hdr-sysname {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--gray-800);
+      letter-spacing: -0.01em;
+    }
+
+    .hdr-tabs {
+      display: flex;
+      gap: 4px;
+    }
+
+    .hdr-tab {
+      height: 52px;
+      display: inline-flex;
+      align-items: center;
+      padding: 0 18px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--gray-500);
+      border-bottom: 2px solid transparent;
+      transition: color .15s, border-color .15s;
+    }
+
+    .hdr-tab:hover {
+      color: var(--gray-700);
+    }
+
+    .hdr-tab.active {
+      color: var(--primary-500);
+      font-weight: 600;
+      border-bottom-color: var(--primary-500);
+    }
+
+    .hdr-right {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    .role-toggle {
+      display: inline-flex;
+      height: 28px;
+      border: 1px solid var(--gray-300);
+      border-radius: 4px;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .role-toggle button {
+      padding: 0 10px;
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--gray-500);
+      background: #fff;
+      transition: background .15s, color .15s;
+    }
+
+    .role-toggle button.is-active {
+      background: var(--primary-50);
+      color: var(--primary-700);
+      font-weight: 600;
+    }
+
+    .notif-bell {
+      width: 32px;
+      height: 32px;
+      border-radius: 4px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: #fff;
+      color: var(--gray-700);
+      border: 1px solid transparent;
+      position: relative;
+      transition: background .15s, border-color .15s;
+    }
+
+    .notif-bell:hover {
+      background: var(--gray-50);
+      border-color: var(--gray-200);
+    }
+
+    .notif-bell svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .notif-bell .badge {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      min-width: 18px;
+      height: 18px;
+      padding: 0 5px;
+      border-radius: 999px;
+      background: var(--primary-500);
+      color: #fff;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid #fff;
+      line-height: 1;
+    }
+
+    .notif-bell .badge.pulse::after {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      border-radius: 50%;
+      background: var(--primary-500);
+      opacity: 0.3;
+      animation: notif-pulse 2s infinite;
+    }
+
+    @keyframes notif-pulse {
+      0% {
+        transform: scale(1);
+        opacity: 0.4;
+      }
+
+      100% {
+        transform: scale(1.6);
+        opacity: 0;
+      }
+    }
+
+    /* Buttons */
+    .btn {
+      height: 36px;
+      padding: 0 14px;
+      border-radius: 4px;
+      font-size: 13px;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background .15s, border-color .15s, color .15s;
+      border: 1px solid transparent;
+      white-space: nowrap;
+    }
+
+    .btn i,
+    .btn svg {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+    }
+
+    .btn.btn-primary {
+      background: var(--primary-500);
+      color: #fff;
+    }
+
+    .btn.btn-primary:hover {
+      background: var(--primary-600);
+    }
+
+    .btn.btn-secondary {
+      background: #fff;
+      border-color: var(--gray-300);
+      color: var(--gray-700);
+    }
+
+    .btn.btn-secondary:hover {
+      background: var(--gray-50);
+    }
+
+    .btn:disabled,
+    .btn.is-disabled {
+      opacity: 0.4;
+      pointer-events: none;
+    }
+
+    .btn-sm {
+      height: 28px;
+      padding: 0 10px;
+      font-size: 12px;
+      border-radius: 4px;
+      border: 1px solid var(--gray-300);
+      background: #fff;
+      color: var(--gray-700);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: background .15s, border-color .15s, color .15s;
+    }
+
+    .btn-sm:hover {
+      background: var(--gray-50);
+    }
+
+    .btn-sm i {
+      width: 14px;
+      height: 14px;
+    }
+
+    /* Page wrap */
+    .page-wrap {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 32px;
+    }
+
+    /* Page header */
+    .page-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+
+    .page-header-left h1 {
+      font-size: 28px;
+      font-weight: 600;
+      color: var(--gray-800);
+      line-height: 1.25;
+      margin-bottom: 4px;
+    }
+
+    .page-header-left .page-subtitle {
+      font-size: 13px;
+      color: var(--gray-500);
+    }
+
+    .page-header-right {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    /* Search input */
+    .input {
+      height: 36px;
+      padding: 0 12px;
+      border-radius: 4px;
+      font-size: 13px;
+      color: var(--gray-700);
+      background: #fff;
+      border: 1px solid var(--gray-300);
+      transition: border-color .15s;
+    }
+
+    .input:focus {
+      outline: none;
+      border-color: var(--primary-500);
+    }
+
+    .input::placeholder {
+      color: var(--gray-400);
+    }
+
+    .input-search {
+      padding-left: 34px;
+    }
+
+    .input-wrap {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .input-wrap .input-icon {
+      position: absolute;
+      left: 10px;
+      color: var(--gray-400);
+      width: 16px;
+      height: 16px;
+      pointer-events: none;
+    }
+
+    /* Table */
+    .table-wrap {
+      width: 100%;
+      background: #fff;
+      border: 1px solid var(--gray-200);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .proj-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .proj-table thead th {
+      background: var(--gray-50);
+      border-bottom: 1px solid var(--gray-200);
+      padding: 10px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--gray-600);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      text-align: left;
+      white-space: nowrap;
+    }
+
+    .proj-table tbody td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--gray-100);
+      font-size: 13px;
+      color: var(--gray-700);
+      vertical-align: middle;
+    }
+
+    .proj-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    .proj-table tbody tr {
+      transition: background .15s;
+      cursor: pointer;
+    }
+
+    .proj-table tbody tr:hover {
+      background: var(--gray-50);
+    }
+
+    .col-name {
+      min-width: 280px;
+    }
+
+    .col-contract {
+      width: 150px;
+    }
+
+    .col-type {
+      width: 80px;
+    }
+
+    .col-status {
+      width: 100px;
+    }
+
+    .col-client {
+      width: 180px;
+    }
+
+    .col-period {
+      width: 200px;
+    }
+
+    .col-actions {
+      width: 150px;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .upload-count-btn {
+      width: 120px;
+      height: 28px;
+      padding: 0 12px;
+      border-radius: 4px;
+      border: 1px solid var(--gray-300);
+      background: #fff;
+      color: var(--gray-700);
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background .15s, border-color .15s, color .15s;
+      white-space: nowrap;
+      text-align: center;
+    }
+
+    .upload-count-btn:hover {
+      background: var(--primary-50);
+      border-color: var(--primary-500);
+      color: var(--primary-700);
+    }
+
+    .upload-count-btn.has-docs {
+      background: var(--primary-50);
+      border-color: var(--primary-200);
+      color: var(--primary-700);
+      font-weight: 600;
+    }
+
+    .upload-count-btn.has-docs:hover {
+      border-color: var(--primary-500);
+    }
+
+    .upload-count-btn.is-disabled,
+    .upload-count-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    .cell-name {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--gray-800);
+      max-width: 360px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .cell-mono {
+      font-family: 'IBM Plex Mono', monospace;
+      color: var(--gray-700);
+    }
+
+    .cell-num {
+      font-family: 'IBM Plex Mono', monospace;
+      color: var(--gray-700);
+      text-align: right;
+    }
+
+    /* Status / Type badges */
+    .badge-pill {
+      display: inline-flex;
+      align-items: center;
+      height: 22px;
+      padding: 0 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+    }
+
+    .badge-pill.is-running {
+      background: var(--primary-50);
+      color: var(--primary-700);
+    }
+
+    .badge-pill.is-ended {
+      background: var(--gray-100);
+      color: var(--gray-600);
+    }
+
+    .badge-pill.is-canceled {
+      background: var(--gray-100);
+      color: var(--gray-600);
+    }
+
+    .badge-pill.is-bid {
+      background: var(--warning-bg);
+      color: var(--warning);
+    }
+
+    .badge-pill.is-exec {
+      background: var(--success-bg);
+      color: var(--success);
+    }
+
+    /* Action icon button */
+    .row-action {
+      width: 28px;
+      height: 28px;
+      border-radius: 4px;
+      color: var(--gray-500);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: background .15s, color .15s;
+    }
+
+    .row-action:hover {
+      background: var(--gray-100);
+      color: var(--gray-800);
+    }
+
+    .row-action svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    /* Empty / footer */
+    .table-empty {
+      padding: 48px 16px;
+      text-align: center;
+      color: var(--gray-500);
+      font-size: 13px;
+    }
+
+    .table-footer {
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid var(--gray-200);
+      background: var(--gray-50);
+    }
+
+    .table-summary {
+      font-size: 12px;
+      color: var(--gray-500);
+    }
+
+    .table-summary b {
+      color: var(--gray-700);
+      font-weight: 600;
+    }
+
+    /* Toast */
+    .toast-container {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 1100;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .toast {
+      background: var(--gray-800);
+      color: #fff;
+      font-size: 13px;
+      padding: 12px 16px;
+      border-radius: 4px;
+      box-shadow: 0 8px 16px rgba(13, 17, 23, 0.2);
+      max-width: 480px;
+      word-break: keep-all;
+    }
+
+    /* ── Upload Modal ──────────────────────────────────────────── */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(13, 17, 23, 0.45);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .modal-backdrop.is-open {
+      display: flex;
+    }
+
+    .modal-panel {
+      background: #fff;
+      border-radius: 6px;
+      width: 100%;
+      max-width: 520px;
+      max-height: calc(100vh - 48px);
+      box-shadow: 0 20px 40px rgba(13, 17, 23, 0.2);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .modal-panel.upload-modal-panel {
+      max-width: 640px;
+    }
+
+    .modal-header {
+      padding: 18px 22px 14px;
+      border-bottom: 1px solid var(--gray-200);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .modal-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--gray-800);
+      margin: 0;
+      flex: 1;
+      min-width: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .modal-close {
+      width: 28px;
+      height: 28px;
+      border-radius: 4px;
+      color: var(--gray-500);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: none;
+      border: none;
+      cursor: pointer;
+      transition: background .15s, color .15s;
+      flex-shrink: 0;
+    }
+
+    .modal-close:hover {
+      background: var(--gray-100);
+      color: var(--gray-800);
+    }
+
+    .modal-close i,
+    .modal-close svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .modal-body {
+      padding: 18px 22px;
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    .modal-footer {
+      padding: 14px 22px 18px;
+      border-top: 1px solid var(--gray-100);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .modal-footer-left {
+      font-size: 12px;
+      color: var(--gray-500);
+    }
+
+    .modal-footer-right {
+      display: flex;
+      gap: 8px;
+    }
+
+    /* Upload zone */
+    .upload-zone {
+      border: 1.5px dashed var(--gray-300);
+      border-radius: 6px;
+      padding: 32px 20px;
+      text-align: center;
+      transition: border-color .15s, background .15s;
+      cursor: pointer;
+    }
+
+    .upload-zone:hover,
+    .upload-zone.is-drag {
+      border-color: var(--primary-500);
+      background: var(--primary-50);
+    }
+
+    .upload-zone-icon {
+      width: 36px;
+      height: 36px;
+      margin: 0 auto 8px;
+      color: var(--primary-500);
+    }
+
+    .upload-zone-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--gray-800);
+      margin-bottom: 4px;
+    }
+
+    .upload-zone-sub {
+      font-size: 12px;
+      color: var(--gray-500);
+      margin-bottom: 14px;
+    }
+
+    .upload-zone-buttons {
+      display: inline-flex;
+      gap: 8px;
+    }
+
+    .upload-zone-mini {
+      border: 1.5px dashed var(--gray-300);
+      border-radius: 4px;
+      padding: 8px 12px;
+      font-size: 12px;
+      color: var(--gray-500);
+      cursor: pointer;
+      transition: border-color .15s, background .15s;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .upload-zone-mini-text {
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .upload-zone-mini:hover,
+    .upload-zone-mini.is-drag {
+      border-color: var(--primary-500);
+      background: var(--primary-50);
+      color: var(--primary-700);
+    }
+
+    /* File list */
+    .upload-list {
+      max-height: 320px;
+      overflow-y: auto;
+      border: 1px solid var(--gray-200);
+      border-radius: 4px;
+    }
+
+    .upload-row {
+      display: grid;
+      grid-template-columns: 24px 1fr auto auto;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--gray-100);
+      font-size: 13px;
+    }
+
+    .upload-row.no-action {
+      grid-template-columns: 24px 1fr auto;
+    }
+
+
+    .upload-row:last-child {
+      border-bottom: none;
+    }
+
+    .upload-row-icon {
+      width: 18px;
+      height: 18px;
+      color: var(--gray-400);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .upload-row.is-success .upload-row-icon {
+      color: var(--primary-500);
+    }
+
+    .upload-row.is-failed .upload-row-icon {
+      color: var(--error);
+    }
+
+    .upload-row.is-uploading .upload-row-icon {
+      color: var(--primary-500);
+    }
+
+    .upload-row-icon svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .upload-row.is-uploading .upload-row-icon svg {
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .upload-row-name {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .upload-row-filename {
+      font-weight: 500;
+      color: var(--gray-800);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .upload-row.is-failed .upload-row-filename {
+      color: var(--error);
+    }
+
+    .upload-row-meta {
+      font-size: 11px;
+      color: var(--gray-500);
+      font-family: 'IBM Plex Mono', monospace;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .upload-row-meta.is-error {
+      color: var(--error);
+    }
+
+    .upload-row-size {
+      font-size: 11px;
+      font-family: 'IBM Plex Mono', monospace;
+      color: var(--gray-500);
+      white-space: nowrap;
+    }
+
+    .upload-row-progress {
+      width: 80px;
+      height: 4px;
+      background: var(--gray-200);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .upload-row-progress-fill {
+      height: 100%;
+      background: var(--primary-500);
+      transition: width .15s;
+    }
+
+    .upload-row-action {
+      width: 24px;
+      height: 24px;
+      border-radius: 4px;
+      color: var(--gray-400);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background .15s, color .15s;
+    }
+
+    .upload-row-action:hover {
+      background: var(--gray-100);
+      color: var(--gray-700);
+    }
+
+    .upload-row-action.is-retry:hover {
+      color: var(--primary-500);
+    }
+
+    /* 실패 행의 [재시도] 버튼 — 텍스트 + 아이콘 */
+    .upload-row-retry-btn {
+      height: 26px;
+      padding: 0 10px;
+      border-radius: 4px;
+      border: 1px solid var(--gray-300);
+      background: #fff;
+      color: var(--gray-700);
+      font-size: 12px;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background .15s, border-color .15s, color .15s;
+    }
+
+    .upload-row-retry-btn:hover {
+      background: var(--primary-50);
+      border-color: var(--primary-500);
+      color: var(--primary-700);
+    }
+
+    .upload-row-retry-btn svg {
+      width: 12px;
+      height: 12px;
+    }
+
+    .upload-row-action svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    /* Duplicate row */
+    .upload-row.is-duplicate .upload-row-filename,
+    .upload-row.is-duplicate .upload-row-icon {
+      color: var(--gray-400);
+    }
+
+    .upload-row-dup-label {
+      font-size: 11px;
+      color: var(--gray-500);
+      font-style: italic;
+      white-space: nowrap;
+    }
+
+    /* 기존 ITB 문서 안내 배너 */
+    .upload-existing-banner {
+      padding: 10px 14px;
+      border-radius: 4px;
+      background: var(--primary-50);
+      border: 1px solid var(--primary-100);
+      color: var(--primary-700);
+      font-size: 12px;
+      line-height: 1.5;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .upload-existing-banner svg {
+      width: 14px;
+      height: 14px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    /* 기존 ITB 문서 섹션 (펼침/접힘) */
+    .upload-existing {
+      margin-top: 16px;
+      border: 1px solid var(--gray-200);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .upload-existing-toggle {
+      width: 100%;
+      padding: 10px 14px;
+      background: var(--gray-50);
+      border: none;
+      border-bottom: 1px solid transparent;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--gray-700);
+      transition: background .15s;
+    }
+
+    .upload-existing-toggle:hover {
+      background: var(--gray-100);
+    }
+
+    .upload-existing.is-open .upload-existing-toggle {
+      border-bottom-color: var(--gray-200);
+    }
+
+    .upload-existing-toggle svg {
+      width: 14px;
+      height: 14px;
+      transition: transform .15s;
+    }
+
+    .upload-existing.is-open .upload-existing-toggle svg {
+      transform: rotate(180deg);
+    }
+
+    .upload-existing-list {
+      max-height: 200px;
+      overflow-y: auto;
+      display: none;
+    }
+
+    .upload-existing.is-open .upload-existing-list {
+      display: block;
+    }
+
+    .upload-existing-row {
+      padding: 8px 14px;
+      border-bottom: 1px solid var(--gray-100);
+      font-size: 12px;
+      color: var(--gray-600);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .upload-existing-row:last-child {
+      border-bottom: none;
+    }
+
+    .upload-existing-row svg {
+      width: 12px;
+      height: 12px;
+      color: var(--gray-400);
+      flex-shrink: 0;
+    }
+
+    .upload-existing-row-name {
+      flex: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .upload-existing-row-date {
+      font-family: 'IBM Plex Mono', monospace;
+      color: var(--gray-400);
+      font-size: 11px;
+    }
+
+    /* Overall progress */
+    .upload-overall {
+      margin-bottom: 14px;
+    }
+
+    .upload-overall-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--gray-600);
+      margin-bottom: 6px;
+    }
+
+    .upload-overall-label b {
+      font-family: 'IBM Plex Mono', monospace;
+      color: var(--gray-800);
+      font-weight: 600;
+    }
+
+    .upload-overall-bar {
+      height: 6px;
+      background: var(--gray-200);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .upload-overall-fill {
+      height: 100%;
+      background: var(--primary-500);
+      transition: width .2s;
+    }
+
+    .upload-summary-banner {
+      margin-top: 12px;
+      padding: 10px 12px;
+      border-radius: 4px;
+      background: var(--warning-bg);
+      color: var(--warning);
+      font-size: 12px;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .upload-summary-banner.is-success {
+      background: var(--primary-50);
+      color: var(--primary-700);
+    }
+
+    .upload-summary-banner svg {
+      width: 14px;
+      height: 14px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .upload-hidden-input {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="top-band"></div>
+
+  <header class="app-header">
+    <div class="hdr-left">
+      <a href="index.html#/" class="hdr-logo">
+        <img src="reference/logo.png" alt="EPC PE Platform">
+        <span class="hdr-sysname">EPC PE AI-Platform</span>
+      </a>
+    </div>
+    <nav class="hdr-tabs">
+      <a href="index.html#/" class="hdr-tab active">Projects</a>
+      <a href="index.html#/templates" class="hdr-tab">Templates</a>
+      <a href="index.html#/bot" class="hdr-tab">AI Q&amp;A</a>
+    </nav>
+    <div class="hdr-right">
+      <div class="role-toggle" aria-label="권한 전환 (시연용)">
+        <button type="button" data-role="member">Member</button>
+        <button type="button" data-role="admin">Admin</button>
+      </div>
+      <button class="notif-bell" aria-label="Notifications">
+        <i data-lucide="bell"></i>
+        <span class="badge pulse">3</span>
+      </button>
+    </div>
+  </header>
+
+  <main class="page-wrap">
+
+    <!-- Page Header -->
+    <div class="page-header">
+      <div class="page-header-left">
+        <h1>프로젝트 목록</h1>
+        <div class="page-subtitle">조직이 수행 중이거나 완료한 모든 프로젝트를 한 곳에서 확인하세요</div>
+      </div>
+      <div class="page-header-right">
+        <div class="input-wrap">
+          <i data-lucide="search" class="input-icon"></i>
+          <input class="input input-search" id="search-input" placeholder="이름 또는 계약번호 검색" style="width: 280px;">
+        </div>
+        <button class="btn btn-primary" id="btn-new-project">
+          <i data-lucide="plus"></i>
+          새 프로젝트 추가
+        </button>
+      </div>
+    </div>
+
+    <!-- Table -->
+    <div class="table-wrap">
+      <table class="proj-table">
+        <thead>
+          <tr>
+            <th class="col-name">프로젝트 이름</th>
+            <th class="col-contract">계약번호</th>
+            <th class="col-type">유형</th>
+            <th class="col-status">상태</th>
+            <th class="col-client">발주처</th>
+            <th class="col-period">계약기간</th>
+            <th class="col-actions" id="th-actions"></th>
+          </tr>
+        </thead>
+        <tbody id="proj-tbody"></tbody>
+      </table>
+      <div id="table-empty" class="table-empty" style="display: none;">조건에 맞는 프로젝트가 없습니다.</div>
+      <div class="table-footer">
+        <div class="table-summary">총 <b id="row-total">0</b>건 — 진행중 <b id="row-running">0</b> · 완료 <b id="row-ended">0</b></div>
+      </div>
+    </div>
+
+  </main>
+
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- ITB Upload Modal -->
+  <div class="modal-backdrop" id="modal-upload" aria-hidden="true">
+    <div class="modal-panel upload-modal-panel" role="dialog" aria-labelledby="upload-modal-title">
+      <div class="modal-header">
+        <div class="modal-title" id="upload-modal-title">ITB 업로드</div>
+        <button type="button" class="modal-close" id="btn-upload-close" aria-label="닫기">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+      <div class="modal-body" id="upload-modal-body">
+        <!-- 동적 렌더 -->
+      </div>
+      <div class="modal-footer" id="upload-modal-footer">
+        <!-- 동적 렌더 -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Hidden file inputs (모달 외부에 두어 모달 재렌더에 영향 없도록) -->
+  <input type="file" id="upload-input-folder" class="upload-hidden-input" webkitdirectory directory multiple>
+
+
+  <script>
+    (function () {
+      const PROJECTS = [
+        { name: 'Saudi ARAMCO Jafurah Gas Plant Phase 2',     contract: 'JA-2025-078',     type: '수행', status: 'running',  client: 'Saudi ARAMCO',  period: '2025.03 — 2027.08', docs: 124, members: 8, itbCount: 12, mine: false },
+        { name: 'UAE ADNOC Hail & Ghasha Sour Gas Project',   contract: 'ADN-2024-142',    type: '수행', status: 'running',  client: 'ADNOC',         period: '2024.09 — 2026.12', docs: 287, members: 12, itbCount: 28, mine: true },
+        { name: 'Qatar NFE Ethane Cracker Package',           contract: 'QP-NFE-2025-011', type: '견적', status: 'running',  client: 'QatarEnergy',   period: '2025.06 — 2028.03', docs: 56,  members: 5, itbCount: 0, mine: false },
+        { name: 'Kuwait Al-Zour Refinery Expansion',          contract: 'KNP-2023-087',    type: '수행', status: 'ended',    client: 'KNPC',          period: '2023.01 — 2025.12', docs: 412, members: 14, itbCount: 45, mine: false },
+        { name: 'Oman Duqm Integrated Refinery Project',      contract: 'ORPIC-2024-055',  type: '수행', status: 'running',  client: 'OQ Refineries', period: '2024.04 — 2026.09', docs: 198, members: 9, itbCount: 18, mine: true },
+        { name: 'Malaysia Petronas PRefChem Revamp Phase 1',  contract: 'PETR-2025-023',   type: '수행', status: 'running',  client: 'Petronas',      period: '2025.02 — 2026.11', docs: 89,  members: 7, itbCount: 9, mine: false },
+        { name: 'Singapore Jurong LNG Terminal Expansion',    contract: 'SJL-2024-031',    type: '수행', status: 'running',  client: 'SLNG',          period: '2024.07 — 2026.06', docs: 142, members: 6, itbCount: 14, mine: false },
+        { name: 'Indonesia Balikpapan Refinery Modernization',contract: 'PRTM-2023-094',   type: '수행', status: 'ended',    client: 'Pertamina',     period: '2023.05 — 2025.10', docs: 356, members: 11, itbCount: 32, mine: false },
+        { name: 'Vietnam Long Son Petrochemical Complex',     contract: 'LSP-2024-017',    type: '견적', status: 'running',  client: 'SCG / PVN',     period: '2024.11 — 2027.02', docs: 47,  members: 4, itbCount: 0, mine: false },
+        { name: 'Egypt ERC Mostorod Hydrocracker Unit',       contract: 'ERC-2022-063',    type: '수행', status: 'ended',    client: 'ERC',           period: '2022.08 — 2025.04', docs: 289, members: 10, itbCount: 26, mine: false },
+        { name: 'Iraq Basra Gas Company Phase 3',             contract: 'BGC-2025-008',    type: '견적', status: 'canceled', client: 'BGC',           period: '2025.04 — 2028.09', docs: 31,  members: 3, itbCount: 7, mine: false },
+        { name: 'Algeria Hassi R’Mel Gas Processing Upgrade', contract: 'SONA-2024-072',   type: '수행', status: 'running',  client: 'Sonatrach',     period: '2024.01 — 2026.07', docs: 167, members: 8, itbCount: 15, mine: false },
+      ];
+
+      // 진행중 프로젝트의 기존 ITB 파일 캐시 (페이지 진입 시 백그라운드 fetch)
+      // key: projectIdx, value: [{ relativePath, size, uploadedAt }, ...]
+      const itbFilesCache = {};
+
+      // mock: 프로젝트별 itbCount 만큼 샘플 파일 생성
+      function generateMockItbFiles(p, projectIdx) {
+        const count = p.itbCount || 0;
+        if (count === 0) return [];
+        const sections = ['section1', 'section2', 'section3', 'section4', 'attachments', 'specs', 'drawings'];
+        const filenames = [
+          'spec.pdf', 'scope.pdf', 'PnID-001.pdf', 'PnID-002.pdf', 'datasheet.xlsx',
+          'requirements.docx', 'overview.pdf', 'process-flow.pdf', 'equipment-list.xlsx',
+          'instrument-list.xlsx', 'safety.pdf', 'commissioning.docx', 'P&ID-rev-A.pdf',
+          'electrical-load.xlsx', 'piping-mto.xlsx', 'control-narrative.docx', 'vendor-list.xlsx',
+          'mech-spec.pdf', 'civil-spec.pdf', 'utility-summary.xlsx', 'project-charter.pdf',
+          'GA-drawing.pdf', 'isometric.pdf', 'tie-in-list.xlsx', 'inspection-plan.docx',
+          'HSE-plan.pdf', 'cause-effect.xlsx', 'alarm-list.xlsx', 'tag-numbering.docx',
+          'spec-sheet-A.pdf', 'spec-sheet-B.pdf', 'spec-sheet-C.pdf', 'addendum-1.pdf',
+          'addendum-2.pdf', 'clarification.docx', 'q-and-a.docx', 'price-breakdown.xlsx',
+          'schedule.pdf', 'milestones.xlsx', 'risk-register.xlsx', 'change-log.docx',
+          'final-report.pdf', 'appendix-A.pdf', 'appendix-B.pdf', 'index.pdf', 'cover.pdf',
+        ];
+        const out = [];
+        for (let i = 0; i < count; i++) {
+          const sec = sections[i % sections.length];
+          const fn = filenames[i % filenames.length];
+          // 같은 sec/fn 조합 중복 방지: i가 클 때 prefix 추가
+          const filename = i >= filenames.length ? `${i + 1}-${fn}` : fn;
+          out.push({
+            relativePath: `${sec}/${filename}`,
+            uploadedAt: '2026-04-' + String(10 + (i % 20)).padStart(2, '0'),
+          });
+        }
+        return out;
+      }
+
+      // 페이지 진입 시 모든 프로젝트 일괄 fetch (mock — 200~400ms 지연)
+      // 완료·취소 프로젝트도 기존 문서 조회를 위해 캐시 필요
+      function preloadItbFiles() {
+        PROJECTS.forEach((p, idx) => {
+          // 실제 구현: fetch(`/api/projects/${idx}/itb/files`)
+          setTimeout(() => {
+            itbFilesCache[idx] = generateMockItbFiles(p, idx);
+          }, 200 + Math.random() * 200);
+        });
+      }
+      preloadItbFiles();
+
+      const tbody = document.getElementById('proj-tbody');
+      const emptyMsg = document.getElementById('table-empty');
+      const searchInput = document.getElementById('search-input');
+      const rowTotal = document.getElementById('row-total');
+      const rowRunning = document.getElementById('row-running');
+      const rowEnded = document.getElementById('row-ended');
+      const thStar = document.getElementById('th-star');
+
+      let currentQuery = '';
+      let currentRole = localStorage.getItem('userRole') || 'member';
+
+      function matchQuery(p) {
+        if (!currentQuery) return true;
+        const q = currentQuery.toLowerCase();
+        return p.name.toLowerCase().includes(q) || p.contract.toLowerCase().includes(q);
+      }
+
+      function statusBadge(status) {
+        if (status === 'running')  return '<span class="badge-pill is-running">진행중</span>';
+        if (status === 'ended')    return '<span class="badge-pill is-ended">완료</span>';
+        if (status === 'canceled') return '<span class="badge-pill is-canceled">취소</span>';
+        return status;
+      }
+
+      function typeBadge(type) {
+        if (type === '견적') return '<span class="badge-pill is-bid">견적</span>';
+        return '<span class="badge-pill is-exec">수행</span>';
+      }
+
+      function escapeHtml(s) {
+        return String(s).replace(/[&<>"']/g, c => ({
+          '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+        }[c]));
+      }
+
+      function rowHtml(p, idx) {
+        const itbCount = p.itbCount || 0;
+        const isClosed = p.status === 'ended' || p.status === 'canceled';
+        const isBtnDisabled = isClosed && itbCount === 0;
+        const uploadBtnCls = `upload-count-btn${itbCount > 0 ? ' has-docs' : ''}${isBtnDisabled ? ' is-disabled' : ''}`;
+        const actionsCell = currentRole === 'admin'
+          ? `<td class="col-actions">
+               <button type="button" class="${uploadBtnCls}" data-upload-idx="${idx}" aria-label="ITB 업로드"${isBtnDisabled ? ' disabled' : ''}>
+                 업로드 문서 ${itbCount}개
+               </button>
+             </td>`
+          : `<td class="col-actions">
+               <button type="button" class="row-action" data-open-idx="${idx}" aria-label="프로젝트 열기">
+                 <i data-lucide="arrow-right"></i>
+               </button>
+             </td>`;
+        return `
+          <tr data-row-idx="${idx}">
+            <td class="col-name"><div class="cell-name" title="${escapeHtml(p.name)}">${escapeHtml(p.name)}</div></td>
+            <td class="col-contract cell-mono">${escapeHtml(p.contract)}</td>
+            <td class="col-type">${typeBadge(p.type)}</td>
+            <td class="col-status">${statusBadge(p.status)}</td>
+            <td class="col-client">${escapeHtml(p.client)}</td>
+            <td class="col-period cell-mono">${escapeHtml(p.period)}</td>
+            ${actionsCell}
+          </tr>`;
+      }
+
+      function render() {
+        const filtered = PROJECTS
+          .map((p, i) => ({ p, i }))
+          .filter(({ p }) => !p.archived && matchQuery(p));
+
+        if (filtered.length === 0) {
+          tbody.innerHTML = '';
+          emptyMsg.style.display = 'block';
+        } else {
+          emptyMsg.style.display = 'none';
+          tbody.innerHTML = filtered.map(({ p, i }) => rowHtml(p, i)).join('');
+        }
+
+        rowTotal.textContent = filtered.length;
+        rowRunning.textContent = filtered.filter(({ p }) => p.status === 'running').length;
+        rowEnded.textContent = filtered.filter(({ p }) => p.status === 'ended').length;
+
+        if (window.lucide) window.lucide.createIcons();
+      }
+
+      // 검색
+      searchInput.addEventListener('input', () => {
+        currentQuery = searchInput.value.trim();
+        render();
+      });
+
+      // 행 / 액션 클릭
+      tbody.addEventListener('click', (e) => {
+        const uploadBtn = e.target.closest('[data-upload-idx]');
+        if (uploadBtn) {
+          e.stopPropagation();
+          const idx = Number(uploadBtn.dataset.uploadIdx);
+          const p = PROJECTS[idx];
+          // 완료·취소 + 기존 문서 0개는 버튼이 disabled — guard만
+          if ((p.status === 'ended' || p.status === 'canceled') && (p.itbCount || 0) === 0) return;
+          openUploadModal(idx);
+          return;
+        }
+        const openBtn = e.target.closest('[data-open-idx]');
+        if (openBtn) {
+          e.stopPropagation();
+          openProject(Number(openBtn.dataset.openIdx));
+          return;
+        }
+        const tr = e.target.closest('tr[data-row-idx]');
+        if (tr) {
+          const idx = Number(tr.dataset.rowIdx);
+          const p = PROJECTS[idx];
+          if (p.status === 'ended' || p.status === 'canceled') {
+            openViewForm(idx);
+          } else {
+            openEditForm(idx);
+          }
+        }
+      });
+
+      function openProject(idx) {
+        const savedRole = localStorage.getItem('myRole');
+        const qs = new URLSearchParams();
+        if (savedRole) qs.set('workstream', savedRole);
+        if (PROJECTS[idx].mine) qs.set('mine', '1');
+        location.href = qs.toString()
+          ? `index.html#/itb?${qs.toString()}`
+          : `index.html#/itb`;
+      }
+
+      function buildPrefill(p) {
+        const [start, end] = (p.period || '').split(' — ').map(s => s ? s.replace(/\./g, '-') + '-01' : '');
+        return {
+          type: p.type || '수행',
+          status: p.status === 'ended' ? '완료' : (p.status === 'canceled' ? '취소' : '진행중'),
+          contract: p.contract || '',
+          name: p.name || '',
+          client: p.client || '',
+          start, end,
+        };
+      }
+
+      function openEditForm(idx) {
+        sessionStorage.setItem('projectFormPrefill', JSON.stringify(buildPrefill(PROJECTS[idx])));
+        location.href = `index.html#/projects/edit?idx=${idx}`;
+      }
+
+      function openViewForm(idx) {
+        sessionStorage.setItem('projectFormPrefill', JSON.stringify(buildPrefill(PROJECTS[idx])));
+        location.href = `index.html#/projects/view?idx=${idx}`;
+      }
+
+      document.getElementById('btn-new-project').addEventListener('click', () => {
+        location.href = 'index.html#/projects/new';
+      });
+
+      // 폼 결과 수신
+      (function consumeFormResult() {
+        const raw = sessionStorage.getItem('projectFormResult');
+        if (!raw) return;
+        sessionStorage.removeItem('projectFormResult');
+        sessionStorage.removeItem('projectFormPrefill');
+        try {
+          const { mode, editIdx, data } = JSON.parse(raw);
+          if (mode === 'new' && data) {
+            const s = (data.start || '').slice(0, 7).replace('-', '.');
+            const e = (data.end || '').slice(0, 7).replace('-', '.');
+            const status = data.status === '완료' ? 'ended' : (data.status === '취소' ? 'canceled' : 'running');
+            PROJECTS.unshift({
+              name: data.name, contract: data.contract,
+              type: data.type || '수행', status,
+              client: data.client || '', period: `${s} — ${e}`,
+              docs: 0, members: 0, mine: false,
+            });
+            showToast(`'${data.name}' 프로젝트가 생성되었습니다`);
+          } else if (mode === 'edit' && data && editIdx !== null && PROJECTS[editIdx]) {
+            const s = (data.start || '').slice(0, 7).replace('-', '.');
+            const e = (data.end || '').slice(0, 7).replace('-', '.');
+            const status = data.status === '완료' ? 'ended' : (data.status === '취소' ? 'canceled' : 'running');
+            Object.assign(PROJECTS[editIdx], {
+              name: data.name, contract: data.contract,
+              type: data.type || PROJECTS[editIdx].type, status,
+              client: data.client || PROJECTS[editIdx].client,
+              period: `${s} — ${e}`,
+            });
+            showToast(`'${data.name}' 프로젝트가 수정되었습니다`);
+          }
+        } catch (err) { console.warn(err); }
+      })();
+
+      // Role toggle
+      const roleButtons = document.querySelectorAll('.role-toggle button');
+      const thActions = document.getElementById('th-actions');
+      function applyRole(role) {
+        currentRole = role;
+        localStorage.setItem('userRole', role);
+        roleButtons.forEach(b => b.classList.toggle('is-active', b.dataset.role === role));
+        const btnNew = document.getElementById('btn-new-project');
+        if (btnNew) btnNew.style.display = (role === 'admin') ? '' : 'none';
+        document.querySelectorAll('.hdr-tab[href*="templates"]').forEach(el => {
+          el.style.display = (role === 'admin') ? '' : 'none';
+        });
+        document.querySelectorAll('.hdr-tab[href*="/bot"]').forEach(el => {
+          el.style.display = (role === 'admin') ? 'none' : '';
+        });
+        if (thActions) thActions.textContent = (role === 'admin') ? 'ITB 업로드' : '';
+        render();
+      }
+      roleButtons.forEach(b => b.addEventListener('click', () => applyRole(b.dataset.role)));
+      applyRole(currentRole);
+
+      // Toast
+      const toastContainer = document.getElementById('toast-container');
+      function showToast(msg) {
+        const el = document.createElement('div');
+        el.className = 'toast';
+        el.textContent = msg;
+        toastContainer.appendChild(el);
+        setTimeout(() => el.remove(), 2800);
+      }
+
+      // ─────── ITB Upload Module ───────
+      const upload = (function () {
+        const MAX_SIZE = 100 * 1024 * 1024; // 100MB
+        const ALLOWED = /\.(pdf|docx?|xlsx?)$/i;
+        const CONCURRENCY = 3;
+        // mock 업로드 모드: 5% 확률 실패, 4MB/s 전송 시뮬레이션
+        const MOCK_FAIL_RATE = 0.18;
+        const MOCK_SPEED = 4 * 1024 * 1024;
+
+        const modal = document.getElementById('modal-upload');
+        const titleEl = document.getElementById('upload-modal-title');
+        const bodyEl = document.getElementById('upload-modal-body');
+        const footerEl = document.getElementById('upload-modal-footer');
+        const closeBtn = document.getElementById('btn-upload-close');
+        const inputFolder = document.getElementById('upload-input-folder');
+
+        const state = {
+          projectIdx: null,
+          phase: 'idle', // idle | staged | uploading | done | partial-fail
+          files: [],     // [{ id, file, relativePath, size, status, progress, error, xhr, isDuplicate }]
+          activeCount: 0,
+          nextId: 1,
+          existingFiles: [],   // 서버에서 받은 기존 파일 목록
+          existingPaths: null, // Set<relativePath> — 중복 매칭용
+          showExisting: false, // 기존 문서 섹션 펼침 여부
+          readOnly: false,     // 완료 프로젝트 — 신규 업로드 불가, 조회만
+        };
+
+        function fmtSize(bytes) {
+          if (bytes < 1024) return bytes + ' B';
+          if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+          if (bytes < 1024 * 1024 * 1024) return (bytes / 1024 / 1024).toFixed(1) + ' MB';
+          return (bytes / 1024 / 1024 / 1024).toFixed(2) + ' GB';
+        }
+
+        function open(projectIdx) {
+          state.projectIdx = projectIdx;
+          state.phase = 'idle';
+          state.files = [];
+          state.activeCount = 0;
+          state.showExisting = false;
+          // 완료·취소 프로젝트는 조회 전용 — 기존 문서 섹션을 기본으로 펼쳐서 보여줌
+          const status = PROJECTS[projectIdx].status;
+          state.readOnly = status === 'ended' || status === 'canceled';
+          if (state.readOnly) state.showExisting = true;
+          // 캐시에서 기존 파일 가져오기 (페이지 진입 시 백그라운드 fetch 됨)
+          state.existingFiles = itbFilesCache[projectIdx] || [];
+          state.existingPaths = new Set(state.existingFiles.map(f => f.relativePath));
+          const p = PROJECTS[projectIdx];
+          titleEl.textContent = `ITB 업로드 — ${p.name}`;
+          modal.classList.add('is-open');
+          modal.setAttribute('aria-hidden', 'false');
+          render();
+        }
+
+        function close() {
+          modal.classList.remove('is-open');
+          modal.setAttribute('aria-hidden', 'true');
+        }
+
+        function isClosable() {
+          return state.phase !== 'uploading';
+        }
+
+        // File enumeration (drag/drop entry-aware)
+        async function readEntry(entry, basePath) {
+          if (entry.isFile) {
+            const file = await new Promise((res, rej) => entry.file(res, rej));
+            file.__relativePath = basePath + entry.name;
+            return [file];
+          }
+          if (entry.isDirectory) {
+            const reader = entry.createReader();
+            const out = [];
+            // readEntries는 한 번에 100개씩 → 비어있을 때까지 반복
+            while (true) {
+              const batch = await new Promise((res, rej) => reader.readEntries(res, rej));
+              if (!batch.length) break;
+              for (const sub of batch) {
+                const subFiles = await readEntry(sub, basePath + entry.name + '/');
+                out.push(...subFiles);
+              }
+            }
+            return out;
+          }
+          return [];
+        }
+
+        async function enumerateDataTransfer(dt) {
+          const items = dt.items;
+          const out = [];
+          if (items && items.length && items[0].webkitGetAsEntry) {
+            const entries = [];
+            for (const it of items) {
+              const entry = it.webkitGetAsEntry?.();
+              if (entry) entries.push(entry);
+            }
+            for (const e of entries) {
+              const fs = await readEntry(e, '');
+              out.push(...fs);
+            }
+          } else {
+            for (const f of dt.files) {
+              f.__relativePath = f.name;
+              out.push(f);
+            }
+          }
+          return out;
+        }
+
+        function addFiles(files) {
+          let rejected = 0;
+          for (const f of files) {
+            const rel = f.__relativePath || f.webkitRelativePath || f.name;
+            if (!ALLOWED.test(f.name)) { rejected++; continue; }
+            if (f.size > MAX_SIZE) { rejected++; continue; }
+            // 같은 모달 세션 내에서의 중복 제거
+            if (state.files.some(x => x.relativePath === rel)) continue;
+            // 서버에 이미 있는 파일과의 중복 (relativePath 기준) — 업로드 skip 마킹
+            const isDuplicate = state.existingPaths && state.existingPaths.has(rel);
+            state.files.push({
+              id: state.nextId++,
+              file: f,
+              relativePath: rel,
+              size: f.size,
+              status: isDuplicate ? 'duplicate' : 'pending',
+              progress: 0,
+              error: null,
+              xhr: null,
+              isDuplicate,
+            });
+          }
+          if (rejected > 0) {
+            showToast(`${rejected}개 파일이 형식·크기 제한으로 제외됐습니다`);
+          }
+          if (state.files.length > 0 && state.phase === 'idle') {
+            state.phase = 'staged';
+          }
+          if (state.files.length === 0 && state.phase === 'staged') {
+            state.phase = 'idle';
+          }
+          render();
+        }
+
+        function removeFile(id) {
+          const idx = state.files.findIndex(f => f.id === id);
+          if (idx < 0) return;
+          const f = state.files[idx];
+          if (f.xhr) try { f.xhr.abort(); } catch {}
+          state.files.splice(idx, 1);
+          if (state.files.length === 0) state.phase = 'idle';
+          render();
+        }
+
+        // ─── Mock upload (presigned URL 시뮬레이션) ───
+        function mockPresign(item) {
+          // 50~150ms 지연 후 mock URL 반환
+          return new Promise((res) => setTimeout(() => {
+            res({
+              url: `mock://s3/projects/${state.projectIdx}/itb/${encodeURIComponent(item.relativePath)}`,
+              key: `projects/${state.projectIdx}/itb/${item.relativePath}`,
+            });
+          }, 50 + Math.random() * 100));
+        }
+
+        function mockPut(item, onProgress) {
+          // 시뮬레이션: 4MB/s, 0.05초마다 progress 업데이트, 실패 확률
+          return new Promise((resolve, reject) => {
+            const total = item.size;
+            const tickMs = 50;
+            const tickBytes = (MOCK_SPEED * tickMs) / 1000;
+            let loaded = 0;
+            const willFail = Math.random() < MOCK_FAIL_RATE;
+            const failAt = willFail ? Math.random() * total * 0.9 : null;
+            const timer = setInterval(() => {
+              if (item.status === 'cancelled') {
+                clearInterval(timer);
+                reject(new Error('cancelled'));
+                return;
+              }
+              loaded = Math.min(total, loaded + tickBytes);
+              if (willFail && loaded >= failAt) {
+                clearInterval(timer);
+                reject(new Error('네트워크 오류'));
+                return;
+              }
+              onProgress(loaded / total);
+              if (loaded >= total) {
+                clearInterval(timer);
+                resolve();
+              }
+            }, tickMs);
+            // expose abort hook via xhr-like
+            item.xhr = { abort: () => { item.status = 'cancelled'; clearInterval(timer); reject(new Error('aborted')); } };
+          });
+        }
+
+        async function uploadOne(item) {
+          item.status = 'uploading';
+          item.error = null;
+          renderRowsOnly();
+
+          const attempt = async () => {
+            try {
+              const { url } = await mockPresign(item);
+              await mockPut(item, (p) => {
+                item.progress = p;
+                renderProgressOnly(item.id);
+              });
+              item.status = 'success';
+              item.progress = 1;
+              item.xhr = null;
+            } catch (err) {
+              if (item.status === 'cancelled') {
+                item.xhr = null;
+                throw err;
+              }
+              item.status = 'failed';
+              item.error = err.message || '업로드 실패';
+              item.xhr = null;
+              throw err;
+            }
+          };
+
+          try { await attempt(); } catch {}
+          renderRowsOnly();
+          updateOverall();
+        }
+
+        async function startUpload() {
+          // 신규 파일이 하나도 없으면 진행하지 않음
+          if (state.files.filter(f => !f.isDuplicate).length === 0) return;
+          state.phase = 'uploading';
+          render();
+          // 워커 풀
+          let cursor = 0;
+          const workers = [];
+          const next = () => {
+            while (cursor < state.files.length) {
+              const item = state.files[cursor++];
+              if (item.status === 'pending' || item.status === 'failed') {
+                return item;
+              }
+            }
+            return null;
+          };
+          const worker = async () => {
+            while (true) {
+              const item = next();
+              if (!item) return;
+              state.activeCount++;
+              await uploadOne(item);
+              state.activeCount--;
+            }
+          };
+          for (let i = 0; i < CONCURRENCY; i++) workers.push(worker());
+          await Promise.all(workers);
+          finalizePhase();
+        }
+
+        function finalizePhase() {
+          const failed = state.files.filter(f => f.status === 'failed').length;
+          const success = state.files.filter(f => f.status === 'success').length;
+          state.phase = failed > 0 ? 'partial-fail' : 'done';
+          // 성공한 파일을 캐시 + 프로젝트 카운트에 반영
+          if (success > 0 && PROJECTS[state.projectIdx]) {
+            const newEntries = state.files.filter(f => f.status === 'success').map(f => ({
+              relativePath: f.relativePath,
+              uploadedAt: new Date().toISOString().slice(0, 10),
+            }));
+            itbFilesCache[state.projectIdx] = [...(itbFilesCache[state.projectIdx] || []), ...newEntries];
+            // 모달 내부의 existing 목록도 갱신 (다음 drop의 중복 판정에 반영)
+            state.existingFiles = itbFilesCache[state.projectIdx];
+            state.existingPaths = new Set(state.existingFiles.map(f => f.relativePath));
+            PROJECTS[state.projectIdx].itbCount = (PROJECTS[state.projectIdx].itbCount || 0) + success;
+            if (typeof window.__renderProjList === 'function') window.__renderProjList();
+          }
+          if (state.phase === 'done') {
+            showToast(`${success}개 파일이 업로드되었습니다`);
+          }
+          render();
+        }
+
+        function retryOne(id) {
+          const item = state.files.find(f => f.id === id);
+          if (!item || item.status !== 'failed') return;
+          item.status = 'pending';
+          item.error = null;
+          item.progress = 0;
+          // 워커가 모두 종료된 상태이므로 다시 startUpload 트리거
+          if (state.phase !== 'uploading') {
+            startUpload();
+          } else {
+            // 진행 중이면 worker 풀이 자연스럽게 집어감 (cursor가 이미 지나갔다면 새 워커가 필요 → 단순화: 직접 처리)
+            uploadOne(item).then(() => {
+              if (state.activeCount === 0) finalizePhase();
+            });
+          }
+        }
+
+        function retryAllFailed() {
+          const failed = state.files.filter(f => f.status === 'failed');
+          if (failed.length === 0) return;
+          for (const f of failed) {
+            f.status = 'pending';
+            f.error = null;
+            f.progress = 0;
+          }
+          startUpload();
+        }
+
+        function cancelAll() {
+          for (const f of state.files) {
+            if (f.xhr) try { f.xhr.abort(); } catch {}
+            if (f.status === 'uploading' || f.status === 'pending') {
+              f.status = 'pending';
+              f.progress = 0;
+              f.error = null;
+            }
+          }
+          state.phase = 'staged';
+          render();
+        }
+
+        // ─── Render ───
+        function statusIcon(s) {
+          if (s === 'success') return 'check-circle-2';
+          if (s === 'failed') return 'alert-circle';
+          if (s === 'uploading') return 'loader-2';
+          if (s === 'duplicate') return 'minus-circle';
+          return 'file';
+        }
+
+        function rowHtml(f) {
+          const cls = `is-${f.status}`;
+          // sizeCol — col 3 (사이즈/진행률/재시도/중복 라벨 자리)
+          let sizeCol = '';
+          if (f.status === 'uploading') {
+            sizeCol = `<div class="upload-row-progress"><div class="upload-row-progress-fill" data-progress-id="${f.id}" style="width: ${(f.progress * 100).toFixed(1)}%;"></div></div>`;
+          } else if (f.status === 'failed') {
+            sizeCol = `<button type="button" class="upload-row-retry-btn" data-retry-id="${f.id}">
+                         <i data-lucide="rotate-cw"></i><span>재시도</span>
+                       </button>`;
+          } else if (f.status === 'duplicate') {
+            sizeCol = `<span class="upload-row-dup-label">중복 (건너뜀)</span>`;
+          } else {
+            sizeCol = `<span class="upload-row-size">${fmtSize(f.size)}</span>`;
+          }
+          // actionBtn — col 4 (제거/없음)
+          let actionBtn = '';
+          let noActionCol = false;
+          if (f.status === 'pending' || f.status === 'duplicate') {
+            actionBtn = `<button type="button" class="upload-row-action" data-remove-id="${f.id}" title="제거" aria-label="제거"><i data-lucide="x"></i></button>`;
+          } else if (f.status === 'uploading') {
+            // 진행 중 — placeholder로 컬럼 폭 유지
+            actionBtn = `<span style="display: inline-block; width: 24px; height: 24px;"></span>`;
+          } else {
+            // success / failed — 컬럼 자체를 없앰
+            noActionCol = true;
+          }
+          return `
+            <div class="upload-row ${cls}${noActionCol ? ' no-action' : ''}" data-row-id="${f.id}">
+              <span class="upload-row-icon"><i data-lucide="${statusIcon(f.status)}"></i></span>
+              <div class="upload-row-name">
+                <div class="upload-row-filename" title="${escapeHtml(f.relativePath)}">${escapeHtml(f.relativePath)}</div>
+              </div>
+              ${sizeCol}
+              ${actionBtn}
+            </div>`;
+        }
+
+        function existingBannerHtml() {
+          const n = state.existingFiles.length;
+          if (state.readOnly) {
+            const p = PROJECTS[state.projectIdx];
+            const statusLabel = p && p.status === 'canceled' ? '취소된' : '완료된';
+            return `<div class="upload-existing-banner">
+                      <i data-lucide="info"></i>
+                      <span>${statusLabel} 프로젝트입니다. 신규 업로드는 불가하며 기존 <b>${n}개</b> 문서만 확인할 수 있습니다.</span>
+                    </div>`;
+          }
+          if (n === 0) {
+            return `<div class="upload-existing-banner">
+                      <i data-lucide="info"></i>
+                      <span>아직 업로드된 ITB 문서가 없습니다. ITB 문서가 담긴 폴더를 그대로 추가하세요.</span>
+                    </div>`;
+          }
+          return `<div class="upload-existing-banner">
+                    <i data-lucide="info"></i>
+                    <span>이미 <b>${n}개</b> 문서가 업로드되어 있습니다. 같은 경로 + 같은 파일명은 자동으로 건너뜁니다 — 폴더를 그대로 다시 올리셔도 됩니다. <b>내용이 변경된 파일</b>은 경로 또는 파일명을 바꿔서 올려주세요.</span>
+                  </div>`;
+        }
+
+        function existingSectionHtml() {
+          const n = state.existingFiles.length;
+          if (n === 0) return '';
+          const openCls = state.showExisting ? ' is-open' : '';
+          const rows = state.existingFiles.map(ef => `
+            <div class="upload-existing-row">
+              <i data-lucide="file"></i>
+              <span class="upload-existing-row-name" title="${escapeHtml(ef.relativePath)}">${escapeHtml(ef.relativePath)}</span>
+              <span class="upload-existing-row-date">${ef.uploadedAt || ''}</span>
+            </div>`).join('');
+          return `
+            <div class="upload-existing${openCls}" id="upload-existing">
+              <button type="button" class="upload-existing-toggle" data-toggle-existing>
+                <span>기존 문서 (${n})</span>
+                <i data-lucide="chevron-down"></i>
+              </button>
+              <div class="upload-existing-list">${rows}</div>
+            </div>`;
+        }
+
+        function bodyIdleHtml() {
+          if (state.readOnly) {
+            // 완료된 프로젝트 — dropzone 숨기고 기존 문서 섹션만 노출 (기본 펼침)
+            return `
+              ${existingBannerHtml()}
+              ${existingSectionHtml()}`;
+          }
+          return `
+            ${existingBannerHtml()}
+            <div class="upload-zone" id="upload-zone-large">
+              <div class="upload-zone-icon"><i data-lucide="upload-cloud" style="width: 36px; height: 36px;"></i></div>
+              <div class="upload-zone-title">폴더를 끌어다 놓으세요</div>
+              <div class="upload-zone-sub">PDF · DOCX · XLSX</div>
+              <div class="upload-zone-buttons">
+                <button type="button" class="btn btn-secondary btn-sm" data-pick="folder">폴더 선택</button>
+              </div>
+            </div>
+            ${existingSectionHtml()}`;
+        }
+
+        function bodyStagedHtml() {
+          const newFiles = state.files.filter(f => !f.isDuplicate);
+          const dupCount = state.files.length - newFiles.length;
+          const totalBytes = newFiles.reduce((s, f) => s + f.size, 0);
+          const summary = dupCount > 0
+            ? `<span>신규 <b style="color: var(--gray-700); font-family: 'IBM Plex Mono', monospace;">${newFiles.length}</b>개 · 중복 <b style="color: var(--gray-500); font-family: 'IBM Plex Mono', monospace;">${dupCount}</b>개 건너뜀</span>`
+            : `<span>총 <b style="color: var(--gray-700); font-family: 'IBM Plex Mono', monospace;">${newFiles.length}</b>개 파일</span>`;
+          const dupNotice = dupCount > 0
+            ? `<div class="upload-existing-banner" style="margin-top: 10px;">
+                 <i data-lucide="alert-triangle"></i>
+                 <span><b>${dupCount}개</b>는 기존과 동일한 경로·파일명이라 분석에서 건너뜁니다. <b>내용이 변경된 파일</b>이라면 경로 또는 파일명을 바꿔서 다시 추가하세요.</span>
+               </div>`
+            : '';
+          return `
+            ${existingBannerHtml()}
+            <div class="upload-zone-mini" id="upload-zone-mini">
+              <span class="upload-zone-mini-text">
+                <i data-lucide="plus" style="width: 12px; height: 12px; vertical-align: -2px; margin-right: 4px;"></i>
+                폴더를 추가로 끌어다 놓으세요
+              </span>
+              <span class="upload-zone-buttons">
+                <button type="button" class="btn btn-secondary btn-sm" data-pick="folder">폴더 추가</button>
+              </span>
+            </div>
+            <div class="upload-list">
+              ${state.files.map(rowHtml).join('')}
+            </div>
+            <div style="margin-top: 10px; font-size: 12px; color: var(--gray-500); display: flex; justify-content: space-between;">
+              ${summary}
+              <span class="mono">${fmtSize(totalBytes)}</span>
+            </div>
+            ${dupNotice}
+            ${existingSectionHtml()}`;
+        }
+
+        function bodyUploadingHtml() {
+          const newFiles = state.files.filter(f => !f.isDuplicate);
+          const done = newFiles.filter(f => f.status === 'success').length;
+          const total = newFiles.length;
+          const overall = computeOverall();
+          return `
+            <div class="upload-overall">
+              <div class="upload-overall-label">
+                <span>전체 진행 — <b>${done}</b> / <b>${total}</b> 완료</span>
+                <b>${(overall * 100).toFixed(0)}%</b>
+              </div>
+              <div class="upload-overall-bar">
+                <div class="upload-overall-fill" id="overall-fill" style="width: ${(overall * 100).toFixed(1)}%;"></div>
+              </div>
+            </div>
+            <div class="upload-list">
+              ${state.files.map(rowHtml).join('')}
+            </div>`;
+        }
+
+        function bodyDoneHtml() {
+          const success = state.files.filter(f => f.status === 'success').length;
+          const failed = state.files.filter(f => f.status === 'failed').length;
+          const banner = failed > 0
+            ? `<div class="upload-summary-banner">
+                 <i data-lucide="alert-circle"></i>
+                 <span><b>${failed}</b>개 파일이 실패했습니다. 재시도하거나 ITB 화면에서 다시 업로드할 수 있습니다.</span>
+               </div>`
+            : `<div class="upload-summary-banner is-success">
+                 <i data-lucide="check-circle-2"></i>
+                 <span>${success}개 파일이 모두 업로드되었습니다.</span>
+               </div>`;
+          return `
+            <div class="upload-list">
+              ${state.files.map(rowHtml).join('')}
+            </div>
+            ${banner}`;
+        }
+
+        function footerHtml() {
+          if (state.readOnly) {
+            return `<div class="modal-footer-left"></div>
+                    <div class="modal-footer-right">
+                      <button type="button" class="btn btn-primary" data-action="cancel">닫기</button>
+                    </div>`;
+          }
+          if (state.phase === 'idle') {
+            return `<div class="modal-footer-left"></div>
+                    <div class="modal-footer-right">
+                      <button type="button" class="btn btn-secondary" data-action="cancel">취소</button>
+                    </div>`;
+          }
+          if (state.phase === 'staged') {
+            const newCount = state.files.filter(f => !f.isDuplicate).length;
+            const startCls = newCount === 0 ? 'btn btn-primary is-disabled' : 'btn btn-primary';
+            return `<div class="modal-footer-left"></div>
+                    <div class="modal-footer-right">
+                      <button type="button" class="btn btn-secondary" data-action="cancel">취소</button>
+                      <button type="button" class="${startCls}" data-action="start">업로드 시작${newCount > 0 ? ` (${newCount})` : ''}</button>
+                    </div>`;
+          }
+          if (state.phase === 'uploading') {
+            return `<div class="modal-footer-left">업로드가 끝날 때까지 창을 닫지 마세요</div>
+                    <div class="modal-footer-right">
+                      <button type="button" class="btn btn-secondary" data-action="cancel-all">모두 취소</button>
+                    </div>`;
+          }
+          // done | partial-fail
+          const hasFailed = state.files.some(f => f.status === 'failed');
+          return `<div class="modal-footer-left"></div>
+                  <div class="modal-footer-right">
+                    ${hasFailed ? `<button type="button" class="btn btn-secondary" data-action="retry-all">실패 항목 재시도</button>` : ''}
+                    <button type="button" class="btn btn-primary" data-action="done">완료</button>
+                  </div>`;
+        }
+
+        function render() {
+          // Header close button: 업로드 중에는 비활성, 그 외 x
+          closeBtn.innerHTML = '<i data-lucide="x"></i>';
+          if (state.phase === 'uploading') {
+            closeBtn.disabled = true;
+            closeBtn.setAttribute('aria-label', '업로드 중에는 닫을 수 없습니다');
+            closeBtn.title = '업로드 중에는 닫을 수 없습니다';
+            closeBtn.style.opacity = '0.4';
+            closeBtn.style.pointerEvents = 'none';
+          } else {
+            closeBtn.disabled = false;
+            closeBtn.setAttribute('aria-label', '닫기');
+            closeBtn.title = '닫기';
+            closeBtn.style.opacity = '';
+            closeBtn.style.pointerEvents = '';
+          }
+          // Title
+          const p = PROJECTS[state.projectIdx];
+          const baseTitle = `ITB 업로드`;
+          if (state.phase === 'idle') titleEl.textContent = `${baseTitle} — ${p.name}`;
+          else titleEl.textContent = `${baseTitle} — ${p.name}`;
+          // Body
+          if (state.phase === 'idle') bodyEl.innerHTML = bodyIdleHtml();
+          else if (state.phase === 'staged') bodyEl.innerHTML = bodyStagedHtml();
+          else if (state.phase === 'uploading') bodyEl.innerHTML = bodyUploadingHtml();
+          else bodyEl.innerHTML = bodyDoneHtml();
+          // Footer
+          footerEl.innerHTML = footerHtml();
+          if (window.lucide) window.lucide.createIcons();
+        }
+
+        function renderRowsOnly() {
+          if (state.phase !== 'uploading' && state.phase !== 'partial-fail' && state.phase !== 'done') return;
+          const list = bodyEl.querySelector('.upload-list');
+          if (list) {
+            list.innerHTML = state.files.map(rowHtml).join('');
+            if (window.lucide) window.lucide.createIcons();
+          }
+          updateOverall();
+        }
+
+        function renderProgressOnly(id) {
+          const item = state.files.find(f => f.id === id);
+          if (!item) return;
+          const fill = bodyEl.querySelector(`[data-progress-id="${id}"]`);
+          if (fill) {
+            fill.style.width = (item.progress * 100).toFixed(1) + '%';
+          }
+          updateOverall();
+        }
+
+        function computeOverall() {
+          // 바이트 기반 전체 진행률 — 파일 크기 가중치 적용 (중복 파일은 제외)
+          const newFiles = state.files.filter(f => !f.isDuplicate);
+          const totalBytes = newFiles.reduce((s, f) => s + f.size, 0);
+          if (totalBytes === 0) return 0;
+          const loadedBytes = newFiles.reduce((s, f) => {
+            if (f.status === 'success') return s + f.size;
+            if (f.status === 'uploading') return s + f.size * f.progress;
+            return s;
+          }, 0);
+          return loadedBytes / totalBytes;
+        }
+
+        function updateOverall() {
+          if (state.files.length === 0) return;
+          const overall = computeOverall();
+          const newFiles = state.files.filter(f => !f.isDuplicate);
+          const done = newFiles.filter(f => f.status === 'success').length;
+          const total = newFiles.length;
+
+          const overallFill = document.getElementById('overall-fill');
+          if (overallFill) overallFill.style.width = (overall * 100).toFixed(1) + '%';
+          // overall label
+          const lbl = bodyEl.querySelector('.upload-overall-label');
+          if (lbl) {
+            lbl.innerHTML = `<span>전체 진행 — <b>${done}</b> / <b>${total}</b> 완료</span><b>${(overall * 100).toFixed(0)}%</b>`;
+          }
+        }
+
+        // ─── Event wiring ───
+        // Drag & drop on body
+        bodyEl.addEventListener('dragover', (e) => {
+          e.preventDefault();
+          const zone = e.target.closest('.upload-zone, .upload-zone-mini');
+          if (zone) zone.classList.add('is-drag');
+        });
+        bodyEl.addEventListener('dragleave', (e) => {
+          const zone = e.target.closest('.upload-zone, .upload-zone-mini');
+          if (zone) zone.classList.remove('is-drag');
+        });
+        bodyEl.addEventListener('drop', async (e) => {
+          e.preventDefault();
+          const zone = e.target.closest('.upload-zone, .upload-zone-mini');
+          if (zone) zone.classList.remove('is-drag');
+          if (state.readOnly) return;
+          if (state.phase !== 'idle' && state.phase !== 'staged') return;
+          const files = await enumerateDataTransfer(e.dataTransfer);
+          addFiles(files);
+        });
+
+        // Body click delegation (file pickers, row actions, existing section toggle)
+        bodyEl.addEventListener('click', (e) => {
+          const pick = e.target.closest('[data-pick]');
+          if (pick) {
+            if (pick.dataset.pick === 'folder') inputFolder.click();
+            return;
+          }
+          const removeBtn = e.target.closest('[data-remove-id]');
+          if (removeBtn) {
+            removeFile(Number(removeBtn.dataset.removeId));
+            return;
+          }
+          const retryBtn = e.target.closest('[data-retry-id]');
+          if (retryBtn) {
+            retryOne(Number(retryBtn.dataset.retryId));
+            return;
+          }
+          const toggleBtn = e.target.closest('[data-toggle-existing]');
+          if (toggleBtn) {
+            state.showExisting = !state.showExisting;
+            const ex = document.getElementById('upload-existing');
+            if (ex) ex.classList.toggle('is-open', state.showExisting);
+            return;
+          }
+        });
+
+        // Footer click delegation
+        footerEl.addEventListener('click', (e) => {
+          const btn = e.target.closest('[data-action]');
+          if (!btn) return;
+          const action = btn.dataset.action;
+          if (action === 'cancel') close();
+          else if (action === 'start') startUpload();
+          else if (action === 'cancel-all') {
+            if (confirm('진행 중인 업로드를 모두 취소하시겠습니까?')) cancelAll();
+          }
+          else if (action === 'retry-all') retryAllFailed();
+          else if (action === 'done') close();
+        });
+
+        // Folder input change
+        inputFolder.addEventListener('change', () => {
+          if (inputFolder.files.length) {
+            const arr = Array.from(inputFolder.files).map(f => { f.__relativePath = f.webkitRelativePath || f.name; return f; });
+            addFiles(arr);
+            inputFolder.value = '';
+          }
+        });
+
+        // Close button — 업로드 중에는 무시
+        closeBtn.addEventListener('click', () => {
+          if (isClosable()) close();
+        });
+
+        // Backdrop click & ESC — 업로드 중에는 무시
+        modal.addEventListener('click', (e) => {
+          if (e.target === modal && isClosable()) close();
+        });
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && modal.classList.contains('is-open') && isClosable()) {
+            close();
+          }
+        });
+
+        return { open };
+      })();
+
+      // 외부에서 호출할 수 있도록 노출
+      function openUploadModal(idx) {
+        upload.open(idx);
+      }
+      // 프로젝트 목록 재렌더 hook (업로드 완료 후 docs 카운트 갱신용)
+      window.__renderProjList = render;
+
+      render();
+    })();
+
+    lucide.createIcons();
+  </script>
+
+</body>
+
+</html>
