@@ -3,23 +3,7 @@
 import Link from "next/link";
 import { useSelectedLayoutSegment } from "next/navigation";
 import { cn } from "@/lib/utils";
-
-type Tab = {
-  id: string;
-  label: string;
-  segment: string | null;
-};
-
-const TABS: Tab[] = [
-  { id: "dashboard", label: "Dashboard", segment: null },
-  { id: "itb", label: "ITB", segment: "itb" },
-  { id: "irs", label: "IRS", segment: "irs" },
-  { id: "dc", label: "Design Criteria", segment: "dc" },
-  { id: "mps", label: "MPS", segment: "mps" },
-  { id: "pnid", label: "P&ID", segment: "pnid" },
-  { id: "compare", label: "문서비교", segment: "compare" },
-  { id: "itb-history", label: "ITB 이력", segment: "itb-history" },
-];
+import { PROJECT_TABS } from "../data/project-tabs";
 
 type ProjectTabBarProps = {
   projectId: string;
@@ -31,7 +15,7 @@ export const ProjectTabBar = ({ projectId }: ProjectTabBarProps) => {
 
   return (
     <nav className="flex h-11 shrink-0 items-stretch border-b border-[var(--gray-200)] bg-card px-8">
-      {TABS.map((tab, i) => {
+      {PROJECT_TABS.map((tab, i) => {
         const isActive = activeSegment === tab.segment;
         const href = tab.segment ? `${base}/${tab.segment}` : base;
         return (

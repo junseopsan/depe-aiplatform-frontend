@@ -6,3 +6,9 @@ export type Project = {
   endDate: string
   client: string
 }
+
+export type ProjectTab = {
+  id: string
+  label: string
+  segment: string | null
+}
