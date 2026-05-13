@@ -1,16 +1,10 @@
 "use client"
 
-import { useCallback, useMemo, useRef, useState } from "react"
-import { ChevronDown, FileUp, Folder, Trash2, Upload } from "lucide-react"
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"
+import { AlertCircle, FileUp, Folder, Trash2, Upload } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/UiButton"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/UiDropdownMenu"
 
 import { FileTreeView } from "./FileTreeView"
 import { buildFileTree } from "./buildFileTree"
@@ -22,7 +16,9 @@ type UiFileUploadProps = {
   onChange: (files: UploadedFile[]) => void
   /** 콤마로 구분된 허용 확장자 (예: ".pdf,.docx") */
   accept?: string
-  /** 빈 상태 안내 문구 */
+  /** 업로드 모드. `"folder"`면 폴더만 받음 (파일 버튼·파일 드롭 차단) */
+  mode?: "any" | "folder"
+  /** 빈 상태 안내 문구. 미지정 시 mode에 맞춰 기본값 사용 */
   placeholder?: string
   className?: string
 }
@@ -31,12 +27,24 @@ export const UiFileUpload = ({
   value,
   onChange,
   accept = ".pdf,.docx",
-  placeholder = "파일 또는 폴더를 업로드하세요",
+  mode = "any",
+  placeholder,
   className,
 }: UiFileUploadProps) => {
+  const folderOnly = mode === "folder"
+  const resolvedPlaceholder =
+    placeholder ??
+    (folderOnly ? "폴더를 업로드하세요" : "파일 또는 폴더를 업로드하세요")
   const fileInputRef = useRef<HTMLInputElement>(null)
   const folderInputRef = useRef<HTMLInputElement>(null)
   const [isDragOver, setIsDragOver] = useState(false)
+  const [rejectMessage, setRejectMessage] = useState<string | null>(null)
+
+  useEffect(() => {
+    if (!rejectMessage) return
+    const timer = setTimeout(() => setRejectMessage(null), 3500)
+    return () => clearTimeout(timer)
+  }, [rejectMessage])
 
   const tree = useMemo(() => buildFileTree(value), [value])
   const acceptedExts = useMemo(
@@ -117,11 +125,37 @@ export const UiFileUpload = ({
     // (e.dataTransfer.files만으로는 폴더 진입이 안 됨)
     const items = e.dataTransfer.items
     if (items && items.length > 0 && typeof items[0].webkitGetAsEntry === "function") {
-      const entries = await readDroppedItems(items)
+      // folderOnly에서 파일 드롭이 섞여 있는지 미리 체크해 피드백 표시
+      if (folderOnly) {
+        const hasFile = Array.from(items).some((item) => {
+          const entry = item.webkitGetAsEntry?.()
+          return entry ? !entry.isDirectory : false
+        })
+        const hasFolder = Array.from(items).some((item) => {
+          const entry = item.webkitGetAsEntry?.()
+          return entry ? entry.isDirectory : false
+        })
+        if (hasFile) {
+          setRejectMessage(
+            hasFolder
+              ? "파일은 받지 않습니다 — 폴더만 추가됩니다"
+              : "파일은 받지 않습니다 — 폴더를 드롭해 주세요",
+          )
+        }
+      }
+
+      const entries = await readDroppedItems(items, { folderOnly })
       addEntries(entries)
       return
     }
 
+    // webkitGetAsEntry 미지원 환경에서 folderOnly면 파일 드롭은 무시 + 피드백
+    if (folderOnly) {
+      if (e.dataTransfer.files.length > 0) {
+        setRejectMessage("파일은 받지 않습니다 — 폴더를 드롭해 주세요")
+      }
+      return
+    }
     if (e.dataTransfer.files.length > 0) addFiles(e.dataTransfer.files)
   }
 
@@ -159,17 +193,22 @@ export const UiFileUpload = ({
           onDrop={onDrop}
           className={cn(
             "flex flex-col items-center justify-center gap-3 rounded border-[1.5px] border-dashed px-6 py-10 text-center transition-colors",
-            isDragOver
-              ? "border-[var(--primary-500)] bg-[var(--primary-50)] text-[var(--primary-700)]"
-              : "border-[var(--gray-300)] text-[var(--gray-500)] hover:border-[var(--primary-500)] hover:bg-[var(--primary-50)] hover:text-[var(--primary-700)]",
+            rejectMessage
+              ? "border-[var(--error)] bg-[var(--error-bg)] text-[var(--error)]"
+              : isDragOver
+                ? "border-[var(--primary-500)] bg-[var(--primary-50)] text-[var(--primary-700)]"
+                : "border-[var(--gray-300)] text-[var(--gray-500)] hover:border-[var(--primary-500)] hover:bg-[var(--primary-50)] hover:text-[var(--primary-700)]",
           )}
         >
-          <Upload size={20} />
-          <p className="text-[13px]">{placeholder}</p>
+          {rejectMessage ? <AlertCircle size={20} /> : <Upload size={20} />}
+          <p className="text-[13px]">{rejectMessage ?? resolvedPlaceholder}</p>
           <p className="text-[12px] text-[var(--gray-400)]">
-            허용 형식: {acceptedExts.join(", ") || "모든 파일"}
+            {folderOnly
+              ? "허용: 폴더"
+              : `허용 형식: ${acceptedExts.join(", ") || "모든 파일"}`}
           </p>
-          <UploadDropdown
+          <UploadActions
+            folderOnly={folderOnly}
             onPickFiles={openFilePicker}
             onPickFolder={openFolderPicker}
           />
@@ -181,7 +220,8 @@ export const UiFileUpload = ({
               업로드된 파일 {totalCount}개
             </span>
             <div className="flex items-center gap-2">
-              <UploadDropdown
+              <UploadActions
+                folderOnly={folderOnly}
                 onPickFiles={openFilePicker}
                 onPickFolder={openFolderPicker}
                 size="sm"
@@ -197,6 +237,12 @@ export const UiFileUpload = ({
               </Button>
             </div>
           </div>
+          {rejectMessage && (
+            <div className="flex items-center gap-2 border-b border-[var(--error-border)] bg-[var(--error-bg)] px-3 py-2 text-[12px] text-[var(--error)]">
+              <AlertCircle size={14} className="shrink-0" />
+              <span>{rejectMessage}</span>
+            </div>
+          )}
           <div
             onDragOver={(e) => {
               e.preventDefault()
@@ -217,34 +263,27 @@ export const UiFileUpload = ({
   )
 }
 
-const UploadDropdown = ({
+const UploadActions = ({
+  folderOnly,
   onPickFiles,
   onPickFolder,
   size = "default",
 }: {
+  folderOnly: boolean
   onPickFiles: () => void
   onPickFolder: () => void
   size?: "default" | "sm"
 }) => (
-  <DropdownMenu>
-    <DropdownMenuTrigger
-      render={
-        <Button type="button" size={size}>
-          <Upload />
-          업로드
-          <ChevronDown />
-        </Button>
-      }
-    />
-    <DropdownMenuContent align="end">
-      <DropdownMenuItem onClick={onPickFiles}>
+  <div className="flex items-center gap-2">
+    {!folderOnly && (
+      <Button type="button" variant="outline" size={size} onClick={onPickFiles}>
         <FileUp />
-        파일 선택
-      </DropdownMenuItem>
-      <DropdownMenuItem onClick={onPickFolder}>
-        <Folder />
-        폴더 선택
-      </DropdownMenuItem>
-    </DropdownMenuContent>
-  </DropdownMenu>
+        파일 업로드
+      </Button>
+    )}
+    <Button type="button" variant="outline" size={size} onClick={onPickFolder}>
+      <Folder />
+      폴더 업로드
+    </Button>
+  </div>
 )

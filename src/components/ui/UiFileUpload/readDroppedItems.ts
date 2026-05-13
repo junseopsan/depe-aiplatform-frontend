@@ -19,21 +19,30 @@ type FsDirectoryReader = {
 
 type DroppedEntry = { file: File; relativePath: string }
 
+type ReadDroppedItemsOptions = {
+  /** true면 최상위 항목 중 폴더가 아닌 것은 무시한다 */
+  folderOnly?: boolean
+}
+
 /**
  * DataTransferItemList에서 파일과 폴더(디렉토리 구조 보존)를 모두 수집한다.
  * 폴더는 `webkitGetAsEntry()` 기반 재귀 순회로 처리한다.
  */
 export const readDroppedItems = async (
   items: DataTransferItemList,
+  options?: ReadDroppedItemsOptions,
 ): Promise<DroppedEntry[]> => {
   const result: DroppedEntry[] = []
   const promises: Promise<void>[] = []
+  const folderOnly = options?.folderOnly === true
 
   for (const item of Array.from(items)) {
     const entry = item.webkitGetAsEntry?.() as FsEntry | null
     if (entry) {
+      if (folderOnly && !entry.isDirectory) continue
       promises.push(traverseEntry(entry, "", result))
     } else {
+      if (folderOnly) continue
       const file = item.getAsFile()
       if (file) result.push({ file, relativePath: file.name })
     }

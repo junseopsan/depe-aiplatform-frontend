@@ -9,7 +9,8 @@
 | `value` | `UploadedFile[]` | — | 현재 업로드된 파일 목록 (controlled) |
 | `onChange` | `(files: UploadedFile[]) => void` | — | 파일 변경 콜백 |
 | `accept` | `string` | `".pdf,.docx"` | 허용 확장자 (콤마 구분) |
-| `placeholder` | `string` | `"파일 또는 폴더를 업로드하세요"` | 빈 상태 안내 문구 |
+| `mode` | `"any" \| "folder"` | `"any"` | `"folder"`면 폴더만 받음. 파일 버튼·파일 드롭 모두 차단됨 |
+| `placeholder` | `string` | mode에 따라 자동 | 빈 상태 안내 문구. 미지정 시 mode에 맞춰 기본값 |
 | `className` | `string` | — | 루트 요소 추가 클래스 |
 
 ## 타입
@@ -29,6 +30,7 @@ type UploadedFile = {
 import { useState } from "react"
 import { UiFileUpload, type UploadedFile } from "@/components/ui/UiFileUpload"
 
+// 파일 + 폴더 모두 허용 (기본)
 export const Example = () => {
   const [files, setFiles] = useState<UploadedFile[]>([])
   return (
@@ -39,11 +41,24 @@ export const Example = () => {
     />
   )
 }
+
+// 폴더 전용 모드
+export const FolderOnlyExample = () => {
+  const [files, setFiles] = useState<UploadedFile[]>([])
+  return (
+    <UiFileUpload
+      value={files}
+      onChange={setFiles}
+      accept=".pdf,.docx"
+      mode="folder"
+    />
+  )
+}
 ```
 
 ## 기능
 
-- **단일 업로드 버튼 + 드롭다운**: "파일 선택" / "폴더 선택" 두 모드를 한 버튼에서 분기 (`UiDropdownMenu` 사용)
+- **두 업로드 버튼**: "파일 업로드" / "폴더 업로드"를 별도 버튼으로 분리
 - **파일 업로드**: 다중 선택, `accept` 확장자 필터
 - **폴더 업로드**: `webkitdirectory`로 디렉토리 통째로 업로드, `webkitRelativePath`를 보존해 트리 구조 유지
 - **트리 뷰 (`FileTreeView`)**: 폴더 접기/펼치기, 폴더당 파일 개수, 파일별 크기 표시
@@ -51,6 +66,8 @@ export const Example = () => {
 - **전체 삭제**: 헤더의 "전체 삭제" 버튼
 - **드래그 앤 드롭**: 빈 상태/채워진 상태 모두에서 파일/폴더 드롭 지원 (`webkitGetAsEntry()` 기반 재귀 순회로 폴더 구조 보존)
 - **확장자 필터**: 허용 외 확장자는 자동 무시
+- **폴더 전용 모드 (`mode="folder"`)**: 파일 업로드 버튼 숨김, 파일 드롭은 무시 (드롭된 최상위 항목 중 폴더만 처리)
+- **드롭 거부 피드백**: 폴더 전용 모드에서 파일을 드롭하면 인라인 에러 메시지 + 빨간색 강조. 3.5초 후 자동 사라짐
 
 ## 브라우저 호환성
 
@@ -59,5 +76,4 @@ export const Example = () => {
 
 ## 의존성
 
-- `@base-ui/react/menu` (via `UiDropdownMenu`)
 - `lucide-react` — 아이콘
