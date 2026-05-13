@@ -24,7 +24,7 @@ export const LegendAnchor = ({ label, blocked = false }: LegendAnchorProps) => {
         )}
         strokeWidth={2}
       />
-      <span className="anchor-text">{label}</span>
+      <span>{label}</span>
     </span>
   );
 };
