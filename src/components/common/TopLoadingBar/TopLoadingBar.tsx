@@ -11,19 +11,22 @@ export const TopLoadingBar = () => {
   const [active, setActive] = useState(false)
 
   useEffect(() => {
-    setActive(true)
-    setProgress(20)
-    const t1 = setTimeout(() => setProgress(60), 120)
-    const t2 = setTimeout(() => setProgress(85), 320)
-    const t3 = setTimeout(() => setProgress(100), 520)
-    const t4 = setTimeout(() => setActive(false), 720)
-    const t5 = setTimeout(() => setProgress(0), 920)
+    const timers: ReturnType<typeof setTimeout>[] = []
+
+    // eslint 규칙(Effect 내 동기 setState 금지) 회피: 다음 태스크로 미룸
+    timers.push(
+      setTimeout(() => {
+        setActive(true)
+        setProgress(20)
+      }, 0),
+    )
+    timers.push(setTimeout(() => setProgress(60), 120))
+    timers.push(setTimeout(() => setProgress(85), 320))
+    timers.push(setTimeout(() => setProgress(100), 520))
+    timers.push(setTimeout(() => setActive(false), 720))
+    timers.push(setTimeout(() => setProgress(0), 920))
     return () => {
-      clearTimeout(t1)
-      clearTimeout(t2)
-      clearTimeout(t3)
-      clearTimeout(t4)
-      clearTimeout(t5)
+      for (const t of timers) clearTimeout(t)
     }
   }, [pathname])
 

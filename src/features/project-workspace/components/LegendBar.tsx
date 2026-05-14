@@ -1,10 +1,10 @@
 /* Copyright © Amazon.com and Affiliates: This deliverable is considered Developed Content as defined in the AWS Service Terms and the SOW between the parties dated 2026-04-20. */
-import type { ReactNode } from 'react'
+import type { ReactNode } from "react";
 
 type LegendBarProps = {
-  left?: ReactNode
-  right?: ReactNode
-}
+  left?: ReactNode;
+  right?: ReactNode;
+};
 
 export const LegendBar = ({ left, right }: LegendBarProps) => {
   return (
@@ -12,5 +12,5 @@ export const LegendBar = ({ left, right }: LegendBarProps) => {
       <div className="flex flex-wrap items-center gap-4">{left}</div>
       <div className="flex items-center gap-2">{right}</div>
     </div>
-  )
-}
+  );
+};
