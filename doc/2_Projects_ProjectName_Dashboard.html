@@ -195,28 +195,44 @@
 
     .notif-bell .badge {
       position: absolute;
-      top: -4px; right: -4px;
-      min-width: 18px; height: 18px;
+      top: -4px;
+      right: -4px;
+      min-width: 18px;
+      height: 18px;
       padding: 0 5px;
       border-radius: 9px;
       background: var(--primary-500);
       color: #fff;
       font-family: 'IBM Plex Mono', monospace;
-      font-size: 10px; font-weight: 500;
-      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 10px;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       border: 2px solid #fff;
       line-height: 1;
     }
+
     .notif-bell .badge.pulse::after {
-      content: ''; position: absolute; inset: -2px;
+      content: '';
+      position: absolute;
+      inset: -2px;
       border-radius: 50%;
       background: var(--primary-500);
       opacity: 0.3;
       animation: notif-pulse 2s infinite;
     }
+
     @keyframes notif-pulse {
-      0% { transform: scale(1); opacity: 0.4; }
-      100% { transform: scale(1.6); opacity: 0; }
+      0% {
+        transform: scale(1);
+        opacity: 0.4;
+      }
+
+      100% {
+        transform: scale(1.6);
+        opacity: 0;
+      }
     }
 
     .btn {
@@ -766,7 +782,7 @@
   </div>
 
   <nav class="subtab-bar">
-    <a href="index.html#/dashboard" class="subtab active" style="display: none;">Dashboard</a>
+    <a href="index.html#/dashboard" class="subtab active">Dashboard</a>
     <a href="index.html#/itb" class="subtab">독소조항</a>
     <a href="index.html#/irs" class="subtab">IRS</a>
     <a href="index.html#/design-criteria" class="subtab">Design Criteria</a>
@@ -1110,8 +1126,7 @@
             <div class="cell-source-line">—</div>
             <div class="cell-status-line">Rev A 발행 <span class="sep">·</span> 05.03</div>
           </a>
-          <a class="m-cell status-ai-failed"
-            href="index.html#/irs?state=ai-failed&amp;failReason=quota">
+          <a class="m-cell status-ai-failed" href="index.html#/irs?state=ai-failed&amp;failReason=quota">
             <div class="cell-doc-title">IRS</div>
             <div class="cell-source-line">ITB Rev B 기반</div>
             <div class="cell-status-line">AI 생성 실패 (할당량 초과)</div>
@@ -1150,8 +1165,7 @@
             <div class="cell-source-line">ITB Rev B 기반</div>
             <div class="cell-status-line">Rev A 발행 <span class="sep">·</span> 05.03</div>
           </a>
-          <a class="m-cell status-ai-failed"
-            href="index.html#/design-criteria?state=ai-failed&amp;failReason=policy">
+          <a class="m-cell status-ai-failed" href="index.html#/design-criteria?state=ai-failed&amp;failReason=policy">
             <div class="cell-doc-title">Design Criteria</div>
             <div class="cell-source-line">ITB Rev B 기반</div>
             <div class="cell-status-line">AI 생성 실패 (정책 위반)</div>
@@ -1265,18 +1279,18 @@
     })();
   </script>
 
-<script>
-  // Role 기반 탭 가시성 — 모든 페이지 공통
-  (function () {
-    var role = localStorage.getItem('userRole') || 'member';
-    document.querySelectorAll('.hdr-tab[href*="templates"]').forEach(function (el) {
-      el.style.display = (role === 'admin') ? '' : 'none';
-    });
-    document.querySelectorAll('.hdr-tab[href*="/bot"]').forEach(function (el) {
-      el.style.display = (role === 'admin') ? 'none' : '';
-    });
-  })();
-</script>
+  <script>
+    // Role 기반 탭 가시성 — 모든 페이지 공통
+    (function () {
+      var role = localStorage.getItem('userRole') || 'member';
+      document.querySelectorAll('.hdr-tab[href*="templates"]').forEach(function (el) {
+        el.style.display = (role === 'admin') ? '' : 'none';
+      });
+      document.querySelectorAll('.hdr-tab[href*="/bot"]').forEach(function (el) {
+        el.style.display = (role === 'admin') ? 'none' : '';
+      });
+    })();
+  </script>
 </body>
 
 </html>

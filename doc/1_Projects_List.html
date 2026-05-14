@@ -691,7 +691,7 @@
     }
 
     .modal-title {
-      font-size: 18px;
+      font-size: 16px;
       font-weight: 600;
       color: var(--gray-800);
       margin: 0;
@@ -777,7 +777,7 @@
     }
 
     .upload-zone-title {
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 600;
       color: var(--gray-800);
       margin-bottom: 4px;
@@ -830,12 +830,18 @@
       border-radius: 4px;
     }
 
+    /* upload-list 바로 다음에 summary가 붙는 경우만 한 박스처럼 연결 */
+    .upload-list:has(+ .upload-stage-summary) {
+      border-radius: 4px 4px 0 0;
+      border-bottom: none;
+    }
+
     .upload-row {
       display: grid;
       grid-template-columns: 24px 1fr auto auto;
       align-items: center;
       gap: 10px;
-      padding: 10px 12px;
+      padding: 8px 12px;
       border-bottom: 1px solid var(--gray-100);
       font-size: 13px;
     }
@@ -891,6 +897,7 @@
     }
 
     .upload-row-filename {
+      font-size: 12px;
       font-weight: 500;
       color: var(--gray-800);
       white-space: nowrap;
@@ -957,35 +964,6 @@
       color: var(--primary-500);
     }
 
-    /* 실패 행의 [재시도] 버튼 — 텍스트 + 아이콘 */
-    .upload-row-retry-btn {
-      height: 26px;
-      padding: 0 10px;
-      border-radius: 4px;
-      border: 1px solid var(--gray-300);
-      background: #fff;
-      color: var(--gray-700);
-      font-size: 12px;
-      font-weight: 500;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      cursor: pointer;
-      white-space: nowrap;
-      transition: background .15s, border-color .15s, color .15s;
-    }
-
-    .upload-row-retry-btn:hover {
-      background: var(--primary-50);
-      border-color: var(--primary-500);
-      color: var(--primary-700);
-    }
-
-    .upload-row-retry-btn svg {
-      width: 12px;
-      height: 12px;
-    }
-
     .upload-row-action svg {
       width: 14px;
       height: 14px;
@@ -1019,12 +997,44 @@
       gap: 8px;
     }
 
+    .upload-existing-banner.is-warning {
+      background: var(--warning-bg);
+      border-color: transparent;
+      color: var(--warning);
+    }
+
     .upload-existing-banner svg {
       width: 14px;
       height: 14px;
       flex-shrink: 0;
       margin-top: 2px;
     }
+
+    /* staged 합계 라인 — upload-list 와 한 박스로 연결 */
+    .upload-stage-summary {
+      margin-top: 0;
+      padding: 8px 12px;
+      font-size: 11px;
+      color: var(--gray-500);
+      display: flex;
+      justify-content: space-between;
+      background: var(--gray-50);
+      border: 1px solid var(--gray-200);
+      border-radius: 0 0 4px 4px;
+    }
+
+    .upload-stage-summary b {
+      color: var(--gray-700);
+      font-family: 'IBM Plex Mono', monospace;
+      font-weight: 600;
+    }
+
+    .upload-stage-summary .dup {
+      color: var(--gray-500);
+      font-family: 'IBM Plex Mono', monospace;
+      font-weight: 600;
+    }
+
 
     /* 기존 ITB 문서 섹션 (펼침/접힘) */
     .upload-existing {
@@ -1069,47 +1079,90 @@
     }
 
     .upload-existing-list {
-      max-height: 200px;
+      max-height: 240px;
       overflow-y: auto;
       display: none;
+      padding: 6px 0;
     }
 
     .upload-existing.is-open .upload-existing-list {
       display: block;
     }
 
-    .upload-existing-row {
-      padding: 8px 14px;
-      border-bottom: 1px solid var(--gray-100);
-      font-size: 12px;
-      color: var(--gray-600);
+    /* 폴더 트리 */
+    .tree-row {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
+      padding: 4px 14px 4px calc(14px + var(--depth, 0) * 16px);
+      font-size: 12px;
+      color: var(--gray-700);
+      line-height: 1.5;
     }
 
-    .upload-existing-row:last-child {
-      border-bottom: none;
+    .tree-row.tree-folder {
+      cursor: pointer;
+      font-weight: 500;
+      user-select: none;
     }
 
-    .upload-existing-row svg {
+    .tree-row.tree-folder:hover {
+      background: var(--gray-50);
+    }
+
+    .tree-row.tree-file {
+      color: var(--gray-600);
+    }
+
+    .tree-chev {
       width: 12px;
       height: 12px;
-      color: var(--gray-400);
+      color: var(--gray-500);
+      flex-shrink: 0;
+      transition: transform .12s;
+    }
+
+    .tree-row.tree-folder.is-collapsed .tree-chev {
+      transform: rotate(-90deg);
+    }
+
+    .tree-chev-spacer {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
       flex-shrink: 0;
     }
 
-    .upload-existing-row-name {
+    .tree-icon {
+      width: 14px;
+      height: 14px;
+      flex-shrink: 0;
+      color: var(--gray-400);
+    }
+
+    .tree-folder .tree-icon {
+      color: var(--primary-500);
+    }
+
+    .tree-name {
       flex: 1;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
 
-    .upload-existing-row-date {
+    .tree-count {
       font-family: 'IBM Plex Mono', monospace;
       color: var(--gray-400);
       font-size: 11px;
+      flex-shrink: 0;
+    }
+
+    .tree-date {
+      font-family: 'IBM Plex Mono', monospace;
+      color: var(--gray-400);
+      font-size: 11px;
+      flex-shrink: 0;
     }
 
     /* Overall progress */
@@ -1148,8 +1201,8 @@
       margin-top: 12px;
       padding: 10px 12px;
       border-radius: 4px;
-      background: var(--warning-bg);
-      color: var(--warning);
+      background: var(--error-bg);
+      color: var(--error);
       font-size: 12px;
       display: flex;
       align-items: flex-start;
@@ -1581,6 +1634,7 @@
           existingPaths: null, // Set<relativePath> — 중복 매칭용
           showExisting: false, // 기존 문서 섹션 펼침 여부
           readOnly: false,     // 완료 프로젝트 — 신규 업로드 불가, 조회만
+          collapsedFolders: new Set(), // 트리에서 접힌 폴더 path
         };
 
         function fmtSize(bytes) {
@@ -1596,6 +1650,7 @@
           state.files = [];
           state.activeCount = 0;
           state.showExisting = false;
+          state.collapsedFolders = new Set(); // 모든 폴더 펼침으로 시작
           // 완료·취소 프로젝트는 조회 전용 — 기존 문서 섹션을 기본으로 펼쳐서 보여줌
           const status = PROJECTS[projectIdx].status;
           state.readOnly = status === 'ended' || status === 'canceled';
@@ -1616,7 +1671,11 @@
         }
 
         function isClosable() {
-          return state.phase !== 'uploading';
+          // 업로드 진행 중에는 닫을 수 없음
+          if (state.phase === 'uploading') return false;
+          // 부분 실패 상태에서도 닫을 수 없음 — 사용자가 재시도하거나 [완료]로 명시 종료해야 함
+          if (state.phase === 'partial-fail') return false;
+          return true;
         }
 
         // File enumeration (drag/drop entry-aware)
@@ -1696,16 +1755,6 @@
           if (state.files.length === 0 && state.phase === 'staged') {
             state.phase = 'idle';
           }
-          render();
-        }
-
-        function removeFile(id) {
-          const idx = state.files.findIndex(f => f.id === id);
-          if (idx < 0) return;
-          const f = state.files[idx];
-          if (f.xhr) try { f.xhr.abort(); } catch {}
-          state.files.splice(idx, 1);
-          if (state.files.length === 0) state.phase = 'idle';
           render();
         }
 
@@ -1817,42 +1866,28 @@
 
         function finalizePhase() {
           const failed = state.files.filter(f => f.status === 'failed').length;
-          const success = state.files.filter(f => f.status === 'success').length;
+          const totalSuccess = state.files.filter(f => f.status === 'success').length;
           state.phase = failed > 0 ? 'partial-fail' : 'done';
-          // 성공한 파일을 캐시 + 프로젝트 카운트에 반영
-          if (success > 0 && PROJECTS[state.projectIdx]) {
-            const newEntries = state.files.filter(f => f.status === 'success').map(f => ({
-              relativePath: f.relativePath,
-              uploadedAt: new Date().toISOString().slice(0, 10),
-            }));
-            itbFilesCache[state.projectIdx] = [...(itbFilesCache[state.projectIdx] || []), ...newEntries];
-            // 모달 내부의 existing 목록도 갱신 (다음 drop의 중복 판정에 반영)
-            state.existingFiles = itbFilesCache[state.projectIdx];
-            state.existingPaths = new Set(state.existingFiles.map(f => f.relativePath));
-            PROJECTS[state.projectIdx].itbCount = (PROJECTS[state.projectIdx].itbCount || 0) + success;
-            if (typeof window.__renderProjList === 'function') window.__renderProjList();
+          // 캐시·카운트는 "이번 단계에서 새로 성공한" 것만 반영 (재시도 시 중복 push 방지)
+          if (PROJECTS[state.projectIdx]) {
+            const cached = new Set((itbFilesCache[state.projectIdx] || []).map(f => f.relativePath));
+            const justAdded = state.files.filter(f => f.status === 'success' && !cached.has(f.relativePath));
+            if (justAdded.length > 0) {
+              const newEntries = justAdded.map(f => ({
+                relativePath: f.relativePath,
+                uploadedAt: new Date().toISOString().slice(0, 10),
+              }));
+              itbFilesCache[state.projectIdx] = [...(itbFilesCache[state.projectIdx] || []), ...newEntries];
+              state.existingFiles = itbFilesCache[state.projectIdx];
+              state.existingPaths = new Set(state.existingFiles.map(f => f.relativePath));
+              PROJECTS[state.projectIdx].itbCount = (PROJECTS[state.projectIdx].itbCount || 0) + justAdded.length;
+              if (typeof window.__renderProjList === 'function') window.__renderProjList();
+            }
           }
           if (state.phase === 'done') {
-            showToast(`${success}개 파일이 업로드되었습니다`);
+            showToast(`${totalSuccess}개 파일이 업로드되었습니다`);
           }
           render();
-        }
-
-        function retryOne(id) {
-          const item = state.files.find(f => f.id === id);
-          if (!item || item.status !== 'failed') return;
-          item.status = 'pending';
-          item.error = null;
-          item.progress = 0;
-          // 워커가 모두 종료된 상태이므로 다시 startUpload 트리거
-          if (state.phase !== 'uploading') {
-            startUpload();
-          } else {
-            // 진행 중이면 worker 풀이 자연스럽게 집어감 (cursor가 이미 지나갔다면 새 워커가 필요 → 단순화: 직접 처리)
-            uploadOne(item).then(() => {
-              if (state.activeCount === 0) finalizePhase();
-            });
-          }
         }
 
         function retryAllFailed() {
@@ -1866,19 +1901,6 @@
           startUpload();
         }
 
-        function cancelAll() {
-          for (const f of state.files) {
-            if (f.xhr) try { f.xhr.abort(); } catch {}
-            if (f.status === 'uploading' || f.status === 'pending') {
-              f.status = 'pending';
-              f.progress = 0;
-              f.error = null;
-            }
-          }
-          state.phase = 'staged';
-          render();
-        }
-
         // ─── Render ───
         function statusIcon(s) {
           if (s === 'success') return 'check-circle-2';
@@ -1890,29 +1912,22 @@
 
         function rowHtml(f) {
           const cls = `is-${f.status}`;
-          // sizeCol — col 3 (사이즈/진행률/재시도/중복 라벨 자리)
+          // sizeCol — col 3 (사이즈/진행률/중복 라벨 자리)
           let sizeCol = '';
           if (f.status === 'uploading') {
             sizeCol = `<div class="upload-row-progress"><div class="upload-row-progress-fill" data-progress-id="${f.id}" style="width: ${(f.progress * 100).toFixed(1)}%;"></div></div>`;
-          } else if (f.status === 'failed') {
-            sizeCol = `<button type="button" class="upload-row-retry-btn" data-retry-id="${f.id}">
-                         <i data-lucide="rotate-cw"></i><span>재시도</span>
-                       </button>`;
           } else if (f.status === 'duplicate') {
             sizeCol = `<span class="upload-row-dup-label">중복 (건너뜀)</span>`;
           } else {
             sizeCol = `<span class="upload-row-size">${fmtSize(f.size)}</span>`;
           }
-          // actionBtn — col 4 (제거/없음)
+          // actionBtn — uploading만 placeholder, 그 외는 컬럼 없음
           let actionBtn = '';
           let noActionCol = false;
-          if (f.status === 'pending' || f.status === 'duplicate') {
-            actionBtn = `<button type="button" class="upload-row-action" data-remove-id="${f.id}" title="제거" aria-label="제거"><i data-lucide="x"></i></button>`;
-          } else if (f.status === 'uploading') {
+          if (f.status === 'uploading') {
             // 진행 중 — placeholder로 컬럼 폭 유지
             actionBtn = `<span style="display: inline-block; width: 24px; height: 24px;"></span>`;
           } else {
-            // success / failed — 컬럼 자체를 없앰
             noActionCol = true;
           }
           return `
@@ -1933,38 +1948,96 @@
             const statusLabel = p && p.status === 'canceled' ? '취소된' : '완료된';
             return `<div class="upload-existing-banner">
                       <i data-lucide="info"></i>
-                      <span>${statusLabel} 프로젝트입니다. 신규 업로드는 불가하며 기존 <b>${n}개</b> 문서만 확인할 수 있습니다.</span>
+                      <span>${statusLabel} 프로젝트입니다. 신규 업로드는 불가합니다.</span>
                     </div>`;
           }
           if (n === 0) {
             return `<div class="upload-existing-banner">
                       <i data-lucide="info"></i>
-                      <span>아직 업로드된 ITB 문서가 없습니다. ITB 문서가 담긴 폴더를 그대로 추가하세요.</span>
+                      <span>ITB 문서는 <b>최상위 폴더 단위로</b> 업로드합니다. 폴더 안의 모든 파일이 자동으로 추가됩니다.</span>
                     </div>`;
           }
           return `<div class="upload-existing-banner">
                     <i data-lucide="info"></i>
-                    <span>이미 <b>${n}개</b> 문서가 업로드되어 있습니다. 같은 경로 + 같은 파일명은 자동으로 건너뜁니다 — 폴더를 그대로 다시 올리셔도 됩니다. <b>내용이 변경된 파일</b>은 경로 또는 파일명을 바꿔서 올려주세요.</span>
+                    <span>이미 <b>${n}개</b> 문서가 업로드되어 있습니다. <b>최상위 폴더를 다시 올리면</b> 동일한 경로·파일명은 자동으로 건너뛰고 <b>새로 발견된 파일만 추가</b>됩니다. 수정된 파일은 <b>파일명을 바꿔서</b> 올려주세요.</span>
                   </div>`;
+        }
+
+        // 평탄한 파일 목록을 폴더 트리로 빌드
+        // 노드 형태: { name, children: Map<name, node>, files: [{ name, uploadedAt }] }
+        function buildTree(files) {
+          const root = { name: '', children: new Map(), files: [] };
+          for (const ef of files) {
+            const parts = ef.relativePath.split('/');
+            let node = root;
+            for (let i = 0; i < parts.length - 1; i++) {
+              const seg = parts[i];
+              if (!node.children.has(seg)) {
+                node.children.set(seg, { name: seg, children: new Map(), files: [] });
+              }
+              node = node.children.get(seg);
+            }
+            node.files.push({ name: parts[parts.length - 1], uploadedAt: ef.uploadedAt });
+          }
+          return root;
+        }
+
+        // 폴더 키 생성 (펼침/접힘 상태 보관용)
+        function nodePath(parts) { return parts.join('/'); }
+
+        function renderTreeNode(node, parentPath, depth) {
+          const collapsed = state.collapsedFolders;
+          let html = '';
+          // 폴더들 (이름순)
+          const folders = [...node.children.entries()].sort(([a], [b]) => a.localeCompare(b));
+          for (const [name, child] of folders) {
+            const path = parentPath ? `${parentPath}/${name}` : name;
+            const isCollapsed = collapsed.has(path);
+            const subCount = countNode(child);
+            html += `
+              <div class="tree-row tree-folder${isCollapsed ? ' is-collapsed' : ''}" data-tree-path="${escapeHtml(path)}" style="--depth: ${depth};">
+                <i data-lucide="chevron-down" class="tree-chev"></i>
+                <i data-lucide="${isCollapsed ? 'folder' : 'folder-open'}" class="tree-icon"></i>
+                <span class="tree-name">${escapeHtml(name)}</span>
+                <span class="tree-count">${subCount}</span>
+              </div>`;
+            if (!isCollapsed) {
+              html += renderTreeNode(child, path, depth + 1);
+            }
+          }
+          // 파일들 (이름순)
+          const files = [...node.files].sort((a, b) => a.name.localeCompare(b.name));
+          for (const f of files) {
+            html += `
+              <div class="tree-row tree-file" style="--depth: ${depth};">
+                <span class="tree-chev tree-chev-spacer"></span>
+                <i data-lucide="file" class="tree-icon"></i>
+                <span class="tree-name" title="${escapeHtml(f.name)}">${escapeHtml(f.name)}</span>
+                <span class="tree-date">${f.uploadedAt || ''}</span>
+              </div>`;
+          }
+          return html;
+        }
+
+        function countNode(node) {
+          let n = node.files.length;
+          for (const child of node.children.values()) n += countNode(child);
+          return n;
         }
 
         function existingSectionHtml() {
           const n = state.existingFiles.length;
           if (n === 0) return '';
           const openCls = state.showExisting ? ' is-open' : '';
-          const rows = state.existingFiles.map(ef => `
-            <div class="upload-existing-row">
-              <i data-lucide="file"></i>
-              <span class="upload-existing-row-name" title="${escapeHtml(ef.relativePath)}">${escapeHtml(ef.relativePath)}</span>
-              <span class="upload-existing-row-date">${ef.uploadedAt || ''}</span>
-            </div>`).join('');
+          const tree = buildTree(state.existingFiles);
+          const treeHtml = renderTreeNode(tree, '', 0);
           return `
             <div class="upload-existing${openCls}" id="upload-existing">
               <button type="button" class="upload-existing-toggle" data-toggle-existing>
                 <span>기존 문서 (${n})</span>
                 <i data-lucide="chevron-down"></i>
               </button>
-              <div class="upload-existing-list">${rows}</div>
+              <div class="upload-existing-list">${treeHtml}</div>
             </div>`;
         }
 
@@ -1992,21 +2065,37 @@
           const newFiles = state.files.filter(f => !f.isDuplicate);
           const dupCount = state.files.length - newFiles.length;
           const totalBytes = newFiles.reduce((s, f) => s + f.size, 0);
-          const summary = dupCount > 0
-            ? `<span>신규 <b style="color: var(--gray-700); font-family: 'IBM Plex Mono', monospace;">${newFiles.length}</b>개 · 중복 <b style="color: var(--gray-500); font-family: 'IBM Plex Mono', monospace;">${dupCount}</b>개 건너뜀</span>`
-            : `<span>총 <b style="color: var(--gray-700); font-family: 'IBM Plex Mono', monospace;">${newFiles.length}</b>개 파일</span>`;
-          const dupNotice = dupCount > 0
-            ? `<div class="upload-existing-banner" style="margin-top: 10px;">
-                 <i data-lucide="alert-triangle"></i>
-                 <span><b>${dupCount}개</b>는 기존과 동일한 경로·파일명이라 분석에서 건너뜁니다. <b>내용이 변경된 파일</b>이라면 경로 또는 파일명을 바꿔서 다시 추가하세요.</span>
-               </div>`
-            : '';
+          const allDup = newFiles.length === 0 && dupCount > 0;
+
+          // 합계 라인 — 신규가 있으면 신규 정보를, 모두 중복이면 생략
+          let summaryLine = '';
+          if (newFiles.length > 0) {
+            summaryLine = `
+              <div class="upload-stage-summary">
+                <span>신규 <b>${newFiles.length}</b>개 추가${dupCount > 0 ? ` · 중복 <span class="dup">${dupCount}</span>개 건너뜀` : ''}</span>
+                <span class="mono">${fmtSize(totalBytes)}</span>
+              </div>`;
+          }
+
+          // 중복 안내 — 강조 배너 (노란색)
+          let dupHint = '';
+          if (dupCount > 0) {
+            const text = allDup
+              ? `<b>${dupCount}개 모두</b> 동일 경로·파일명이라 분석에서 건너뜁니다. <b>수정된 파일이라면 파일명을 바꿔서</b> 다시 추가하세요.`
+              : `<b>${dupCount}개</b>는 동일 경로·파일명이라 분석에서 건너뜁니다. <b>수정된 파일이라면 파일명을 바꿔서</b> 다시 추가하세요.`;
+            dupHint = `
+              <div class="upload-existing-banner is-warning" style="margin-top: 10px;">
+                <i data-lucide="alert-triangle"></i>
+                <span>${text}</span>
+              </div>`;
+          }
+
           return `
             ${existingBannerHtml()}
             <div class="upload-zone-mini" id="upload-zone-mini">
               <span class="upload-zone-mini-text">
                 <i data-lucide="plus" style="width: 12px; height: 12px; vertical-align: -2px; margin-right: 4px;"></i>
-                폴더를 추가로 끌어다 놓으세요
+                최상위 폴더를 다시 올리려면 끌어다 놓으세요
               </span>
               <span class="upload-zone-buttons">
                 <button type="button" class="btn btn-secondary btn-sm" data-pick="folder">폴더 추가</button>
@@ -2015,11 +2104,8 @@
             <div class="upload-list">
               ${state.files.map(rowHtml).join('')}
             </div>
-            <div style="margin-top: 10px; font-size: 12px; color: var(--gray-500); display: flex; justify-content: space-between;">
-              ${summary}
-              <span class="mono">${fmtSize(totalBytes)}</span>
-            </div>
-            ${dupNotice}
+            ${summaryLine}
+            ${dupHint}
             ${existingSectionHtml()}`;
         }
 
@@ -2049,7 +2135,7 @@
           const banner = failed > 0
             ? `<div class="upload-summary-banner">
                  <i data-lucide="alert-circle"></i>
-                 <span><b>${failed}</b>개 파일이 실패했습니다. 재시도하거나 ITB 화면에서 다시 업로드할 수 있습니다.</span>
+                 <span><b>${failed}개</b> 파일이 실패했습니다. 재시도해주세요.</span>
                </div>`
             : `<div class="upload-summary-banner is-success">
                  <i data-lucide="check-circle-2"></i>
@@ -2086,15 +2172,18 @@
           }
           if (state.phase === 'uploading') {
             return `<div class="modal-footer-left">업로드가 끝날 때까지 창을 닫지 마세요</div>
+                    <div class="modal-footer-right"></div>`;
+          }
+          // partial-fail — 재시도 강제 (닫기·완료 불가)
+          if (state.phase === 'partial-fail') {
+            return `<div class="modal-footer-left">실패한 파일을 재시도해야 모달을 닫을 수 있습니다</div>
                     <div class="modal-footer-right">
-                      <button type="button" class="btn btn-secondary" data-action="cancel-all">모두 취소</button>
+                      <button type="button" class="btn btn-primary" data-action="retry-all">실패 항목 재시도</button>
                     </div>`;
           }
-          // done | partial-fail
-          const hasFailed = state.files.some(f => f.status === 'failed');
+          // done
           return `<div class="modal-footer-left"></div>
                   <div class="modal-footer-right">
-                    ${hasFailed ? `<button type="button" class="btn btn-secondary" data-action="retry-all">실패 항목 재시도</button>` : ''}
                     <button type="button" class="btn btn-primary" data-action="done">완료</button>
                   </div>`;
         }
@@ -2102,10 +2191,13 @@
         function render() {
           // Header close button: 업로드 중에는 비활성, 그 외 x
           closeBtn.innerHTML = '<i data-lucide="x"></i>';
-          if (state.phase === 'uploading') {
+          if (!isClosable()) {
+            const reason = state.phase === 'uploading'
+              ? '업로드 중에는 닫을 수 없습니다'
+              : '실패한 파일을 재시도해야 닫을 수 있습니다';
             closeBtn.disabled = true;
-            closeBtn.setAttribute('aria-label', '업로드 중에는 닫을 수 없습니다');
-            closeBtn.title = '업로드 중에는 닫을 수 없습니다';
+            closeBtn.setAttribute('aria-label', reason);
+            closeBtn.title = reason;
             closeBtn.style.opacity = '0.4';
             closeBtn.style.pointerEvents = 'none';
           } else {
@@ -2207,21 +2299,25 @@
             if (pick.dataset.pick === 'folder') inputFolder.click();
             return;
           }
-          const removeBtn = e.target.closest('[data-remove-id]');
-          if (removeBtn) {
-            removeFile(Number(removeBtn.dataset.removeId));
-            return;
-          }
-          const retryBtn = e.target.closest('[data-retry-id]');
-          if (retryBtn) {
-            retryOne(Number(retryBtn.dataset.retryId));
-            return;
-          }
           const toggleBtn = e.target.closest('[data-toggle-existing]');
           if (toggleBtn) {
             state.showExisting = !state.showExisting;
             const ex = document.getElementById('upload-existing');
             if (ex) ex.classList.toggle('is-open', state.showExisting);
+            return;
+          }
+          const folderRow = e.target.closest('.tree-row.tree-folder');
+          if (folderRow) {
+            const path = folderRow.dataset.treePath;
+            if (state.collapsedFolders.has(path)) state.collapsedFolders.delete(path);
+            else state.collapsedFolders.add(path);
+            // 트리만 다시 렌더 (전체 모달 재렌더 회피)
+            const list = bodyEl.querySelector('.upload-existing-list');
+            if (list) {
+              const tree = buildTree(state.existingFiles);
+              list.innerHTML = renderTreeNode(tree, '', 0);
+              if (window.lucide) window.lucide.createIcons();
+            }
             return;
           }
         });
@@ -2233,9 +2329,6 @@
           const action = btn.dataset.action;
           if (action === 'cancel') close();
           else if (action === 'start') startUpload();
-          else if (action === 'cancel-all') {
-            if (confirm('진행 중인 업로드를 모두 취소하시겠습니까?')) cancelAll();
-          }
           else if (action === 'retry-all') retryAllFailed();
           else if (action === 'done') close();
         });
