@@ -1,3 +1,4 @@
+/* Copyright © Amazon.com and Affiliates: This deliverable is considered Developed Content as defined in the AWS Service Terms and the SOW between the parties dated 2026-04-20. */
 import { LegendAnchor } from '@/features/workspace/components/LegendAnchor'
 import { LegendBar } from '@/features/workspace/components/LegendBar'
 import { LegendStatusTag } from '@/features/workspace/components/LegendStatusTag'

@@ -1,3 +1,4 @@
+/* Copyright © Amazon.com and Affiliates: This deliverable is considered Developed Content as defined in the AWS Service Terms and the SOW between the parties dated 2026-04-20. */
 'use client'
 
 import { useEffect, useState } from 'react'
@@ -12,7 +13,7 @@ export const TopLoadingBar = () => {
   useEffect(() => {
     const timers: ReturnType<typeof setTimeout>[] = []
 
-    // effect 본문에서 동기 setState를 피하기 위해 다음 태스크로 미룸 (eslint 규칙)
+    // eslint 규칙(Effect 내 동기 setState 금지) 회피: 다음 태스크로 미룸
     timers.push(
       setTimeout(() => {
         setActive(true)
@@ -24,7 +25,6 @@ export const TopLoadingBar = () => {
     timers.push(setTimeout(() => setProgress(100), 520))
     timers.push(setTimeout(() => setActive(false), 720))
     timers.push(setTimeout(() => setProgress(0), 920))
-
     return () => {
       for (const t of timers) clearTimeout(t)
     }
