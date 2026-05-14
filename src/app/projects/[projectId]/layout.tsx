@@ -1,8 +1,8 @@
 /* Copyright © Amazon.com and Affiliates: This deliverable is considered Developed Content as defined in the AWS Service Terms and the SOW between the parties dated 2026-04-20. */
 import { notFound } from 'next/navigation'
-import { MOCK_PROJECTS } from '@/features/project-workspace/data/mock-project'
-import { ProjectInfoBar } from '@/features/project-workspace/components/ProjectInfoBar'
-import { ProjectTabBar } from '@/features/project-workspace/components/ProjectTabBar'
+import { MOCK_PROJECTS } from '@/features/workspace/data/mock-project'
+import { ProjectInfoBar } from '@/features/workspace/components/ProjectInfoBar'
+import { ProjectTabBar } from '@/features/workspace/components/ProjectTabBar'
 
 export default async function ProjectLayout({
   children,
