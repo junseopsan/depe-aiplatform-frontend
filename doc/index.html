@@ -107,7 +107,9 @@
   <script>
     (() => {
       const ROUTES = {
-        '/': '1_Projects_Dashboard.html',
+        '/': '1_Projects_List.html',
+        '/projects': '1_Projects_List.html',
+        '/projects-dashboard': '1_Projects_Dashboard.html',
         '/dashboard': '2_Projects_ProjectName_Dashboard.html',
         '/itb': '3_Projects_ProjectName_ITB.html',
         '/irs': '4_Projects_ProjectName_IRS.html',
@@ -119,6 +121,7 @@
         '/templates': '8_Templates.html',
         '/projects/new': '9_Projects_Form.html',
         '/projects/edit': '9_Projects_Form.html',
+        '/projects/view': '9_Projects_Form.html',
         '/bot': '10_Bot.html',
       };
       const FILE_TO_ROUTE = Object.fromEntries(
