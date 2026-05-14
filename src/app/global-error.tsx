@@ -1,6 +1,8 @@
+/* Copyright © Amazon.com and Affiliates: This deliverable is considered Developed Content as defined in the AWS Service Terms and the SOW between the parties dated 2026-04-20. */
 "use client";
 
 import { useEffect } from "react";
+import Link from "next/link";
 
 type GlobalErrorProps = {
   error: Error & { digest?: string };
@@ -42,12 +44,12 @@ export default function GlobalError({
             >
               다시 시도
             </button>
-            <a
+            <Link
               href="/"
               className="inline-flex h-9 items-center rounded-lg border border-[var(--gray-200)] bg-card px-4 text-sm font-medium text-[var(--gray-700)] transition-colors hover:bg-[var(--gray-50)]"
             >
               홈으로 가기
-            </a>
+            </Link>
           </div>
         </div>
       </body>
