@@ -39,3 +39,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# doc/md — 로컬·초안 문서 등 Git에 올리지 않음
+doc/md/
+
+# tasks — 로컬 작업 메모·티켓 초안 등 Git에 올리지 않음
+tasks/
