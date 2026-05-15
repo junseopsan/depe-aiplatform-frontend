@@ -1,4 +1,5 @@
 /* Copyright © Amazon.com and Affiliates: This deliverable is considered Developed Content as defined in the AWS Service Terms and the SOW between the parties dated 2026-04-20. */
+import Link from 'next/link'
 import { Plus } from 'lucide-react'
 import { UiButton } from '@/components/ui/UiButton'
 import { UiSearch } from '@/components/ui/UiSearch'
@@ -22,7 +23,7 @@ export default function ProjectsPage() {
         </div>
         <div className="flex items-center gap-2.5">
           <UiSearch placeholder="이름 또는 계약번호 검색" className="w-[280px]" />
-          <UiButton size="lg">
+          <UiButton size="lg" nativeButton={false} render={<Link href="/projects/new" />}>
             <Plus />
             새 프로젝트 추가
           </UiButton>
