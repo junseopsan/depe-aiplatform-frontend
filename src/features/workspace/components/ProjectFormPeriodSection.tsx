@@ -25,7 +25,6 @@ export const ProjectFormPeriodSection = ({
           id="startDate"
           value={startDate}
           onChange={(e) => onStartDateChange(e.target.value)}
-          placeholder="YYYY.MM"
         />
       </UiFormField>
       <UiFormField label="완공일" required htmlFor="endDate">
@@ -33,7 +32,6 @@ export const ProjectFormPeriodSection = ({
           id="endDate"
           value={endDate}
           onChange={(e) => onEndDateChange(e.target.value)}
-          placeholder="YYYY.MM"
         />
       </UiFormField>
     </div>
