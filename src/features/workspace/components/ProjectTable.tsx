@@ -49,8 +49,8 @@ const columns: UiTableColumn<Project>[] = [
     align: 'center',
     render: (p) => (
       <Link
-        href={`/projects/${p.id}`}
-        aria-label="프로젝트 열기"
+        href={`/projects/${p.id}/edit`}
+        aria-label="프로젝트 수정"
         className="inline-flex h-7 w-7 items-center justify-center rounded-[4px] text-[var(--gray-500)] transition-colors hover:bg-[var(--gray-100)] hover:text-[var(--gray-800)]"
       >
         <ArrowRight className="size-4" />
@@ -69,7 +69,7 @@ export const ProjectTable = ({ projects }: ProjectTableProps) => {
       columns={columns}
       data={projects}
       rowKey={(p) => p.id}
-      onRowClick={(p) => router.push(`/projects/${p.id}`)}
+      onRowClick={(p) => router.push(`/projects/${p.id}/edit`)}
       summary={{
         breakdown: [
           { label: '진행중', value: running },
