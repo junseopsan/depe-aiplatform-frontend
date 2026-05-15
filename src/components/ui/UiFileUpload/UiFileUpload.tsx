@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { AlertCircle, FileUp, Folder, Trash2, Upload } from "lucide-react"
 
 import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/UiButton"
+import { UiButton } from "@/components/ui/UiButton"
 
 import { FileTreeView } from "./FileTreeView"
 import { buildFileTree } from "./buildFileTree"
@@ -226,7 +226,7 @@ export const UiFileUpload = ({
                 onPickFolder={openFolderPicker}
                 size="sm"
               />
-              <Button
+              <UiButton
                 type="button"
                 variant="outline"
                 size="sm"
@@ -234,7 +234,7 @@ export const UiFileUpload = ({
               >
                 <Trash2 />
                 전체 삭제
-              </Button>
+              </UiButton>
             </div>
           </div>
           {rejectMessage && (
@@ -276,14 +276,14 @@ const UploadActions = ({
 }) => (
   <div className="flex items-center gap-2">
     {!folderOnly && (
-      <Button type="button" variant="outline" size={size} onClick={onPickFiles}>
+      <UiButton type="button" variant="outline" size={size} onClick={onPickFiles}>
         <FileUp />
         파일 업로드
-      </Button>
+      </UiButton>
     )}
-    <Button type="button" variant="outline" size={size} onClick={onPickFolder}>
+    <UiButton type="button" variant="outline" size={size} onClick={onPickFolder}>
       <Folder />
       폴더 업로드
-    </Button>
+    </UiButton>
   </div>
 )

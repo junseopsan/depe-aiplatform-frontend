@@ -11,6 +11,11 @@ export type Project = {
   startDate: string
   endDate: string
   client: string
+  budgetCode?: string
+  description?: string
+  projectForm?: string
+  region?: string
+  location?: string
 }
 
 export type ProjectTab = {
