@@ -1573,6 +1573,12 @@
               period: `${s} — ${e}`,
             });
             showToast(`'${data.name}' 프로젝트가 수정되었습니다`);
+          } else if (mode === 'delete' && editIdx !== null && PROJECTS[editIdx]) {
+            const removed = PROJECTS[editIdx];
+            PROJECTS.splice(editIdx, 1);
+            // 캐시도 정리
+            if (typeof itbFilesCache !== 'undefined') delete itbFilesCache[editIdx];
+            showToast(`'${removed.name}' 프로젝트가 삭제되었습니다`);
           }
         } catch (err) { console.warn(err); }
       })();

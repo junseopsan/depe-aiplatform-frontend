@@ -242,19 +242,19 @@
       border-bottom: 1px solid var(--gray-200);
       padding: 18px 32px;
       display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 24px;
+      flex-direction: column;
+      gap: 4px;
       position: sticky;
       top: 54px;
       /* top-band 2px + app-header 52px */
       z-index: 98;
     }
 
-    .form-bar-left {
+    .form-bar-row {
       display: flex;
-      flex-direction: column;
-      gap: 4px;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
       min-width: 0;
     }
 
@@ -285,6 +285,8 @@
       font-weight: 600;
       color: var(--gray-800);
       line-height: 1.25;
+      min-width: 0;
+      flex: 1;
     }
 
     /* Buttons */
@@ -547,7 +549,15 @@
 
     .form-action-bar-right {
       display: flex;
+      align-items: center;
       gap: 8px;
+    }
+
+    .action-divider {
+      width: 1px;
+      height: 20px;
+      background: var(--gray-300);
+      margin: 0 4px;
     }
 
     /* Toast */
@@ -598,17 +608,19 @@
   </header>
 
   <div class="form-bar">
-    <div class="form-bar-left">
-      <div class="form-bar-breadcrumb">
-        <a href="index.html#/">Projects</a>
-        <span class="sep">/</span>
-        <span id="crumb-mode">새 프로젝트</span>
-      </div>
-      <h1 id="form-title">새 프로젝트 추가</h1>
+    <div class="form-bar-breadcrumb">
+      <a href="index.html#/">Projects</a>
+      <span class="sep">/</span>
+      <span id="crumb-mode">새 프로젝트</span>
     </div>
-    <div class="form-action-bar-right">
-      <a href="index.html#/" class="btn btn-secondary">취소</a>
-      <button type="button" class="btn btn-primary is-disabled" id="btn-submit">프로젝트 생성</button>
+    <div class="form-bar-row">
+      <h1 id="form-title">새 프로젝트 추가</h1>
+      <div class="form-action-bar-right">
+        <button type="button" class="btn btn-ghost-danger" id="btn-delete" style="display: none;">삭제</button>
+        <span class="action-divider" id="action-divider" style="display: none;"></span>
+        <a href="index.html#/" class="btn btn-secondary">취소</a>
+        <button type="button" class="btn btn-primary is-disabled" id="btn-submit">프로젝트 생성</button>
+      </div>
     </div>
   </div>
 
@@ -811,6 +823,13 @@
       crumbMode.textContent = crumbText;
       formTitle.textContent = titleText;
       btnSubmit.textContent = '변경사항 저장';
+      // edit 모드에서만 [삭제] 버튼 + divider 노출
+      if (mode === 'edit') {
+        const btnDelete = document.getElementById('btn-delete');
+        const divider = document.getElementById('action-divider');
+        if (btnDelete) btnDelete.style.display = '';
+        if (divider) divider.style.display = '';
+      }
       if (prefill) {
         // pre-fill
         document.querySelector(`input[name="type"][value="${prefill.type || '수행'}"]`)?.click();
@@ -899,6 +918,17 @@
     }
     btnSubmit.addEventListener('click', submit);
 
+    // ═══ 삭제 ═══
+    const btnDelete = document.getElementById('btn-delete');
+    if (btnDelete) {
+      btnDelete.addEventListener('click', () => {
+        const name = prefill?.name || '이 프로젝트';
+        if (!confirm(`'${name}' 프로젝트를 삭제하시겠습니까?\n\n관련된 모든 ITB 문서와 분석 결과가 함께 삭제되며, 되돌릴 수 없습니다.`)) return;
+        sessionStorage.setItem('projectFormResult', JSON.stringify({ mode: 'delete', editIdx, data: { name } }));
+        showToast(`'${name}' 프로젝트가 삭제되었습니다`);
+        setTimeout(() => { location.href = 'index.html#/'; }, 600);
+      });
+    }
 
     // ═══ Toast ═══
     const toastContainer = document.getElementById('toast-container');
