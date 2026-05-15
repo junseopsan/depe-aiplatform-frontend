@@ -32,7 +32,7 @@ export const ProjectEditForm = ({ project }: ProjectEditFormProps) => {
   const [location, setLocation] = useState(project.location ?? '')
 
   const handleCancel = () => {
-    router.push(`/projects/${project.id}`)
+    router.push('/projects')
   }
 
   return (
