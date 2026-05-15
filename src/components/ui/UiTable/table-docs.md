@@ -12,7 +12,9 @@
 | `selectable` | `boolean` | `false` | 체크박스 선택 기능 활성화 |
 | `onSelectionChange` | `(keys: string[]) => void` | — | 선택 변경 콜백 |
 | `filters` | `UiTableFilter<T>[]` | — | 상단 필터 버튼 목록 (최대 5개 권장) |
-| `footer` | `UiTableFooterRow` | — | 하단 요약 행 |
+| `footer` | `UiTableFooterRow` | — | 하단 요약 행 (label / value 2분할) |
+| `summary` | `boolean \| UiTableSummary` | — | 푸터에 "총 N건" 표시. `breakdown` 배열을 넘기면 " — {label} {value} · ..." 형태로 덧붙임 |
+| `onRowClick` | `(row: T) => void` | — | 행 전체를 클릭 가능하게 만듦 (cursor-pointer 자동 적용) |
 | `className` | `string` | — | 루트 요소 추가 클래스 |
 
 ## UiTableColumn\<T\>
@@ -24,7 +26,10 @@
 | `align` | `'left' \| 'center' \| 'right'` | 텍스트 정렬 |
 | `width` | `string` | 컬럼 너비 (예: `'140px'`) |
 | `sortable` | `boolean` | 정렬 기능 활성화 |
-| `render` | `(row: T) => ReactNode` | 커스텀 셀 렌더링 |
+| `mono` | `boolean` | 셀에 IBM Plex Mono 폰트 적용 |
+| `truncate` | `boolean \| string` | truncate + max-width. 문자열은 max-width 값 (예: `'360px'`) |
+| `format` | `(row: T) => string` | 기본 셀 값 계산 (`render` 없을 때 사용) |
+| `render` | `(row: T) => ReactNode` | 커스텀 셀 렌더링 (`mono`/`truncate`/`format` 무시) |
 
 ## UiTableFilter\<T\>
 
@@ -32,6 +37,14 @@
 |-------|------|-------------|
 | `label` | `string` | 버튼 텍스트 |
 | `predicate` | `(row: T) => boolean` | 필터 조건 함수 |
+
+## UiTableFooterRow
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `colSpan` | `number` | 좌측 셀의 colSpan (기본: `totalCols - 1`) |
+| `label` | `ReactNode` | 좌측 셀 내용 (요약 텍스트 등) |
+| `value` | `ReactNode` | 우측 셀 내용 (총합 값 등, 우측 정렬) |
 
 ## 사용 예시
 

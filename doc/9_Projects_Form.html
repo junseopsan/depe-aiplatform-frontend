@@ -638,20 +638,20 @@
         <div class="form-row col-2">
           <div class="form-field">
             <label class="form-label" for="contract">계약번호 <span class="required">*</span></label>
-            <input class="form-input mono" id="contract" placeholder="예: JA-2025-078">
+            <input class="form-input mono" id="contract">
           </div>
           <div class="form-field">
             <label class="form-label" for="budget-code">예산코드</label>
-            <input class="form-input mono" id="budget-code" placeholder="예: BD-2025-078">
+            <input class="form-input mono" id="budget-code">
           </div>
         </div>
 
-        <div class="form-row">
+        <div class="form-row" id="status-row">
           <div class="form-field">
             <label class="form-label">프로젝트 상태 <span class="required">*</span></label>
             <div class="seg-group" role="radiogroup">
-              <input type="radio" name="status" id="status-running" value="수행중" checked>
-              <label for="status-running">수행중</label>
+              <input type="radio" name="status" id="status-running" value="진행중" checked>
+              <label for="status-running">진행중</label>
               <input type="radio" name="status" id="status-ended" value="완료">
               <label for="status-ended">완료</label>
               <input type="radio" name="status" id="status-canceled" value="취소">
@@ -671,11 +671,11 @@
         <div class="form-row col-2">
           <div class="form-field">
             <label class="form-label" for="name">프로젝트 이름 <span class="required">*</span></label>
-            <input class="form-input" id="name" placeholder="예: Saudi ARAMCO Jafurah Gas Plant Phase 2">
+            <input class="form-input" id="name">
           </div>
           <div class="form-field">
             <label class="form-label" for="client">발주처 <span class="required">*</span></label>
-            <input class="form-input" id="client" placeholder="예: Saudi ARAMCO">
+            <input class="form-input" id="client">
           </div>
         </div>
 
@@ -683,7 +683,7 @@
           <div class="form-field">
             <label class="form-label" for="description">프로젝트 설명</label>
             <textarea class="form-textarea" id="description" rows="3"
-              placeholder="프로젝트 개요, 범위, 주요 특이사항을 입력하세요"></textarea>
+              ></textarea>
           </div>
         </div>
       </section>
@@ -717,15 +717,15 @@
         <div class="form-row col-3">
           <div class="form-field">
             <label class="form-label" for="form-type">프로젝트 형태</label>
-            <input class="form-input" id="form-type" placeholder="예: 육상 Gas Plant">
+            <input class="form-input" id="form-type">
           </div>
           <div class="form-field">
             <label class="form-label" for="region">지역</label>
-            <input class="form-input" id="region" placeholder="예: 중동">
+            <input class="form-input" id="region">
           </div>
           <div class="form-field">
             <label class="form-label" for="location">위치</label>
-            <input class="form-input" id="location" placeholder="예: Jafurah, Saudi Arabia">
+            <input class="form-input" id="location">
           </div>
         </div>
       </section>
@@ -763,17 +763,20 @@
       return new URLSearchParams(hashQ || searchQ);
     }
     const params = getParams();
-    // mode 판정 — URL hash path(/projects/edit) 또는 ?mode=edit 둘 다 지원
+    // mode 판정 — URL hash path(/projects/edit, /projects/view) 또는 ?mode= 모두 지원
     const hashPath = (location.hash.replace(/^#/, '').split('?')[0]) || location.pathname;
-    const mode = (hashPath.endsWith('/projects/edit') || params.get('mode') === 'edit') ? 'edit' : 'new';
+    let mode;
+    if (hashPath.endsWith('/projects/view') || params.get('mode') === 'view') mode = 'view';
+    else if (hashPath.endsWith('/projects/edit') || params.get('mode') === 'edit') mode = 'edit';
+    else mode = 'new';
     const editIdx = params.get('idx') !== null ? Number(params.get('idx')) : null;
 
     // ═══ 외부(1번 페이지)에서 전달된 현재 프로젝트 정보가 있으면 pre-fill ═══
-    // 간단한 mock: sessionStorage에 1번 페이지가 edit 시 저장해둔다고 가정
+    // 간단한 mock: sessionStorage에 1번 페이지가 edit/view 시 저장해둔다고 가정
     let prefill = null;
     try {
       const raw = sessionStorage.getItem('projectFormPrefill');
-      if (raw && mode === 'edit') prefill = JSON.parse(raw);
+      if (raw && (mode === 'edit' || mode === 'view')) prefill = JSON.parse(raw);
     } catch { }
 
     // ═══ DOM 참조 ═══
@@ -798,14 +801,21 @@
     const itbText = document.getElementById('itb-text');
 
     // ═══ 모드별 UI 조정 ═══
-    if (mode === 'edit') {
-      crumbMode.textContent = prefill?.name || '프로젝트 수정';
-      formTitle.textContent = '프로젝트 정보 수정';
+    // 새 프로젝트 추가 시 상태 필드 숨김 (기본값 '진행중' 유지)
+    if (mode === 'new') {
+      const statusRow = document.getElementById('status-row');
+      if (statusRow) statusRow.style.display = 'none';
+    }
+    if (mode === 'edit' || mode === 'view') {
+      const titleText = mode === 'view' ? '프로젝트 정보' : '프로젝트 정보 수정';
+      const crumbText = mode === 'view' ? (prefill?.name || '프로젝트 보기') : (prefill?.name || '프로젝트 수정');
+      crumbMode.textContent = crumbText;
+      formTitle.textContent = titleText;
       btnSubmit.textContent = '변경사항 저장';
       if (prefill) {
         // pre-fill
         document.querySelector(`input[name="type"][value="${prefill.type || '수행'}"]`)?.click();
-        document.querySelector(`input[name="status"][value="${prefill.status || '수행중'}"]`)?.click();
+        document.querySelector(`input[name="status"][value="${prefill.status || '진행중'}"]`)?.click();
         elContract.value = prefill.contract || '';
         elBudget.value = prefill.budgetCode || '';
         elName.value = prefill.name || '';
@@ -817,6 +827,21 @@
         elRegion.value = prefill.region || '';
         elLocation.value = prefill.location || '';
       }
+    }
+
+    // ═══ view 모드 — 모든 입력을 readonly/disabled로, 제출 버튼 숨김 ═══
+    if (mode === 'view') {
+      // 모든 input/textarea를 disabled
+      document.querySelectorAll('#project-form input, #project-form textarea, #project-form select')
+        .forEach(el => { el.disabled = true; });
+      // ITB 업로드 섹션 숨김 (이미 업로드된 자료를 다시 받지 않음)
+      const itbSection = document.querySelector('#itb-drop')?.closest('section.form-section');
+      if (itbSection) itbSection.style.display = 'none';
+      // 제출 버튼 숨김
+      btnSubmit.style.display = 'none';
+      // 취소 → 목록으로 돌아가기
+      const btnCancel = document.querySelector('.form-action-bar-right .btn-secondary');
+      if (btnCancel) btnCancel.textContent = '목록으로';
     }
 
     // ═══ 제출 활성 검증 ═══
