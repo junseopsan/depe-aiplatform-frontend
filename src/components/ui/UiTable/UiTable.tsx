@@ -13,7 +13,7 @@ import {
   TableHead,
   TableRow,
   TableCell,
-} from './table-primitives'
+} from '@/components/ui/UiTable/table-primitives'
 
 export type UiTableColumn<T> = {
   key: string

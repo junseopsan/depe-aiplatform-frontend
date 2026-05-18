@@ -4,13 +4,12 @@
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { UiButton } from '@/components/ui/UiButton'
-import type { ProjectStatus, ProjectType } from '../types/workspace.types'
-import { ProjectFormBar } from './ProjectFormBar'
-import { ProjectFormIdentitySection } from './ProjectFormIdentitySection'
-import { ProjectFormOverviewSection } from './ProjectFormOverviewSection'
-import { ProjectFormPeriodSection } from './ProjectFormPeriodSection'
-import { ProjectFormShapeLocationSection } from './ProjectFormShapeLocationSection'
-import { ProjectFormItbSection } from './ProjectFormItbSection'
+import type { ProjectStatus, ProjectType } from '@/features/workspace/components/../types/workspace.types'
+import { ProjectFormBar } from '@/features/workspace/components/form/ProjectFormBar'
+import { ProjectFormIdentitySection } from '@/features/workspace/components/form/ProjectFormIdentitySection'
+import { ProjectFormOverviewSection } from '@/features/workspace/components/form/ProjectFormOverviewSection'
+import { ProjectFormPeriodSection } from '@/features/workspace/components/form/ProjectFormPeriodSection'
+import { ProjectFormShapeLocationSection } from '@/features/workspace/components/form/ProjectFormShapeLocationSection'
 
 export const ProjectCreateForm = () => {
   const router = useRouter()
@@ -85,8 +84,6 @@ export const ProjectCreateForm = () => {
             onRegionChange={setRegion}
             onLocationChange={setLocation}
           />
-          {/* 5. ITB 업로드 */}
-          <ProjectFormItbSection />
         </form>
       </main>
     </div>

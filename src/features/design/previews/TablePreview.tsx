@@ -3,7 +3,7 @@
 
 import { UiTable } from "@/components/ui/UiTable";
 import type { UiTableColumn, UiTableFilter } from "@/components/ui/UiTable";
-import { INVOICES, type Invoice } from "../data/table-demo-data";
+import { INVOICES, type Invoice } from "@/features/design/data/table-demo-data";
 
 const columns: UiTableColumn<Invoice>[] = [
   {

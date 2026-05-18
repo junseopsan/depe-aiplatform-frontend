@@ -4,7 +4,7 @@ import { useState } from "react"
 import { ChevronRight, File as FileIcon, Folder, FolderOpen, X } from "lucide-react"
 
 import { cn } from "@/lib/utils"
-import type { FileTreeNode } from "./types"
+import type { FileTreeNode } from "@/components/ui/UiFileUpload/types"
 
 type FileTreeViewProps = {
   nodes: FileTreeNode[]

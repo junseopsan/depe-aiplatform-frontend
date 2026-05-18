@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/UiDialog'
 import { UiFileUpload } from '@/components/ui/UiFileUpload/UiFileUpload'
 import type { UploadedFile } from '@/components/ui/UiFileUpload/types'
-import type { Project } from '../types/workspace.types'
+import type { Project } from '@/features/workspace/components/../types/workspace.types'
 
 type ItbUploadModalProps = {
   open: boolean

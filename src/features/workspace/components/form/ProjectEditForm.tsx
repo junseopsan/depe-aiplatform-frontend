@@ -4,13 +4,13 @@
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { UiButton } from '@/components/ui/UiButton'
-import type { Project, ProjectStatus, ProjectType } from '../types/workspace.types'
-import { ProjectFormBar } from './ProjectFormBar'
-import { ProjectFormIdentitySection } from './ProjectFormIdentitySection'
-import { ProjectFormOverviewSection } from './ProjectFormOverviewSection'
-import { ProjectFormPeriodSection } from './ProjectFormPeriodSection'
-import { ProjectFormShapeLocationSection } from './ProjectFormShapeLocationSection'
-import { ProjectFormItbSection } from './ProjectFormItbSection'
+import { useUserRole } from '@/lib/use-user-role'
+import type { Project, ProjectStatus, ProjectType } from '@/features/workspace/components/../types/workspace.types'
+import { ProjectFormBar } from '@/features/workspace/components/form/ProjectFormBar'
+import { ProjectFormIdentitySection } from '@/features/workspace/components/form/ProjectFormIdentitySection'
+import { ProjectFormOverviewSection } from '@/features/workspace/components/form/ProjectFormOverviewSection'
+import { ProjectFormPeriodSection } from '@/features/workspace/components/form/ProjectFormPeriodSection'
+import { ProjectFormShapeLocationSection } from '@/features/workspace/components/form/ProjectFormShapeLocationSection'
 
 type ProjectEditFormProps = {
   project: Project
@@ -18,6 +18,7 @@ type ProjectEditFormProps = {
 
 export const ProjectEditForm = ({ project }: ProjectEditFormProps) => {
   const router = useRouter()
+  const { role } = useUserRole()
   const [type, setType] = useState<ProjectType>(project.type)
   const [status, setStatus] = useState<ProjectStatus>(project.status)
   const [contractNo, setContractNo] = useState(project.contractNo)
@@ -32,6 +33,14 @@ export const ProjectEditForm = ({ project }: ProjectEditFormProps) => {
   const [location, setLocation] = useState(project.location ?? '')
 
   const handleCancel = () => {
+    router.push(`/projects/${project.contractNo}`)
+  }
+
+  const handleDelete = () => {
+    const ok = window.confirm(
+      `'${project.name}' 프로젝트를 삭제하시겠습니까?\n\n관련된 모든 ITB 문서와 분석 결과가 함께 삭제되며, 되돌릴 수 없습니다.`,
+    )
+    if (!ok) return
     router.push('/projects')
   }
 
@@ -40,6 +49,13 @@ export const ProjectEditForm = ({ project }: ProjectEditFormProps) => {
       <ProjectFormBar
         breadcrumb={project.name}
         title="프로젝트 정보 수정"
+        onDelete={
+          role === 'admin' ? (
+            <UiButton type="button" variant="ghost-danger" size="lg" onClick={handleDelete}>
+              삭제
+            </UiButton>
+          ) : undefined
+        }
         onCancel={
           <UiButton type="button" variant="secondary" size="lg" onClick={handleCancel}>
             취소
@@ -89,8 +105,6 @@ export const ProjectEditForm = ({ project }: ProjectEditFormProps) => {
             onRegionChange={setRegion}
             onLocationChange={setLocation}
           />
-          {/* 5. ITB 업로드 */}
-          <ProjectFormItbSection />
         </form>
       </main>
     </div>

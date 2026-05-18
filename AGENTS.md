@@ -30,3 +30,14 @@ This version has breaking changes — APIs, conventions, and file structure may 
 - 애니메이션·트랜지션: `doc` CSS의 `@keyframes`·`transition` 값을 그대로 옮김
 
 스펙이 모호하거나 누락된 경우 추정해 구현하지 말고 사용자에게 확인을 요청한다.
+
+# Import paths: 절대경로(`@/...`) 강제
+
+`src/` 내부 모든 import는 `tsconfig.json`의 path alias `@/*`(→ `./src/*`)를 사용한 절대경로로 작성한다. `./Foo`, `../Bar`, `../../baz/qux` 같은 상대경로는 금지.
+
+- ✅ `import { UiButton } from '@/components/ui/UiButton'`
+- ✅ `import { ProjectFormSection } from '@/features/workspace/components/form/ProjectFormSection'`
+- ❌ `import { ProjectFormSection } from './ProjectFormSection'`
+- ❌ `import type { Project } from '../../types/workspace.types'`
+
+이유: 파일이 폴더 사이를 옮겨다닐 때 import 경로가 깨지지 않으며(이번 워크스페이스 컴포넌트 4그룹 분리 때 실제로 깨졌음), 어디서 어떤 모듈을 가져오는지 한눈에 보인다. `eslint-config-next`의 `no-restricted-imports` 또는 `eslint-plugin-import` 규칙으로 강제하면 좋다.

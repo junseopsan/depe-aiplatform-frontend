@@ -1,4 +1,4 @@
-import type { FileTreeNode, UploadedFile } from "./types"
+import type { FileTreeNode, UploadedFile } from "@/components/ui/UiFileUpload/types"
 
 type FolderNode = Extract<FileTreeNode, { kind: "folder" }>
 
