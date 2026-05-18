@@ -1,8 +1,10 @@
 /* Copyright © Amazon.com and Affiliates: This deliverable is considered Developed Content as defined in the AWS Service Terms and the SOW between the parties dated 2026-04-20. */
 'use client'
 
+import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { UiButton } from '@/components/ui/UiButton'
+import { UiConfirmDialog } from '@/components/ui/UiConfirmDialog'
 import { useUserRole } from '@/lib/use-user-role'
 import type { Project } from '@/features/workspace/types/workspace.types'
 import { useProjectEditForm } from '@/features/workspace/hooks/useProjectEditForm'
@@ -20,23 +22,27 @@ export const ProjectEditForm = ({ project }: ProjectEditFormProps) => {
   const router = useRouter()
   const { role } = useUserRole()
   const form = useProjectEditForm(project)
+  const [cancelOpen, setCancelOpen] = useState(false)
+  const [deleteOpen, setDeleteOpen] = useState(false)
+
+  const goToDetail = () => router.push(`/projects/${project.contractNo}`)
 
   const handleCancel = () => {
-    if (form.isDirty && !window.confirm('변경 내용을 저장하지 않고 나가시겠습니까?')) return
-    router.push(`/projects/${project.contractNo}`)
+    if (form.isDirty) {
+      setCancelOpen(true)
+      return
+    }
+    goToDetail()
   }
 
   const handleSave = () => {
     if (form.isInvalid) return
     // TODO: 실제 저장 API 연동. 현재는 mock 환경이라 라우팅만.
-    router.push(`/projects/${project.contractNo}`)
+    goToDetail()
   }
 
-  const handleDelete = () => {
-    const ok = window.confirm(
-      `'${project.name}' 프로젝트를 삭제하시겠습니까?\n\n관련된 모든 ITB 문서와 분석 결과가 함께 삭제되며, 되돌릴 수 없습니다.`,
-    )
-    if (!ok) return
+  const handleDeleteConfirm = () => {
+    // TODO: 실제 삭제 API 연동.
     router.push('/projects')
   }
 
@@ -47,7 +53,7 @@ export const ProjectEditForm = ({ project }: ProjectEditFormProps) => {
         title="프로젝트 정보 수정"
         onDelete={
           role === 'admin' ? (
-            <UiButton type="button" variant="ghost-danger" size="lg" onClick={handleDelete}>
+            <UiButton type="button" variant="ghost-danger" size="lg" onClick={() => setDeleteOpen(true)}>
               삭제
             </UiButton>
           ) : undefined
@@ -101,6 +107,22 @@ export const ProjectEditForm = ({ project }: ProjectEditFormProps) => {
           />
         </form>
       </main>
+
+      <UiConfirmDialog
+        open={cancelOpen}
+        onClose={() => setCancelOpen(false)}
+        onConfirm={goToDetail}
+        title="변경 내용을 저장하지 않고 나가시겠습니까?"
+        description="입력하신 변경 사항은 저장되지 않습니다."
+      />
+
+      <UiConfirmDialog
+        open={deleteOpen}
+        onClose={() => setDeleteOpen(false)}
+        onConfirm={handleDeleteConfirm}
+        title={`'${project.name}' 프로젝트를 삭제하시겠습니까?`}
+        description={`관련된 모든 ITB 문서와 분석 결과가 함께 삭제되며, 되돌릴 수 없습니다.`}
+      />
     </div>
   )
 }
