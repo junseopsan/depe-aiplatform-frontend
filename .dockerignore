@@ -1,0 +1,33 @@
+# VCS
+.git
+.gitignore
+
+# Next.js 빌드 캐시 (builder 스테이지에서 새로 생성)
+.next
+out
+
+# 로컬 의존성 (deps 스테이지에서 설치)
+node_modules
+
+# 개발 전용 파일
+.env*.local
+*.local
+
+# 문서·프로토타입
+doc
+tasks
+README.md
+CLAUDE.md
+AGENTS.md
+
+# IDE / OS 메타
+.DS_Store
+.vscode
+.idea
+*.swp
+*.swo
+
+# CI / 빌드 설정 (런타임 불필요)
+buildspec*.yml
+Dockerfile
+.dockerignore
