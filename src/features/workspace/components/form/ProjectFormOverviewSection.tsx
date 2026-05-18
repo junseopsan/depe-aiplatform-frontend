@@ -49,7 +49,6 @@ export const ProjectFormOverviewSection = ({
           rows={3}
           value={description}
           onChange={(e) => onDescriptionChange(e.target.value)}
-          placeholder="간단한 설명을 10자 이상 입력하세요"
         />
       </UiFormField>
     </div>
