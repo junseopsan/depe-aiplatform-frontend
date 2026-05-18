@@ -1,7 +1,7 @@
 /* Copyright © Amazon.com and Affiliates: This deliverable is considered Developed Content as defined in the AWS Service Terms and the SOW between the parties dated 2026-04-20. */
 import { UiBadge } from '@/components/ui/UiBadge'
-import type { Project } from '@/features/workspace/components/../types/workspace.types'
-import { PROJECT_STATUS_BADGE, PROJECT_TYPE_BADGE } from '@/features/workspace/components/../data/project-badges'
+import type { Project } from '@/features/workspace/types/workspace.types'
+import { PROJECT_STATUS_BADGE, PROJECT_TYPE_BADGE } from '@/features/workspace/data/project-badges'
 import { ProjectFormSection } from '@/features/workspace/components/form/ProjectFormSection'
 import { ProjectDetailField, valueOrDash } from '@/features/workspace/components/detail/ProjectDetailField'
 

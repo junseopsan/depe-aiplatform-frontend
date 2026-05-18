@@ -4,8 +4,8 @@
 import { UiFormField } from '@/components/ui/UiFormField'
 import { UiInput } from '@/components/ui/UiInput'
 import { UiSegmented } from '@/components/ui/UiSegmented'
-import type { ProjectStatus, ProjectType } from '@/features/workspace/components/../types/workspace.types'
-import { PROJECT_STATUS_OPTIONS, PROJECT_TYPE_OPTIONS } from '@/features/workspace/components/../utils/project-options'
+import type { ProjectStatus, ProjectType } from '@/features/workspace/types/workspace.types'
+import { PROJECT_STATUS_OPTIONS, PROJECT_TYPE_OPTIONS } from '@/features/workspace/utils/project-options'
 import { ProjectFormSection } from '@/features/workspace/components/form/ProjectFormSection'
 
 type ProjectFormIdentitySectionProps = {
@@ -17,6 +17,7 @@ type ProjectFormIdentitySectionProps = {
   onStatusChange: (value: ProjectStatus) => void
   onContractNoChange: (value: string) => void
   onBudgetCodeChange: (value: string) => void
+  contractNoError?: string
 }
 
 export const ProjectFormIdentitySection = ({
@@ -28,10 +29,11 @@ export const ProjectFormIdentitySection = ({
   onStatusChange,
   onContractNoChange,
   onBudgetCodeChange,
+  contractNoError,
 }: ProjectFormIdentitySectionProps) => (
   <ProjectFormSection index={1} title="식별 및 분류">
     <div className="mb-4 grid gap-4">
-      <UiFormField label="프로젝트 유형" required>
+      <UiFormField label="프로젝트 구분">
         <UiSegmented
           name="type"
           options={PROJECT_TYPE_OPTIONS}
@@ -41,7 +43,7 @@ export const ProjectFormIdentitySection = ({
       </UiFormField>
     </div>
     <div className="mb-4 grid grid-cols-2 gap-4">
-      <UiFormField label="계약번호" required htmlFor="contractNo">
+      <UiFormField label="계약번호" required htmlFor="contractNo" error={contractNoError}>
         <UiInput
           id="contractNo"
           mono
@@ -59,7 +61,7 @@ export const ProjectFormIdentitySection = ({
       </UiFormField>
     </div>
     <div className="grid gap-4">
-      <UiFormField label="프로젝트 상태" required>
+      <UiFormField label="프로젝트 상태">
         <UiSegmented
           name="status"
           options={PROJECT_STATUS_OPTIONS}

@@ -1,5 +1,5 @@
 /* Copyright © Amazon.com and Affiliates: This deliverable is considered Developed Content as defined in the AWS Service Terms and the SOW between the parties dated 2026-04-20. */
-import type { Project } from '@/features/workspace/components/../types/workspace.types'
+import type { Project } from '@/features/workspace/types/workspace.types'
 import { ProjectDetailIdentitySection } from '@/features/workspace/components/detail/ProjectDetailIdentitySection'
 import { ProjectDetailOverviewSection } from '@/features/workspace/components/detail/ProjectDetailOverviewSection'
 import { ProjectDetailPeriodSection } from '@/features/workspace/components/detail/ProjectDetailPeriodSection'
