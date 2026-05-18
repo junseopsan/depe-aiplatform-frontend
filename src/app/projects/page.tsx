@@ -1,9 +1,9 @@
 /* Copyright © Amazon.com and Affiliates: This deliverable is considered Developed Content as defined in the AWS Service Terms and the SOW between the parties dated 2026-04-20. */
 import { UiSearch } from '@/components/ui/UiSearch'
 import { MOCK_PROJECTS } from '@/features/workspace/data/mock-project'
-import { NewProjectButton } from '@/features/workspace/components/NewProjectButton'
-import { ProjectTable } from '@/features/workspace/components/ProjectTable'
-import { ProjectListEmpty } from '@/features/workspace/components/ProjectListEmpty'
+import { NewProjectButton } from '@/features/workspace/components/list/NewProjectButton'
+import { ProjectTable } from '@/features/workspace/components/list/ProjectTable'
+import { ProjectListEmpty } from '@/features/workspace/components/list/ProjectListEmpty'
 
 export default function ProjectsPage() {
   const projects = MOCK_PROJECTS

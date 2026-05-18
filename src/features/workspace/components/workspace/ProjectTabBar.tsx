@@ -4,15 +4,15 @@
 import Link from "next/link";
 import { useSelectedLayoutSegment } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { PROJECT_TABS } from "../data/project-tabs";
+import { PROJECT_TABS } from "@/features/workspace/data/project-tabs";
 
 type ProjectTabBarProps = {
-  projectId: string;
+  contractNo: string;
 };
 
-export const ProjectTabBar = ({ projectId }: ProjectTabBarProps) => {
+export const ProjectTabBar = ({ contractNo }: ProjectTabBarProps) => {
   const activeSegment = useSelectedLayoutSegment();
-  const base = `/projects/${projectId}`;
+  const base = `/projects/${contractNo}`;
 
   return (
     <nav className="flex h-11 shrink-0 items-stretch border-b border-[var(--gray-200)] bg-card px-8">

@@ -27,6 +27,9 @@ const buttonVariants = cva(
         // Destructive
         destructive:
           "bg-[var(--error-bg)] text-[var(--error)] border-[var(--error)] hover:bg-[var(--error)] hover:text-white",
+        // Ghost-danger — 흰 배경 + gray border, 텍스트만 error (doc btn-ghost-danger)
+        "ghost-danger":
+          "bg-white text-[var(--error)] border-[var(--gray-300)] hover:bg-[rgba(160,69,69,0.05)] hover:border-[var(--error)]",
         // Link
         link:
           "text-[var(--primary-500)] underline-offset-4 hover:underline",

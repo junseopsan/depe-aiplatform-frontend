@@ -6,10 +6,10 @@ import { AlertCircle, FileUp, Folder, Trash2, Upload } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { UiButton } from "@/components/ui/UiButton"
 
-import { FileTreeView } from "./FileTreeView"
-import { buildFileTree } from "./buildFileTree"
-import { readDroppedItems } from "./readDroppedItems"
-import type { UploadedFile } from "./types"
+import { FileTreeView } from "@/components/ui/UiFileUpload/FileTreeView"
+import { buildFileTree } from "@/components/ui/UiFileUpload/buildFileTree"
+import { readDroppedItems } from "@/components/ui/UiFileUpload/readDroppedItems"
+import type { UploadedFile } from "@/components/ui/UiFileUpload/types"
 
 type UiFileUploadProps = {
   value: UploadedFile[]

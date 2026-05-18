@@ -4,7 +4,7 @@
 import { UiFormField } from '@/components/ui/UiFormField'
 import { UiInput } from '@/components/ui/UiInput'
 import { UiTextarea } from '@/components/ui/UiTextarea'
-import { ProjectFormSection } from './ProjectFormSection'
+import { ProjectFormSection } from '@/features/workspace/components/form/ProjectFormSection'
 
 type ProjectFormOverviewSectionProps = {
   name: string

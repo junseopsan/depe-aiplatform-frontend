@@ -4,9 +4,9 @@
 import { UiFormField } from '@/components/ui/UiFormField'
 import { UiInput } from '@/components/ui/UiInput'
 import { UiSegmented } from '@/components/ui/UiSegmented'
-import type { ProjectStatus, ProjectType } from '../types/workspace.types'
-import { PROJECT_STATUS_OPTIONS, PROJECT_TYPE_OPTIONS } from '../utils/project-options'
-import { ProjectFormSection } from './ProjectFormSection'
+import type { ProjectStatus, ProjectType } from '@/features/workspace/components/../types/workspace.types'
+import { PROJECT_STATUS_OPTIONS, PROJECT_TYPE_OPTIONS } from '@/features/workspace/components/../utils/project-options'
+import { ProjectFormSection } from '@/features/workspace/components/form/ProjectFormSection'
 
 type ProjectFormIdentitySectionProps = {
   type: ProjectType

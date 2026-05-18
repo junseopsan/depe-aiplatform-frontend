@@ -3,7 +3,7 @@
 
 import { UiFormField } from '@/components/ui/UiFormField'
 import { UiInput } from '@/components/ui/UiInput'
-import { ProjectFormSection } from './ProjectFormSection'
+import { ProjectFormSection } from '@/features/workspace/components/form/ProjectFormSection'
 
 type ProjectFormShapeLocationSectionProps = {
   projectForm: string

@@ -9,12 +9,12 @@ import { cn } from "@/lib/utils";
 import { UiBadge } from "@/components/ui/UiBadge";
 import { UiTable, type UiTableColumn } from "@/components/ui/UiTable";
 import { useUserRole } from "@/lib/use-user-role";
-import type { Project } from "../types/workspace.types";
+import type { Project } from "@/features/workspace/types/workspace.types";
 import {
   PROJECT_STATUS_BADGE,
   PROJECT_TYPE_BADGE,
-} from "../data/project-badges";
-import { ItbUploadModal } from "./ItbUploadModal";
+} from "@/features/workspace/data/project-badges";
+import { ItbUploadModal } from "@/features/workspace/components/list/ItbUploadModal";
 
 type ProjectTableProps = {
   projects: Project[];
@@ -66,8 +66,8 @@ const memberActionColumn: UiTableColumn<Project> = {
   align: "center",
   render: (p) => (
     <Link
-      href={`/projects/${p.id}/edit`}
-      aria-label="프로젝트 수정"
+      href={`/projects/${p.contractNo}/itb`}
+      aria-label="프로젝트 워크스페이스"
       className="inline-flex h-7 w-7 items-center justify-center rounded-[4px] text-[var(--gray-500)] transition-colors hover:bg-[var(--gray-100)] hover:text-[var(--gray-800)]"
     >
       <ArrowRight className="size-4" />
@@ -125,11 +125,7 @@ export const ProjectTable = ({ projects }: ProjectTableProps) => {
         columns={columns}
         data={projects}
         rowKey={(p) => p.id}
-        onRowClick={
-          role === "admin"
-            ? undefined
-            : (p) => router.push(`/projects/${p.id}/edit`)
-        }
+        onRowClick={(p) => router.push(`/projects/${p.contractNo}`)}
         summary={{
           breakdown: [
             { label: "진행중", value: running },

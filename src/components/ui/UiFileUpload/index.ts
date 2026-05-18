@@ -1,3 +1,3 @@
-export { UiFileUpload } from "./UiFileUpload"
-export { buildFileTree } from "./buildFileTree"
-export type { UploadedFile, FileTreeNode } from "./types"
+export { UiFileUpload } from "@/components/ui/UiFileUpload/UiFileUpload"
+export { buildFileTree } from "@/components/ui/UiFileUpload/buildFileTree"
+export type { UploadedFile, FileTreeNode } from "@/components/ui/UiFileUpload/types"

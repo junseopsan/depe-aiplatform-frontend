@@ -4,7 +4,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
-import { COMPONENT_REGISTRY } from '../data/registry'
+import { COMPONENT_REGISTRY } from '@/features/design/data/registry'
 
 export const ComponentDocsSidebar = () => {
   const pathname = usePathname()
