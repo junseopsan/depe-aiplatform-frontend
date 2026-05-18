@@ -1,6 +1,7 @@
 /* Copyright © Amazon.com and Affiliates: This deliverable is considered Developed Content as defined in the AWS Service Terms and the SOW between the parties dated 2026-04-20. */
 'use client'
 
+import { cn } from '@/lib/utils'
 import { UiFormField } from '@/components/ui/UiFormField'
 import { UiInput } from '@/components/ui/UiInput'
 import { UiSegmented } from '@/components/ui/UiSegmented'
@@ -18,6 +19,7 @@ type ProjectFormIdentitySectionProps = {
   onContractNoChange: (value: string) => void
   onBudgetCodeChange: (value: string) => void
   contractNoError?: string
+  showStatus?: boolean
 }
 
 export const ProjectFormIdentitySection = ({
@@ -30,6 +32,7 @@ export const ProjectFormIdentitySection = ({
   onContractNoChange,
   onBudgetCodeChange,
   contractNoError,
+  showStatus = true,
 }: ProjectFormIdentitySectionProps) => (
   <ProjectFormSection index={1} title="식별 및 분류">
     <div className="mb-4 grid gap-4">
@@ -42,7 +45,7 @@ export const ProjectFormIdentitySection = ({
         />
       </UiFormField>
     </div>
-    <div className="mb-4 grid grid-cols-2 gap-4">
+    <div className={cn('grid grid-cols-2 gap-4', showStatus && 'mb-4')}>
       <UiFormField label="계약번호" required htmlFor="contractNo" error={contractNoError}>
         <UiInput
           id="contractNo"
@@ -60,15 +63,17 @@ export const ProjectFormIdentitySection = ({
         />
       </UiFormField>
     </div>
-    <div className="grid gap-4">
-      <UiFormField label="프로젝트 상태">
-        <UiSegmented
-          name="status"
-          options={PROJECT_STATUS_OPTIONS}
-          value={status}
-          onChange={onStatusChange}
-        />
-      </UiFormField>
-    </div>
+    {showStatus && (
+      <div className="grid gap-4">
+        <UiFormField label="프로젝트 상태">
+          <UiSegmented
+            name="status"
+            options={PROJECT_STATUS_OPTIONS}
+            value={status}
+            onChange={onStatusChange}
+          />
+        </UiFormField>
+      </div>
+    )}
   </ProjectFormSection>
 )

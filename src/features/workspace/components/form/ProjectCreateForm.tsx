@@ -58,6 +58,7 @@ export const ProjectCreateForm = () => {
             onStatusChange={setStatus}
             onContractNoChange={setContractNo}
             onBudgetCodeChange={setBudgetCode}
+            showStatus={false}
           />
           {/* 2. 프로젝트 개요 — 이름·발주처·설명 */}
           <ProjectFormOverviewSection
