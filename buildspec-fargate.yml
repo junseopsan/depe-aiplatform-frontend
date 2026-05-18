@@ -28,7 +28,6 @@ version: 0.2
 phases:
   pre_build:
     commands:
-      - export DOCKER_BUILDKIT=1
       - BUILD_DATE=$(date -u +%Y%m%d-%H%M%S)
       - |
         COMMIT_SHA=$(aws s3api head-object \
@@ -45,23 +44,23 @@ phases:
       - IMAGE_URI="${ECR_URI}/${ECR_REPO}:${IMAGE_TAG}"
       - CACHE_URI="${ECR_URI}/${ECR_REPO}:cache"
       - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_URI
-      - docker pull $CACHE_URI || true
+      - docker buildx rm mybuilder 2>/dev/null || true
+      - docker buildx create --use --name mybuilder
+      - docker buildx inspect --bootstrap
 
   build:
     commands:
       - |
-        docker build \
-          --cache-from $CACHE_URI \
-          --build-arg BUILDKIT_INLINE_CACHE=1 \
-          --platform linux/amd64 \
+        docker buildx build \
+          --platform linux/arm64 \
+          --cache-from type=registry,ref=$CACHE_URI \
+          --cache-to type=registry,ref=$CACHE_URI,mode=max \
           -t $IMAGE_URI \
-          -t $CACHE_URI \
+          --push \
           .
 
   post_build:
     commands:
-      - docker push $IMAGE_URI
-      - docker push $CACHE_URI
       - printf '[{"name":"%s","imageUri":"%s"}]' $ECS_CONTAINER_NAME $IMAGE_URI > imagedefinitions.json
 
 artifacts:
