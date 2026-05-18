@@ -1,0 +1,69 @@
+version: 0.2
+
+# =============================================================================
+# CodeBuild 프로젝트 설정 가이드
+# =============================================================================
+#
+# [환경 변수]
+#   AWS_ACCOUNT_ID     : 계정 ID
+#   AWS_REGION         : ap-northeast-2
+#   ECR_REPO           : depap-webapp-frontend
+#   ECS_CONTAINER_NAME : webapp-frontend
+#
+# [환경]
+#   Privileged mode : 활성화 필수 (Docker 빌드)
+#   서비스 역할     : depap-{env}-cicd-role-cb
+#
+# [소스]
+#   CodePipeline Source가 S3인 경우 CODEBUILD_RESOLVED_SOURCE_VERSION은
+#   git SHA가 아닌 S3 오브젝트 버전 ID(UUID)가 된다.
+#   실제 commit SHA는 webhook processor가 S3 object metadata(commit-sha)에
+#   기록하므로, 이를 aws s3api head-object로 조회해 이미지 태그에 사용한다.
+#
+# [빌드]
+#   npm install/build 는 Dockerfile 멀티스테이지 내부에서 수행된다.
+#   CodeBuild 환경에 Node.js 설치 불필요.
+# =============================================================================
+
+phases:
+  pre_build:
+    commands:
+      - export DOCKER_BUILDKIT=1
+      - BUILD_DATE=$(date -u +%Y%m%d-%H%M%S)
+      - |
+        COMMIT_SHA=$(aws s3api head-object \
+          --bucket $CODEBUILD_SOURCE_BUCKET_NAME \
+          --key $CODEBUILD_SOURCE_OBJECT_KEY \
+          --query 'Metadata."commit-sha"' \
+          --output text 2>/dev/null || echo "")
+        if [ -z "$COMMIT_SHA" ] || [ "$COMMIT_SHA" = "None" ]; then
+          COMMIT_SHA=${CODEBUILD_RESOLVED_SOURCE_VERSION:-unknown}
+        fi
+        COMMIT_HASH=$(echo "$COMMIT_SHA" | cut -c1-8)
+      - IMAGE_TAG="${BUILD_DATE}-${COMMIT_HASH}"
+      - ECR_URI="${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com"
+      - IMAGE_URI="${ECR_URI}/${ECR_REPO}:${IMAGE_TAG}"
+      - CACHE_URI="${ECR_URI}/${ECR_REPO}:cache"
+      - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_URI
+      - docker pull $CACHE_URI || true
+
+  build:
+    commands:
+      - |
+        docker build \
+          --cache-from $CACHE_URI \
+          --build-arg BUILDKIT_INLINE_CACHE=1 \
+          --platform linux/amd64 \
+          -t $IMAGE_URI \
+          -t $CACHE_URI \
+          .
+
+  post_build:
+    commands:
+      - docker push $IMAGE_URI
+      - docker push $CACHE_URI
+      - printf '[{"name":"%s","imageUri":"%s"}]' $ECS_CONTAINER_NAME $IMAGE_URI > imagedefinitions.json
+
+artifacts:
+  files:
+    - imagedefinitions.json
