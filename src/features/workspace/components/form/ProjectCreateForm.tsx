@@ -4,7 +4,7 @@
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { UiButton } from '@/components/ui/UiButton'
-import type { ProjectStatus, ProjectType } from '@/features/workspace/components/../types/workspace.types'
+import type { ProjectStatus, ProjectType } from '@/features/workspace/types/workspace.types'
 import { ProjectFormBar } from '@/features/workspace/components/form/ProjectFormBar'
 import { ProjectFormIdentitySection } from '@/features/workspace/components/form/ProjectFormIdentitySection'
 import { ProjectFormOverviewSection } from '@/features/workspace/components/form/ProjectFormOverviewSection'

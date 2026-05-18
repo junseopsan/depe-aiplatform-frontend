@@ -7,6 +7,7 @@ export type UiFormFieldProps = {
   required?: boolean
   htmlFor?: string
   className?: string
+  error?: string
   children: React.ReactNode
 }
 
@@ -15,6 +16,7 @@ export const UiFormField = ({
   required,
   htmlFor,
   className,
+  error,
   children,
 }: UiFormFieldProps) => (
   <div className={cn('flex flex-col gap-1.5', className)}>
@@ -26,5 +28,8 @@ export const UiFormField = ({
       {required && <span className="font-semibold text-[var(--error)]">*</span>}
     </label>
     {children}
+    {error && (
+      <p className="text-[12px] leading-[1.5] text-[var(--error)]">{error}</p>
+    )}
   </div>
 )

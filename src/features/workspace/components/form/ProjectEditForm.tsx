@@ -2,10 +2,10 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
 import { UiButton } from '@/components/ui/UiButton'
 import { useUserRole } from '@/lib/use-user-role'
-import type { Project, ProjectStatus, ProjectType } from '@/features/workspace/components/../types/workspace.types'
+import type { Project } from '@/features/workspace/types/workspace.types'
+import { useProjectEditForm } from '@/features/workspace/hooks/useProjectEditForm'
 import { ProjectFormBar } from '@/features/workspace/components/form/ProjectFormBar'
 import { ProjectFormIdentitySection } from '@/features/workspace/components/form/ProjectFormIdentitySection'
 import { ProjectFormOverviewSection } from '@/features/workspace/components/form/ProjectFormOverviewSection'
@@ -19,20 +19,16 @@ type ProjectEditFormProps = {
 export const ProjectEditForm = ({ project }: ProjectEditFormProps) => {
   const router = useRouter()
   const { role } = useUserRole()
-  const [type, setType] = useState<ProjectType>(project.type)
-  const [status, setStatus] = useState<ProjectStatus>(project.status)
-  const [contractNo, setContractNo] = useState(project.contractNo)
-  const [budgetCode, setBudgetCode] = useState(project.budgetCode ?? '')
-  const [name, setName] = useState(project.name)
-  const [client, setClient] = useState(project.client)
-  const [description, setDescription] = useState(project.description ?? '')
-  const [startDate, setStartDate] = useState(project.startDate)
-  const [endDate, setEndDate] = useState(project.endDate)
-  const [projectForm, setProjectForm] = useState(project.projectForm ?? '')
-  const [region, setRegion] = useState(project.region ?? '')
-  const [location, setLocation] = useState(project.location ?? '')
+  const form = useProjectEditForm(project)
 
   const handleCancel = () => {
+    if (form.isDirty && !window.confirm('변경 내용을 저장하지 않고 나가시겠습니까?')) return
+    router.push(`/projects/${project.contractNo}`)
+  }
+
+  const handleSave = () => {
+    if (form.isInvalid) return
+    // TODO: 실제 저장 API 연동. 현재는 mock 환경이라 라우팅만.
     router.push(`/projects/${project.contractNo}`)
   }
 
@@ -62,48 +58,46 @@ export const ProjectEditForm = ({ project }: ProjectEditFormProps) => {
           </UiButton>
         }
         onSubmit={
-          <UiButton type="button" size="lg">
+          <UiButton type="button" size="lg" disabled={form.isInvalid} onClick={handleSave}>
             변경사항 저장
           </UiButton>
         }
       />
       <main className="mx-auto w-full max-w-[1400px] flex-1 overflow-y-auto px-8 py-8">
         <form autoComplete="off">
-          {/* 1. 식별 및 분류 — 유형·계약번호·예산코드·상태 */}
           <ProjectFormIdentitySection
-            type={type}
-            status={status}
-            contractNo={contractNo}
-            budgetCode={budgetCode}
-            onTypeChange={setType}
-            onStatusChange={setStatus}
-            onContractNoChange={setContractNo}
-            onBudgetCodeChange={setBudgetCode}
+            type={form.type}
+            status={form.status}
+            contractNo={form.contractNo}
+            budgetCode={form.budgetCode}
+            onTypeChange={form.setType}
+            onStatusChange={form.setStatus}
+            onContractNoChange={form.setContractNo}
+            onBudgetCodeChange={form.setBudgetCode}
+            contractNoError={form.contractNoError}
           />
-          {/* 2. 프로젝트 개요 — 이름·발주처·설명 */}
           <ProjectFormOverviewSection
-            name={name}
-            client={client}
-            description={description}
-            onNameChange={setName}
-            onClientChange={setClient}
-            onDescriptionChange={setDescription}
+            name={form.name}
+            client={form.client}
+            description={form.description}
+            onNameChange={form.setName}
+            onClientChange={form.setClient}
+            onDescriptionChange={form.setDescription}
+            nameError={form.nameError}
           />
-          {/* 3. 기간 — 착수일·완공일 */}
           <ProjectFormPeriodSection
-            startDate={startDate}
-            endDate={endDate}
-            onStartDateChange={setStartDate}
-            onEndDateChange={setEndDate}
+            startDate={form.startDate}
+            endDate={form.endDate}
+            onStartDateChange={form.setStartDate}
+            onEndDateChange={form.setEndDate}
           />
-          {/* 4. 형태 · 위치 — 프로젝트 형태·지역·위치 */}
           <ProjectFormShapeLocationSection
-            projectForm={projectForm}
-            region={region}
-            location={location}
-            onProjectFormChange={setProjectForm}
-            onRegionChange={setRegion}
-            onLocationChange={setLocation}
+            projectForm={form.projectForm}
+            region={form.region}
+            location={form.location}
+            onProjectFormChange={form.setProjectForm}
+            onRegionChange={form.setRegion}
+            onLocationChange={form.setLocation}
           />
         </form>
       </main>

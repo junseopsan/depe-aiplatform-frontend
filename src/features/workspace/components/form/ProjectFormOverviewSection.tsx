@@ -13,6 +13,7 @@ type ProjectFormOverviewSectionProps = {
   onNameChange: (value: string) => void
   onClientChange: (value: string) => void
   onDescriptionChange: (value: string) => void
+  nameError?: string
 }
 
 export const ProjectFormOverviewSection = ({
@@ -22,17 +23,18 @@ export const ProjectFormOverviewSection = ({
   onNameChange,
   onClientChange,
   onDescriptionChange,
+  nameError,
 }: ProjectFormOverviewSectionProps) => (
   <ProjectFormSection index={2} title="프로젝트 개요">
     <div className="mb-4 grid grid-cols-2 gap-4">
-      <UiFormField label="프로젝트 이름" required htmlFor="name">
+      <UiFormField label="프로젝트 이름" required htmlFor="name" error={nameError}>
         <UiInput
           id="name"
           value={name}
           onChange={(e) => onNameChange(e.target.value)}
         />
       </UiFormField>
-      <UiFormField label="발주처" required htmlFor="client">
+      <UiFormField label="발주처" htmlFor="client">
         <UiInput
           id="client"
           value={client}
@@ -41,13 +43,13 @@ export const ProjectFormOverviewSection = ({
       </UiFormField>
     </div>
     <div className="grid gap-4">
-      <UiFormField label="프로젝트 설명" htmlFor="description">
+      <UiFormField label="프로젝트 설명" required htmlFor="description">
         <UiTextarea
           id="description"
           rows={3}
           value={description}
           onChange={(e) => onDescriptionChange(e.target.value)}
-          placeholder="프로젝트에 대한 간단한 설명을 입력하세요"
+          placeholder="간단한 설명을 10자 이상 입력하세요"
         />
       </UiFormField>
     </div>
