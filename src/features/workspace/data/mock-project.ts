@@ -11,6 +11,7 @@ export const MOCK_PROJECTS: Project[] = [
     startDate: '2025.03',
     endDate: '2027.08',
     client: 'Saudi ARAMCO',
+    itbCount: 12,
   },
   {
     id: '002',
@@ -21,6 +22,7 @@ export const MOCK_PROJECTS: Project[] = [
     startDate: '2024.09',
     endDate: '2026.12',
     client: 'ADNOC',
+    itbCount: 28,
   },
   {
     id: '003',
@@ -31,6 +33,7 @@ export const MOCK_PROJECTS: Project[] = [
     startDate: '2025.06',
     endDate: '2028.03',
     client: 'QatarEnergy',
+    itbCount: 0,
   },
   {
     id: '004',
@@ -41,6 +44,7 @@ export const MOCK_PROJECTS: Project[] = [
     startDate: '2023.01',
     endDate: '2025.12',
     client: 'KNPC',
+    itbCount: 45,
   },
   {
     id: '005',
@@ -51,6 +55,7 @@ export const MOCK_PROJECTS: Project[] = [
     startDate: '2024.04',
     endDate: '2026.09',
     client: 'OQ Refineries',
+    itbCount: 18,
   },
   {
     id: '006',
@@ -61,6 +66,7 @@ export const MOCK_PROJECTS: Project[] = [
     startDate: '2025.02',
     endDate: '2026.11',
     client: 'Petronas',
+    itbCount: 9,
   },
   {
     id: '007',
@@ -71,6 +77,7 @@ export const MOCK_PROJECTS: Project[] = [
     startDate: '2024.07',
     endDate: '2026.06',
     client: 'SLNG',
+    itbCount: 14,
   },
   {
     id: '008',
@@ -81,6 +88,7 @@ export const MOCK_PROJECTS: Project[] = [
     startDate: '2023.05',
     endDate: '2025.10',
     client: 'Pertamina',
+    itbCount: 32,
   },
   {
     id: '009',
@@ -91,6 +99,7 @@ export const MOCK_PROJECTS: Project[] = [
     startDate: '2024.11',
     endDate: '2027.02',
     client: 'SCG / PVN',
+    itbCount: 0,
   },
   {
     id: '010',
@@ -101,6 +110,7 @@ export const MOCK_PROJECTS: Project[] = [
     startDate: '2022.08',
     endDate: '2025.04',
     client: 'ERC',
+    itbCount: 26,
   },
   {
     id: '011',
@@ -111,6 +121,7 @@ export const MOCK_PROJECTS: Project[] = [
     startDate: '2025.04',
     endDate: '2028.09',
     client: 'BGC',
+    itbCount: 7,
   },
   {
     id: '012',
@@ -121,5 +132,6 @@ export const MOCK_PROJECTS: Project[] = [
     startDate: '2024.01',
     endDate: '2026.07',
     client: 'Sonatrach',
+    itbCount: 15,
   },
 ]

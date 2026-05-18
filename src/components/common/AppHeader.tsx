@@ -5,26 +5,33 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Bell } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { USER_ROLE_OPTIONS, useUserRole, type UserRole } from '@/lib/use-user-role'
+import { UiSegmented } from '@/components/ui/UiSegmented'
 import { TopLoadingBar } from '@/components/common/TopLoadingBar'
 
 type NavItem = {
   label: string
   href: string
   isActive: (pathname: string) => boolean
+  /** 보이는 role 목록. 미지정 시 모든 role에 노출 */
+  roles?: UserRole[]
 }
 
 const NAV_ITEMS: NavItem[] = [
   { label: 'Projects', href: '/projects', isActive: (p) => p.startsWith('/projects') },
-  { label: 'AI Q&A', href: '/ai-qna', isActive: (p) => p.startsWith('/ai-qna') },
+  { label: 'AI Q&A', href: '/ai-qna', isActive: (p) => p.startsWith('/ai-qna'), roles: ['member'] },
+  { label: 'Templates', href: '/templates', isActive: (p) => p.startsWith('/templates'), roles: ['admin'] },
 ]
 
 const NOTIFICATION_COUNT = 3
 
 export const AppHeader = () => {
   const pathname = usePathname()
+  const { role, setRole } = useUserRole()
+  const navItems = NAV_ITEMS.filter((item) => !item.roles || item.roles.includes(role))
 
   return (
-    <>
+    <div className="contents">
       <TopLoadingBar />
       <header className="sticky top-0.5 z-[99] grid h-[52px] shrink-0 grid-cols-[1fr_auto_1fr] items-center border-b border-[var(--gray-200)] bg-card px-6">
       <Link href="/" className="flex items-center gap-2.5">
@@ -37,7 +44,7 @@ export const AppHeader = () => {
       </Link>
 
       <nav className="flex items-center gap-1">
-        {NAV_ITEMS.map((item) => {
+        {navItems.map((item) => {
           const isActive = item.isActive(pathname)
           return (
             <Link
@@ -57,6 +64,13 @@ export const AppHeader = () => {
       </nav>
 
       <div className="flex items-center justify-end gap-2">
+        <UiSegmented
+          name="user-role"
+          options={USER_ROLE_OPTIONS}
+          value={role}
+          onChange={setRole}
+          size="sm"
+        />
         <button
           type="button"
           aria-label="알림"
@@ -71,6 +85,6 @@ export const AppHeader = () => {
         </button>
       </div>
     </header>
-    </>
+    </div>
   )
 }

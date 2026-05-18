@@ -36,7 +36,7 @@ export const ProjectEditForm = ({ project }: ProjectEditFormProps) => {
   }
 
   return (
-    <>
+    <div className="contents">
       <ProjectFormBar
         breadcrumb={project.name}
         title="프로젝트 정보 수정"
@@ -93,6 +93,6 @@ export const ProjectEditForm = ({ project }: ProjectEditFormProps) => {
           <ProjectFormItbSection />
         </form>
       </main>
-    </>
+    </div>
   )
 }

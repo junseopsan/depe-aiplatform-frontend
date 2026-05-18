@@ -16,10 +16,10 @@ export default async function ProjectLayout({
   if (!project) notFound()
 
   return (
-    <>
+    <div className="contents">
       <ProjectInfoBar project={project} />
       <ProjectTabBar projectId={projectId} />
       {children}
-    </>
+    </div>
   )
 }

@@ -1,9 +1,9 @@
 /* Copyright © Amazon.com and Affiliates: This deliverable is considered Developed Content as defined in the AWS Service Terms and the SOW between the parties dated 2026-04-20. */
-'use client'
+"use client";
 
-import { Upload } from 'lucide-react'
-import { UiInput } from '@/components/ui/UiInput'
-import { ProjectFormSection } from './ProjectFormSection'
+import { Upload } from "lucide-react";
+import { UiInput } from "@/components/ui/UiInput";
+import { ProjectFormSection } from "./ProjectFormSection";
 
 export const ProjectFormItbSection = () => (
   <ProjectFormSection
@@ -17,4 +17,4 @@ export const ProjectFormItbSection = () => (
       <UiInput type="file" accept=".pdf" className="hidden" />
     </label>
   </ProjectFormSection>
-)
+);
