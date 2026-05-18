@@ -1,18 +1,18 @@
 /* Copyright © Amazon.com and Affiliates: This deliverable is considered Developed Content as defined in the AWS Service Terms and the SOW between the parties dated 2026-04-20. */
-'use client'
+"use client";
 
-import { useEffect } from 'react'
-import Link from 'next/link'
+import { useEffect } from "react";
+import Link from "next/link";
 
 type ErrorPageProps = {
-  error: Error & { digest?: string }
-  unstable_retry: () => void
-}
+  error: Error & { digest?: string };
+  unstable_retry: () => void;
+};
 
 export default function ErrorPage({ error, unstable_retry }: ErrorPageProps) {
   useEffect(() => {
-    console.error(error)
-  }, [error])
+    console.error(error);
+  }, [error]);
 
   return (
     <div className="flex flex-1 flex-col items-center justify-center gap-4 bg-background px-6 py-16 text-center">
@@ -25,11 +25,11 @@ export default function ErrorPage({ error, unstable_retry }: ErrorPageProps) {
       <p className="max-w-md text-sm text-[var(--gray-500)]">
         잠시 후 다시 시도해 주세요. 문제가 계속되면 관리자에게 문의해 주세요.
       </p>
-      {error.digest && (
+      {/* {error.digest && (
         <p className="font-mono text-[11px] text-[var(--gray-400)]">
           ref: {error.digest}
         </p>
-      )}
+      )} */}
       <div className="mt-2 flex items-center gap-2">
         <button
           type="button"
@@ -46,5 +46,5 @@ export default function ErrorPage({ error, unstable_retry }: ErrorPageProps) {
         </Link>
       </div>
     </div>
-  )
+  );
 }
