@@ -272,7 +272,7 @@ export const UiTable = <T,>({
                   {typeof summary === 'object' &&
                     summary.breakdown &&
                     summary.breakdown.length > 0 && (
-                      <>
+                      <div className="contents">
                         {' — '}
                         {summary.breakdown.map((item, i) => (
                           <span key={item.label}>
@@ -280,7 +280,7 @@ export const UiTable = <T,>({
                             {item.label} <b>{item.value}</b>
                           </span>
                         ))}
-                      </>
+                      </div>
                     )}
                 </TableCell>
               </TableRow>

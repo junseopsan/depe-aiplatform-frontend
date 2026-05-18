@@ -32,7 +32,7 @@ export const ProjectCreateForm = () => {
   }
 
   return (
-    <>
+    <div className="contents">
       <ProjectFormBar
         breadcrumb="새 프로젝트"
         title="새 프로젝트 추가"
@@ -89,6 +89,6 @@ export const ProjectCreateForm = () => {
           <ProjectFormItbSection />
         </form>
       </main>
-    </>
+    </div>
   )
 }

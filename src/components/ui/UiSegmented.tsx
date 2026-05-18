@@ -9,12 +9,21 @@ export type UiSegmentedOption<V extends string> = {
   label: string
 }
 
+export type UiSegmentedSize = 'sm' | 'md'
+
 export type UiSegmentedProps<V extends string> = {
   name: string
   options: UiSegmentedOption<V>[]
   value: V
   onChange: (value: V) => void
+  /** 'md' (기본, h-[38px]/px-4/13px, 분리선 있음) · 'sm' (h-7/px-2.5/11px, 분리선 없음) */
+  size?: UiSegmentedSize
   className?: string
+}
+
+const SIZE_CLASS: Record<UiSegmentedSize, string> = {
+  md: 'h-[38px] px-4 text-[13px]',
+  sm: 'h-7 px-2.5 text-[11px]',
 }
 
 export const UiSegmented = <V extends string>({
@@ -22,8 +31,11 @@ export const UiSegmented = <V extends string>({
   options,
   value,
   onChange,
+  size = 'md',
   className,
 }: UiSegmentedProps<V>) => {
+  const showDivider = size === 'md'
+
   return (
     <div
       role="radiogroup"
@@ -50,8 +62,9 @@ export const UiSegmented = <V extends string>({
             <label
               htmlFor={id}
               className={cn(
-                'inline-flex h-[38px] cursor-pointer items-center px-4 text-[13px] font-medium transition-colors',
-                !isLast && 'border-r border-[var(--gray-300)]',
+                'inline-flex cursor-pointer items-center font-medium transition-colors',
+                SIZE_CLASS[size],
+                showDivider && !isLast && 'border-r border-[var(--gray-300)]',
                 isChecked
                   ? 'bg-[var(--primary-50)] font-semibold text-[var(--primary-700)]'
                   : 'text-[var(--gray-500)] hover:bg-[var(--gray-50)] hover:text-[var(--gray-700)]',

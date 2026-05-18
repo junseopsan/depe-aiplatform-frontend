@@ -11,6 +11,7 @@ export type Project = {
   startDate: string
   endDate: string
   client: string
+  itbCount: number
   budgetCode?: string
   description?: string
   projectForm?: string
