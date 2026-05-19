@@ -1,16 +1,16 @@
 /* Copyright © Amazon.com and Affiliates: This deliverable is considered Developed Content as defined in the AWS Service Terms and the SOW between the parties dated 2026-04-20. */
 :root {
-  /* Primary Blue */
-  --primary-900: #001E3C;
-  --primary-800: #002E5D;
-  --primary-700: #003F7F;
-  --primary-600: #004E9A;
-  --primary-500: #0059A8;
-  --primary-400: #1A70BB;
-  --primary-300: #4A95D0;
-  --primary-200: #8DC0E8;
-  --primary-100: #C6E0F4;
-  --primary-50: #EAF4FB;
+  /* Primary Blue — doc/common.css 정본 */
+  --primary-900: #081E3A;
+  --primary-800: #0F2E57;
+  --primary-700: #173F73;
+  --primary-600: #1F4E91;
+  --primary-500: #275DB2;
+  --primary-400: #4A7BC7;
+  --primary-300: #7FA2D9;
+  --primary-200: #B2C7E8;
+  --primary-100: #D4DFEE;
+  --primary-50:  #EEF2F9;
 
   /* Gray */
   --gray-900: #0D1117;
@@ -22,28 +22,72 @@
   --gray-300: #CBD5E1;
   --gray-200: #E2E8F0;
   --gray-100: #F1F5F9;
-  --gray-50: #F8FAFC;
+  --gray-50:  #F8FAFC;
 
-  /* Semantic — color-system.html 기준 */
+  /* Semantic — main 값 doc 정본, bg 값 doc 정본 (info-bg 는 doc 미정의이나 정본 패턴에 맞춰 유지) */
   --success: #3A8C6E;
-  --success-bg: #EAF5EF;
+  --success-bg: #E8F3EE;
   --success-bg-hover: #d8ede2;
   --success-border: rgba(58, 140, 110, 0.2);
 
   --warning: #B07D3A;
-  --warning-bg: #FBF2E4;
-  --warning-bg-hover: #f6e8cd;
+  --warning-bg: #F6E8CD;
+  --warning-bg-hover: #efdcb4;
   --warning-border: rgba(176, 125, 58, 0.2);
 
   --error: #A04545;
-  --error-bg: #F9ECEC;
-  --error-bg-hover: #f4dcdc;
+  --error-bg: #F4DCDC;
+  --error-bg-hover: #ecc8c8;
   --error-border: rgba(160, 69, 69, 0.2);
 
   --info: #3A6A96;
   --info-bg: #ECF2F8;
   --info-bg-hover: #dce8f2;
   --info-border: rgba(58, 106, 150, 0.2);
+
+  /* Typography — font-family / size / weight / line-height */
+  --font-family-sans: 'IBM Plex Sans KR', sans-serif;
+  --font-family-mono: 'IBM Plex Mono', monospace;
+
+  --font-size-xs: 11px;
+  --font-size-sm: 12px;
+  --font-size-body: 13px;
+  --font-size-base: 14px;
+  --font-size-lg: 15px;
+  --font-size-xl: 16px;
+  --font-size-2xl: 20px;
+
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  --line-height-tight: 1.2;
+  --line-height-base: 1.5;
+  --line-height-relaxed: 1.6;
+
+  /* Spacing — 4px 베이스, doc 에 자주 등장하는 값 커버 */
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-3-5: 14px;
+  --space-4:  16px;
+  --space-4-5: 18px;
+  --space-5:  20px;
+  --space-5-5: 22px;
+  --space-6:  24px;
+  --space-7:  28px;
+  --space-8:  32px;
+
+  /* Border radius — doc 의 4 단계 */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-full: 999px;
+
+  /* Shadow — doc 의 두 종 */
+  --shadow-dropdown: 0 8px 16px rgba(13, 17, 23, 0.12);
+  --shadow-modal:    0 20px 40px rgba(13, 17, 23, 0.2);
 
   /* Matrix */
   --matrix-bg: var(--gray-100);

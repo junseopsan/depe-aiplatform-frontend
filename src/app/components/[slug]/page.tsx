@@ -1,6 +1,7 @@
 /* Copyright © Amazon.com and Affiliates: This deliverable is considered Developed Content as defined in the AWS Service Terms and the SOW between the parties dated 2026-04-20. */
 import { notFound } from 'next/navigation'
 import { COMPONENT_REGISTRY } from '@/features/design/data/registry'
+import { TokensPreview } from '@/features/design/previews/TokensPreview'
 import { ButtonPreview } from '@/features/design/previews/ButtonPreview'
 import { InputPreview } from '@/features/design/previews/InputPreview'
 import { TextareaPreview } from '@/features/design/previews/TextareaPreview'
@@ -14,6 +15,7 @@ import { PdfViewerPreview } from '@/features/design/previews/PdfViewerPreview'
 import { FileUploadPreview } from '@/features/design/previews/FileUploadPreview'
 
 const PREVIEWS: Record<string, React.ComponentType> = {
+  tokens: TokensPreview,
   button: ButtonPreview,
   input: InputPreview,
   textarea: TextareaPreview,

@@ -6,6 +6,7 @@ export type ComponentEntry = {
 }
 
 export const COMPONENT_REGISTRY: ComponentEntry[] = [
+  { slug: 'tokens', name: 'Design Tokens', description: 'Color / Typography / Spacing / Radius / Shadow 토큰' },
   { slug: 'button', name: 'Button', description: 'variant·size·disabled를 지원하는 기본 버튼' },
   { slug: 'input', name: 'Input', description: '단일 행 텍스트 입력' },
   { slug: 'textarea', name: 'Textarea', description: '여러 행 텍스트 입력' },
