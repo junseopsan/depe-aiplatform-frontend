@@ -36,12 +36,12 @@ export const ProjectCreateForm = () => {
         breadcrumb="새 프로젝트"
         title="새 프로젝트 추가"
         onCancel={
-          <UiButton type="button" variant="secondary" size="lg" onClick={handleCancel}>
+          <UiButton type="button" variant="secondary" onClick={handleCancel}>
             취소
           </UiButton>
         }
         onSubmit={
-          <UiButton type="button" size="lg">
+          <UiButton type="button">
             프로젝트 생성
           </UiButton>
         }

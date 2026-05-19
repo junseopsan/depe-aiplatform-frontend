@@ -52,10 +52,10 @@ export const ItbUploadModal = ({ open, project, onClose }: ItbUploadModalProps) 
           />
         </UiDialogBody>
         <UiDialogFooter>
-          <UiButton variant="secondary" size="lg" onClick={onClose}>
+          <UiButton variant="secondary" onClick={onClose}>
             취소
           </UiButton>
-          <UiButton size="lg" disabled={files.length === 0}>
+          <UiButton disabled={files.length === 0}>
             업로드
           </UiButton>
         </UiDialogFooter>

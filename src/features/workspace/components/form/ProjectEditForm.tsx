@@ -53,18 +53,18 @@ export const ProjectEditForm = ({ project }: ProjectEditFormProps) => {
         title="프로젝트 정보 수정"
         onDelete={
           role === 'admin' ? (
-            <UiButton type="button" variant="ghost-danger" size="lg" onClick={() => setDeleteOpen(true)}>
+            <UiButton type="button" variant="ghost-danger" onClick={() => setDeleteOpen(true)}>
               삭제
             </UiButton>
           ) : undefined
         }
         onCancel={
-          <UiButton type="button" variant="secondary" size="lg" onClick={handleCancel}>
+          <UiButton type="button" variant="secondary" onClick={handleCancel}>
             취소
           </UiButton>
         }
         onSubmit={
-          <UiButton type="button" size="lg" disabled={form.isInvalid} onClick={handleSave}>
+          <UiButton type="button" disabled={form.isInvalid} onClick={handleSave}>
             변경사항 저장
           </UiButton>
         }
