@@ -48,3 +48,8 @@ export const listProjects = async (): Promise<Project[]> => {
   const raw = await apiFetch<ApiProject[]>('/api/projects')
   return raw.map(toProject)
 }
+
+export const getProject = async (projectId: string | number): Promise<Project> => {
+  const raw = await apiFetch<ApiProject>(`/api/projects/${projectId}`)
+  return toProject(raw)
+}
