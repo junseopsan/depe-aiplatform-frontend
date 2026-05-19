@@ -54,3 +54,44 @@ This version has breaking changes — APIs, conventions, and file structure may 
 예외: Next.js의 `page.tsx`, `layout.tsx`, `error.tsx` 등 **default export가 강제되는 라우트 파일**은 `export default function PageName(...) {}` 형태가 일반적이므로 그대로 둔다.
 
 이유: 콜백·메서드·top-level 선언 사이에서 호출 컨벤션이 통일되고, `this` 바인딩 혼란이 없으며, 한 줄 컴포넌트는 표현식 본문으로 보일러플레이트가 줄어든다.
+
+# 도메인 모델 정본은 `doc/md/domain-model-*.md`
+
+프로젝트·문서 도메인 정본은 다음 문서다.
+
+- 프로젝트(Project) — `doc/md/domain-model-project.md`
+- 문서(Document) — `doc/md/domain-model-doc.md`
+
+새 화면을 만들거나 기존 폼·목록을 손질하기 전에 **반드시** 해당 문서를 먼저 확인하고, 필드명·enum 값·필수 여부·길이 제약·전이 규칙을 그대로 따른다. 정본과 어긋나는 구현이 필요하면 추정해서 만들지 말고 사용자에게 정본 갱신 후 진행할지 확인한다.
+
+## Enum은 영문 코드, 라벨은 별도 매핑
+
+도메인 정본의 enum (`Project.status`, `Project.projectType`, `DocumentType`, `DocumentStatus`, `FileUploadStatus`, `GenerationMode`, `ContentType` 등) 은 **정본의 영문 코드 그대로** TypeScript type으로 정의한다. 화면 노출용 한국어 라벨은 별도 매핑(예: `PROJECT_STATUS_LABEL`, `DOCUMENT_TYPE_LABEL`) 으로 관리한다.
+
+- ✅ `type ProjectStatus = 'PREPARING' | 'IN_PROGRESS' | 'CLOSED' | 'CANCELLED'`
+- ✅ `const PROJECT_STATUS_LABEL: Record<ProjectStatus, string> = { PREPARING: '준비중', IN_PROGRESS: '진행중', CLOSED: '완료', CANCELLED: '취소' }`
+- ❌ `type ProjectStatus = 'running' | 'ended' | 'canceled'` — 도메인과 다른 enum
+- ❌ `type DocumentType = 'itb' | 'irs' | ...` — 한국어 라벨("독소조항")과 무관하게 코드는 정본의 `ITB`/`IRS`/… 사용
+
+데이터·URL·필터링은 영문 코드로, 화면에 보이는 텍스트만 라벨 매핑을 통해 한국어로 노출한다.
+
+## 도메인이 자동 전이·불변으로 명시한 필드는 UI에서 직접 편집 불가
+
+도메인 정본이 "불변" 또는 "자동 전이" 라고 명시한 필드는 사용자 입력 UI에서 차단한다.
+
+- `Project.contractNumber` — 불변. 수정 폼에서 `readonly`/`disabled` 처리, 변경하려면 보관 후 재등록 안내
+- `Project.projectType` — 불변. 등록 폼에서만 선택, 수정 폼에서 `readonly`
+- `Project.status` — PUT 으로 `PREPARING` / `IN_PROGRESS` 직접 지정 거부. 수정 폼에서는 종결 전이(`CLOSED` / `CANCELLED`) 만 선택 가능하게 노출하고, 활성 상태로의 변경 옵션은 숨긴다. terminal → 재오픈도 거부.
+- `Project.archivedAt` — 단방향. 활성 토글 UI 없음, 보관(삭제) 액션으로만 채워짐
+- `Document.revision` — 시스템이 계산. 폼에 입력 필드 두지 않음
+- `Document.s3Key`, `Document.locationHash` — 시스템 계산. 화면 노출 X (감사용 별도 화면 외)
+
+## 사용자 가시성 규칙
+
+목록·상세 조회에서 도메인 정본의 가시성 규칙을 그대로 적용한다.
+
+- **member**: `Project.status = IN_PROGRESS` 만 노출 (PREPARING / CLOSED / CANCELLED 숨김)
+- **admin**: terminal(`CLOSED` / `CANCELLED`) 포함 활성/종결 모두 노출
+- **archived (`archivedAt != null`)**: 두 역할 모두에서 숨김. 직접 접근 시 *프로젝트를 찾을 수 없음* 처리
+
+가시성은 도메인 invariant 가 아니라 *조회 표면 정책*이므로 application/route 계층에서 필터링한다. 도메인 데이터는 status 와 archivedAt 만 가진다.
