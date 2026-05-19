@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation'
 import { Bell } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { USER_ROLE_OPTIONS, useUserRole, type UserRole } from '@/lib/use-user-role'
+import { UiBadge } from '@/components/ui/UiBadge'
 import { UiSegmented } from '@/components/ui/UiSegmented'
 import { TopLoadingBar } from '@/components/common/TopLoadingBar'
 
@@ -77,11 +78,11 @@ export const AppHeader = () => {
           className="relative flex h-8 w-8 items-center justify-center rounded border border-transparent bg-card text-[var(--gray-700)] transition-colors hover:border-[var(--gray-200)] hover:bg-[var(--gray-50)]"
         >
           <Bell size={16} />
-          {NOTIFICATION_COUNT > 0 && (
-            <span className="absolute -right-1 -top-1 inline-flex h-[18px] min-w-[18px] items-center justify-center rounded-[9px] border-2 border-white bg-[var(--primary-500)] px-[5px] font-mono text-[10px] font-medium leading-none text-white after:absolute after:inset-[-2px] after:rounded-full after:bg-[var(--primary-500)] after:opacity-30 after:[animation:notif-pulse_2s_infinite] after:content-['']">
-              {NOTIFICATION_COUNT}
-            </span>
-          )}
+          <UiBadge
+            count={NOTIFICATION_COUNT}
+            pulse
+            className="absolute right-0 top-0 -translate-y-1/2 translate-x-1/2"
+          />
         </button>
       </div>
     </header>
