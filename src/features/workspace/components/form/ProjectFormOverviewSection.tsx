@@ -8,7 +8,7 @@ import { ProjectFormSection } from '@/features/workspace/components/form/Project
 
 type ProjectFormOverviewSectionProps = {
   name: string
-  client: string
+  customer: string
   description: string
   onNameChange: (value: string) => void
   onClientChange: (value: string) => void
@@ -18,7 +18,7 @@ type ProjectFormOverviewSectionProps = {
 
 export const ProjectFormOverviewSection = ({
   name,
-  client,
+  customer,
   description,
   onNameChange,
   onClientChange,
@@ -34,10 +34,10 @@ export const ProjectFormOverviewSection = ({
           onChange={(e) => onNameChange(e.target.value)}
         />
       </UiFormField>
-      <UiFormField label="발주처" htmlFor="client">
+      <UiFormField label="발주처" htmlFor="customer">
         <UiInput
-          id="client"
-          value={client}
+          id="customer"
+          value={customer}
           onChange={(e) => onClientChange(e.target.value)}
         />
       </UiFormField>

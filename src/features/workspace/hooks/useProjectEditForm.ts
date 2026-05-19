@@ -23,7 +23,7 @@ export const useProjectEditForm = (project: Project) => {
   const [contractNo, setContractNo] = useState(project.contractNo)
   const [budgetCode, setBudgetCode] = useState(project.budgetCode ?? '')
   const [name, setName] = useState(project.name)
-  const [client, setClient] = useState(project.client)
+  const [customer, setClient] = useState(project.customer)
   const [description, setDescription] = useState(project.description ?? '')
   const [startDate, setStartDate] = useState(project.startDate)
   const [endDate, setEndDate] = useState(project.endDate)
@@ -47,7 +47,7 @@ export const useProjectEditForm = (project: Project) => {
     contractNo !== project.contractNo ||
     budgetCode !== (project.budgetCode ?? '') ||
     name !== project.name ||
-    client !== project.client ||
+    customer !== project.customer ||
     description !== (project.description ?? '') ||
     startDate !== project.startDate ||
     endDate !== project.endDate ||
@@ -62,7 +62,7 @@ export const useProjectEditForm = (project: Project) => {
     contractNo,
     budgetCode,
     name,
-    client,
+    customer,
     description,
     startDate,
     endDate,

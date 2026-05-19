@@ -19,7 +19,7 @@ export const ProjectDetailView = ({ project }: ProjectDetailViewProps) => (
     />
     <ProjectDetailOverviewSection
       name={project.name}
-      client={project.client}
+      customer={project.customer}
       description={project.description}
     />
     <ProjectDetailPeriodSection
