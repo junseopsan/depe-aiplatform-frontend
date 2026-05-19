@@ -11,7 +11,7 @@ export default function ProjectNotFound() {
       <p className="max-w-md text-sm text-[var(--gray-500)]">
         요청하신 프로젝트가 존재하지 않거나 접근 권한이 없습니다.
       </p>
-      <UiButton size="lg" nativeButton={false} render={<Link href="/projects" />}>
+      <UiButton nativeButton={false} render={<Link href="/projects" />}>
         <ArrowLeft />
         목록으로 돌아가기
       </UiButton>

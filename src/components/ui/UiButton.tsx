@@ -5,7 +5,7 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 const buttonVariants = cva(
-  "inline-flex shrink-0 cursor-pointer items-center justify-center rounded-[4px] border border-transparent text-sm font-medium whitespace-nowrap transition-colors outline-none select-none focus-visible:ring-2 focus-visible:ring-[var(--primary-500)] focus-visible:ring-offset-1 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+  "inline-flex shrink-0 cursor-pointer items-center justify-center rounded-[4px] border border-transparent text-sm font-medium whitespace-nowrap transition-colors outline-none select-none focus-visible:ring-2 focus-visible:ring-[var(--primary-500)] focus-visible:ring-offset-1 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
   {
     variants: {
       variant: {
@@ -35,12 +35,15 @@ const buttonVariants = cva(
           "text-[var(--primary-500)] underline-offset-4 hover:underline",
       },
       size: {
-        default: "h-8 gap-1.5 px-3",
-        xs: "h-6 gap-1 px-2 text-xs",
+        // default — doc btn 기준 (height 36, padding 14, 13px)
+        default: "h-9 gap-1.5 px-[14px] text-[13px]",
+        // legend — Legend bar 전용 (height 32)
+        legend: "h-8 gap-1.5 px-3 text-[13px]",
+        // sm — btn-sm (height 28)
         sm: "h-7 gap-1 px-2.5 text-xs",
-        // lg — doc btn 기준 (height 36, padding 14, 13px)
-        lg: "h-9 gap-1.5 px-[14px] text-[13px]",
-        icon: "size-8",
+        // xs — 작은 inline 액션
+        xs: "h-6 gap-1 px-2 text-xs",
+        icon: "size-9",
         "icon-sm": "size-7",
       },
     },
@@ -51,19 +54,17 @@ const buttonVariants = cva(
   }
 )
 
-function UiButton({
+const UiButton = ({
   className,
   variant = "default",
   size = "default",
   ...props
-}: ButtonPrimitive.Props & VariantProps<typeof buttonVariants>) {
-  return (
-    <ButtonPrimitive
-      data-slot="button"
-      className={cn(buttonVariants({ variant, size, className }))}
-      {...props}
-    />
-  )
-}
+}: ButtonPrimitive.Props & VariantProps<typeof buttonVariants>) => (
+  <ButtonPrimitive
+    data-slot="button"
+    className={cn(buttonVariants({ variant, size, className }))}
+    {...props}
+  />
+)
 
 export { UiButton, buttonVariants }

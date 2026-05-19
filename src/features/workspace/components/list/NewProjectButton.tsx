@@ -11,7 +11,7 @@ export const NewProjectButton = () => {
   if (role !== 'admin') return null
 
   return (
-    <UiButton size="lg" nativeButton={false} render={<Link href="/projects/new" />}>
+    <UiButton nativeButton={false} render={<Link href="/projects/new" />}>
       <Plus />
       새 프로젝트 추가
     </UiButton>

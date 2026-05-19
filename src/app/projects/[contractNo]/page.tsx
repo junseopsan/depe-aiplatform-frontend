@@ -35,14 +35,14 @@ export default async function ProjectDetailPage({
         <div className="flex items-center gap-2">
           <UiButton
             variant="secondary"
-            size="lg"
+
             nativeButton={false}
             render={<Link href="/projects" />}
           >
             목록
           </UiButton>
           <UiButton
-            size="lg"
+
             nativeButton={false}
             render={<Link href={`/projects/${project.contractNo}/edit`} />}
           >

@@ -54,10 +54,10 @@ export const UiConfirmDialog = ({
           </UiDialogBody>
         )}
         <UiDialogFooter>
-          <UiButton type="button" variant="secondary" size="lg" onClick={onClose}>
+          <UiButton type="button" variant="secondary" onClick={onClose}>
             {cancelLabel}
           </UiButton>
-          <UiButton type="button" size="lg" onClick={handleConfirm}>
+          <UiButton type="button" onClick={handleConfirm}>
             {confirmLabel}
           </UiButton>
         </UiDialogFooter>
