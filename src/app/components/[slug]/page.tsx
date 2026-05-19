@@ -6,6 +6,9 @@ import { InputPreview } from '@/features/design/previews/InputPreview'
 import { TextareaPreview } from '@/features/design/previews/TextareaPreview'
 import { SelectPreview } from '@/features/design/previews/SelectPreview'
 import { SegmentedPreview } from '@/features/design/previews/SegmentedPreview'
+import { PillPreview } from '@/features/design/previews/PillPreview'
+import { BadgePreview } from '@/features/design/previews/BadgePreview'
+import { ChipPreview } from '@/features/design/previews/ChipPreview'
 import { TablePreview } from '@/features/design/previews/TablePreview'
 import { PdfViewerPreview } from '@/features/design/previews/PdfViewerPreview'
 import { FileUploadPreview } from '@/features/design/previews/FileUploadPreview'
@@ -16,6 +19,9 @@ const PREVIEWS: Record<string, React.ComponentType> = {
   textarea: TextareaPreview,
   select: SelectPreview,
   segmented: SegmentedPreview,
+  pill: PillPreview,
+  badge: BadgePreview,
+  chip: ChipPreview,
   table: TablePreview,
   'pdf-viewer': PdfViewerPreview,
   'file-upload': FileUploadPreview,

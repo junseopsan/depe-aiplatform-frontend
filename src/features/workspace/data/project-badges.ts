@@ -1,10 +1,10 @@
 /* Copyright © Amazon.com and Affiliates: This deliverable is considered Developed Content as defined in the AWS Service Terms and the SOW between the parties dated 2026-04-20. */
-import type { UiBadgeTone } from '@/components/ui/UiBadge'
+import type { UiPillTone } from '@/components/ui/UiPill'
 import type { ProjectStatus, ProjectType } from '@/features/workspace/types/workspace.types'
 
 export type BadgeDisplay = {
   label: string
-  tone: UiBadgeTone
+  tone: UiPillTone
 }
 
 export const PROJECT_STATUS_BADGE: Record<ProjectStatus, BadgeDisplay> = {

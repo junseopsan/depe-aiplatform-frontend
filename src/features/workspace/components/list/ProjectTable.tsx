@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { UiBadge } from "@/components/ui/UiBadge";
+import { UiPill } from "@/components/ui/UiPill";
 import { UiTable, type UiTableColumn } from "@/components/ui/UiTable";
 import { useUserRole } from "@/lib/use-user-role";
 import type { Project } from "@/features/workspace/types/workspace.types";
@@ -37,7 +37,7 @@ const baseColumns: UiTableColumn<Project>[] = [
     width: "80px",
     render: (p) => {
       const badge = PROJECT_TYPE_BADGE[p.type];
-      return <UiBadge tone={badge.tone}>{badge.label}</UiBadge>;
+      return <UiPill tone={badge.tone}>{badge.label}</UiPill>;
     },
   },
   {
@@ -46,7 +46,7 @@ const baseColumns: UiTableColumn<Project>[] = [
     width: "100px",
     render: (p) => {
       const badge = PROJECT_STATUS_BADGE[p.status];
-      return <UiBadge tone={badge.tone}>{badge.label}</UiBadge>;
+      return <UiPill tone={badge.tone}>{badge.label}</UiPill>;
     },
   },
   { key: "client", header: "발주처", width: "180px" },
