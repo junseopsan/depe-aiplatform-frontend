@@ -26,7 +26,7 @@ const UiDialogOverlay = ({ className, ...props }: DialogPrimitive.Backdrop.Props
   <DialogPrimitive.Backdrop
     data-slot="dialog-overlay"
     className={cn(
-      'fixed inset-0 z-50 bg-black/30 transition-opacity duration-150 data-ending-style:opacity-0 data-starting-style:opacity-0',
+      'fixed inset-0 z-50 bg-[rgba(13,17,23,0.45)] transition-opacity duration-150 data-ending-style:opacity-0 data-starting-style:opacity-0',
       className,
     )}
     {...props}
@@ -63,7 +63,7 @@ const UiDialogContent = ({
           className="absolute right-3 top-3 inline-flex size-7 cursor-pointer items-center justify-center rounded text-[var(--gray-500)] transition-colors hover:bg-[var(--gray-100)] hover:text-[var(--gray-800)]"
           aria-label="닫기"
         >
-          <XIcon className="size-4" />
+          <XIcon className="size-[18px]" />
         </DialogPrimitive.Close>
       )}
     </DialogPrimitive.Popup>
@@ -74,7 +74,7 @@ const UiDialogHeader = ({ className, ...props }: React.ComponentProps<'div'>) =>
   <div
     data-slot="dialog-header"
     className={cn(
-      'flex items-center justify-between border-b border-[var(--gray-200)] px-5 py-3.5',
+      'flex items-center justify-between border-b border-[var(--gray-200)] px-[22px] pt-[18px] pb-[14px]',
       className,
     )}
     {...props}
@@ -84,7 +84,10 @@ const UiDialogHeader = ({ className, ...props }: React.ComponentProps<'div'>) =>
 const UiDialogTitle = ({ className, ...props }: DialogPrimitive.Title.Props) => (
   <DialogPrimitive.Title
     data-slot="dialog-title"
-    className={cn('text-[15px] font-semibold text-[var(--gray-800)]', className)}
+    className={cn(
+      'min-w-0 flex-1 truncate pr-8 text-base font-semibold text-[var(--gray-800)]',
+      className,
+    )}
     {...props}
   />
 )
@@ -92,7 +95,7 @@ const UiDialogTitle = ({ className, ...props }: DialogPrimitive.Title.Props) => 
 const UiDialogBody = ({ className, ...props }: React.ComponentProps<'div'>) => (
   <div
     data-slot="dialog-body"
-    className={cn('flex-1 overflow-y-auto px-5 py-4', className)}
+    className={cn('flex-1 overflow-y-auto px-[22px] py-[18px]', className)}
     {...props}
   />
 )
@@ -101,7 +104,7 @@ const UiDialogFooter = ({ className, ...props }: React.ComponentProps<'div'>) =>
   <div
     data-slot="dialog-footer"
     className={cn(
-      'flex items-center justify-end gap-2 border-t border-[var(--gray-200)] px-5 py-3',
+      'flex items-center justify-end gap-2 border-t border-[var(--gray-100)] px-[22px] pt-[14px] pb-[18px]',
       className,
     )}
     {...props}
