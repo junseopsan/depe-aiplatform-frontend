@@ -2,12 +2,20 @@
 import { notFound } from 'next/navigation'
 import { COMPONENT_REGISTRY } from '@/features/design/data/registry'
 import { ButtonPreview } from '@/features/design/previews/ButtonPreview'
+import { InputPreview } from '@/features/design/previews/InputPreview'
+import { TextareaPreview } from '@/features/design/previews/TextareaPreview'
+import { SelectPreview } from '@/features/design/previews/SelectPreview'
+import { SegmentedPreview } from '@/features/design/previews/SegmentedPreview'
 import { TablePreview } from '@/features/design/previews/TablePreview'
 import { PdfViewerPreview } from '@/features/design/previews/PdfViewerPreview'
 import { FileUploadPreview } from '@/features/design/previews/FileUploadPreview'
 
 const PREVIEWS: Record<string, React.ComponentType> = {
   button: ButtonPreview,
+  input: InputPreview,
+  textarea: TextareaPreview,
+  select: SelectPreview,
+  segmented: SegmentedPreview,
   table: TablePreview,
   'pdf-viewer': PdfViewerPreview,
   'file-upload': FileUploadPreview,

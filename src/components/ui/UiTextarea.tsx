@@ -2,17 +2,13 @@
 import * as React from 'react'
 import { cn } from '@/lib/utils'
 
-function UiTextarea({ className, ...props }: React.ComponentProps<'textarea'>) {
-  return (
-    <textarea
-      data-slot="textarea"
-      className={cn(
-        'min-h-20 w-full resize-y rounded-[4px] border border-[var(--gray-300)] bg-white px-3 py-2.5 text-[13px] text-[var(--gray-700)] transition-colors outline-none placeholder:text-[var(--gray-400)] focus:border-[var(--primary-500)] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50',
-        className,
-      )}
-      {...props}
-    />
-  )
-}
-
-export { UiTextarea }
+export const UiTextarea = ({ className, ...props }: React.ComponentProps<'textarea'>) => (
+  <textarea
+    data-slot="textarea"
+    className={cn(
+      'min-h-[100px] w-full resize-y rounded-[4px] border border-[var(--gray-300)] bg-white px-3 py-[10px] text-[13px] leading-[1.55] text-[var(--gray-800)] transition-colors outline-none placeholder:text-[var(--gray-400)] focus:border-[var(--primary-500)] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-40',
+      className,
+    )}
+    {...props}
+  />
+)
