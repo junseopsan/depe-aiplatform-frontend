@@ -84,7 +84,7 @@ export const ProjectEditForm = ({ project }: ProjectEditFormProps) => {
           />
           <ProjectFormOverviewSection
             name={form.name}
-            client={form.client}
+            customer={form.customer}
             description={form.description}
             onNameChange={form.setName}
             onClientChange={form.setClient}

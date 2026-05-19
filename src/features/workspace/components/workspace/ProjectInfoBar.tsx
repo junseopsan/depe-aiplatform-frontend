@@ -13,7 +13,7 @@ export const ProjectInfoBar = ({ project }: ProjectInfoBarProps) => {
       value: `${project.startDate} — ${project.endDate}`,
       mono: true,
     },
-    { label: "발주처", value: project.client },
+    { label: "발주처", value: project.customer },
   ];
 
   return (

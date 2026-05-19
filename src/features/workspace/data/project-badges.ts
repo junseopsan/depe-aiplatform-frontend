@@ -8,12 +8,13 @@ export type BadgeDisplay = {
 }
 
 export const PROJECT_STATUS_BADGE: Record<ProjectStatus, BadgeDisplay> = {
-  running: { label: '진행중', tone: 'primary' },
-  ended: { label: '완료', tone: 'gray' },
-  canceled: { label: '취소', tone: 'gray' },
+  PREPARING: { label: '준비중', tone: 'gray' },
+  IN_PROGRESS: { label: '진행중', tone: 'primary' },
+  CLOSED: { label: '완료', tone: 'gray' },
+  CANCELLED: { label: '취소', tone: 'gray' },
 }
 
 export const PROJECT_TYPE_BADGE: Record<ProjectType, BadgeDisplay> = {
-  견적: { label: '견적', tone: 'warning' },
-  수행: { label: '수행', tone: 'success' },
+  ESTIMATE: { label: '견적', tone: 'warning' },
+  EXECUTION: { label: '수행', tone: 'success' },
 }

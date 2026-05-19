@@ -13,12 +13,12 @@ import { ProjectFormShapeLocationSection } from '@/features/workspace/components
 
 export const ProjectCreateForm = () => {
   const router = useRouter()
-  const [type, setType] = useState<ProjectType>('수행')
-  const [status, setStatus] = useState<ProjectStatus>('running')
+  const [type, setType] = useState<ProjectType>('EXECUTION')
+  const [status, setStatus] = useState<ProjectStatus>('IN_PROGRESS')
   const [contractNo, setContractNo] = useState('')
   const [budgetCode, setBudgetCode] = useState('')
   const [name, setName] = useState('')
-  const [client, setClient] = useState('')
+  const [customer, setClient] = useState('')
   const [description, setDescription] = useState('')
   const [startDate, setStartDate] = useState('')
   const [endDate, setEndDate] = useState('')
@@ -63,7 +63,7 @@ export const ProjectCreateForm = () => {
           {/* 2. 프로젝트 개요 — 이름·발주처·설명 */}
           <ProjectFormOverviewSection
             name={name}
-            client={client}
+            customer={customer}
             description={description}
             onNameChange={setName}
             onClientChange={setClient}

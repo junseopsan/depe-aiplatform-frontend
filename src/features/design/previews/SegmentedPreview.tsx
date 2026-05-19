@@ -4,17 +4,11 @@
 import { useState } from 'react'
 import { UiFormField } from '@/components/ui/UiFormField'
 import { UiSegmented } from '@/components/ui/UiSegmented'
-
-const TYPE_OPTIONS = [
-  { value: '견적', label: '견적' },
-  { value: '수행', label: '수행' },
-] as const
-
-const STATUS_OPTIONS = [
-  { value: 'running', label: '진행중' },
-  { value: 'ended', label: '완료' },
-  { value: 'canceled', label: '취소' },
-] as const
+import type { ProjectStatus, ProjectType } from '@/features/workspace/types/workspace.types'
+import {
+  PROJECT_STATUS_OPTIONS,
+  PROJECT_TYPE_OPTIONS,
+} from '@/features/workspace/utils/project-options'
 
 const Section = ({ title, children }: { title: string; children: React.ReactNode }) => (
   <div className="flex flex-col gap-3">
@@ -24,8 +18,8 @@ const Section = ({ title, children }: { title: string; children: React.ReactNode
 )
 
 export const SegmentedPreview = () => {
-  const [type, setType] = useState<'견적' | '수행'>('수행')
-  const [status, setStatus] = useState<'running' | 'ended' | 'canceled'>('running')
+  const [type, setType] = useState<ProjectType>('EXECUTION')
+  const [status, setStatus] = useState<ProjectStatus>('IN_PROGRESS')
 
   return (
     <div className="flex w-full max-w-[700px] flex-col gap-8">
@@ -33,7 +27,7 @@ export const SegmentedPreview = () => {
         <UiFormField label="프로젝트 구분">
           <UiSegmented
             name="seg-type"
-            options={[...TYPE_OPTIONS]}
+            options={PROJECT_TYPE_OPTIONS}
             value={type}
             onChange={setType}
           />
@@ -41,7 +35,7 @@ export const SegmentedPreview = () => {
         <UiFormField label="프로젝트 상태">
           <UiSegmented
             name="seg-status"
-            options={[...STATUS_OPTIONS]}
+            options={PROJECT_STATUS_OPTIONS}
             value={status}
             onChange={setStatus}
           />
@@ -53,7 +47,7 @@ export const SegmentedPreview = () => {
           <UiSegmented
             name="seg-type-sm"
             size="sm"
-            options={[...TYPE_OPTIONS]}
+            options={PROJECT_TYPE_OPTIONS}
             value={type}
             onChange={setType}
           />

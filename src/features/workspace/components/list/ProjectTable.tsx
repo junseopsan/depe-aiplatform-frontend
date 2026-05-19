@@ -49,7 +49,7 @@ const baseColumns: UiTableColumn<Project>[] = [
       return <UiPill tone={badge.tone}>{badge.label}</UiPill>;
     },
   },
-  { key: "client", header: "발주처", width: "180px" },
+  { key: "customer", header: "발주처", width: "180px" },
   {
     key: "period",
     header: "계약기간",
@@ -80,8 +80,8 @@ export const ProjectTable = ({ projects }: ProjectTableProps) => {
   const { role } = useUserRole();
   const [uploadTarget, setUploadTarget] = useState<Project | null>(null);
 
-  const running = projects.filter((p) => p.status === "running").length;
-  const ended = projects.filter((p) => p.status === "ended").length;
+  const running = projects.filter((p) => p.status === "IN_PROGRESS").length;
+  const ended = projects.filter((p) => p.status === "CLOSED").length;
 
   const columns = useMemo<UiTableColumn<Project>[]>(() => {
     if (role !== "admin") return [...baseColumns, memberActionColumn];
@@ -92,7 +92,7 @@ export const ProjectTable = ({ projects }: ProjectTableProps) => {
       width: "150px",
       align: "center",
       render: (p) => {
-        const isClosed = p.status === "ended" || p.status === "canceled";
+        const isClosed = p.status === "CLOSED" || p.status === "CANCELLED";
         const isDisabled = isClosed && p.itbCount === 0;
         const hasDocs = p.itbCount > 0;
         return (

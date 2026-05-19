@@ -4,19 +4,19 @@ import { ProjectDetailField, valueOrDash } from '@/features/workspace/components
 
 type ProjectDetailOverviewSectionProps = {
   name: string
-  client: string
+  customer: string
   description?: string
 }
 
 export const ProjectDetailOverviewSection = ({
   name,
-  client,
+  customer,
   description,
 }: ProjectDetailOverviewSectionProps) => (
   <ProjectFormSection index={2} title="프로젝트 개요">
     <div className="mb-4 grid grid-cols-2 gap-4">
       <ProjectDetailField label="프로젝트 이름">{name}</ProjectDetailField>
-      <ProjectDetailField label="발주처">{client}</ProjectDetailField>
+      <ProjectDetailField label="발주처">{customer}</ProjectDetailField>
     </div>
     <ProjectDetailField label="프로젝트 설명">
       <p className="whitespace-pre-wrap">{valueOrDash(description)}</p>
