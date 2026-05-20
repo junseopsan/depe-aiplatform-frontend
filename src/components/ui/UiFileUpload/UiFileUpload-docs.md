@@ -11,6 +11,8 @@
 | `accept` | `string` | `".pdf,.docx"` | 허용 확장자 (콤마 구분) |
 | `mode` | `"any" \| "folder"` | `"any"` | `"folder"`면 폴더만 받음. 파일 버튼·파일 드롭 모두 차단됨 |
 | `placeholder` | `string` | mode에 따라 자동 | 빈 상태 안내 문구. 미지정 시 mode에 맞춰 기본값 |
+| `acceptHint` | `string` | accept/mode 기반 자동 | 빈 상태 placeholder 아래 줄의 안내 문구 (예: `"PDF · DOCX · XLSX"`). 미지정 시 `"허용: 폴더"` / `"허용 형식: …"` |
+| `pickFolderLabel` | `string` | `"폴더 업로드"` | 폴더 선택 버튼 라벨 (예: `"폴더 선택"`) |
 | `className` | `string` | — | 루트 요소 추가 클래스 |
 
 ## 타입

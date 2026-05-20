@@ -1,7 +1,7 @@
 "use client"
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
-import { AlertCircle, FileUp, Folder, Trash2, Upload } from "lucide-react"
+import { AlertCircle, FileUp, Folder, Trash2, UploadCloud } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 import { UiButton } from "@/components/ui/UiButton"
@@ -20,6 +20,10 @@ type UiFileUploadProps = {
   mode?: "any" | "folder"
   /** 빈 상태 안내 문구. 미지정 시 mode에 맞춰 기본값 사용 */
   placeholder?: string
+  /** 빈 상태에서 placeholder 아래 줄의 안내 문구. 미지정 시 accept/mode 기반 기본 문구 사용 */
+  acceptHint?: string
+  /** 폴더 선택 버튼 라벨. 기본값 `"폴더 업로드"` */
+  pickFolderLabel?: string
   className?: string
 }
 
@@ -29,6 +33,8 @@ export const UiFileUpload = ({
   accept = ".pdf,.docx",
   mode = "any",
   placeholder,
+  acceptHint,
+  pickFolderLabel,
   className,
 }: UiFileUploadProps) => {
   const folderOnly = mode === "folder"
@@ -192,25 +198,40 @@ export const UiFileUpload = ({
           onDragLeave={() => setIsDragOver(false)}
           onDrop={onDrop}
           className={cn(
-            "flex flex-col items-center justify-center gap-3 rounded border-[1.5px] border-dashed px-6 py-10 text-center transition-colors",
+            "flex cursor-pointer flex-col items-center justify-center rounded border-[1.5px] border-dashed px-5 py-8 text-center transition-colors",
             rejectMessage
-              ? "border-[var(--error)] bg-[var(--error-bg)] text-[var(--error)]"
+              ? "border-[var(--error)] bg-[var(--error-bg)]"
               : isDragOver
-                ? "border-[var(--primary-500)] bg-[var(--primary-50)] text-[var(--primary-700)]"
-                : "border-[var(--gray-300)] text-[var(--gray-500)] hover:border-[var(--primary-500)] hover:bg-[var(--primary-50)] hover:text-[var(--primary-700)]",
+                ? "border-[var(--primary-500)] bg-[var(--primary-50)]"
+                : "border-[var(--gray-300)] hover:border-[var(--primary-500)] hover:bg-[var(--primary-50)]",
           )}
         >
-          {rejectMessage ? <AlertCircle size={20} /> : <Upload size={20} />}
-          <p className="text-[13px]">{rejectMessage ?? resolvedPlaceholder}</p>
-          <p className="text-[12px] text-[var(--gray-400)]">
-            {folderOnly
-              ? "허용: 폴더"
-              : `허용 형식: ${acceptedExts.join(", ") || "모든 파일"}`}
+          {rejectMessage ? (
+            <AlertCircle size={36} className="mb-2 text-[var(--error)]" />
+          ) : (
+            <UploadCloud size={36} className="mb-2 text-[var(--primary-500)]" />
+          )}
+          <p
+            className={cn(
+              "mb-1 text-[13px] font-semibold",
+              rejectMessage ? "text-[var(--error)]" : "text-[var(--gray-800)]",
+            )}
+          >
+            {rejectMessage ?? resolvedPlaceholder}
           </p>
+          {!rejectMessage && (
+            <p className="mb-3.5 text-[12px] text-[var(--gray-500)]">
+              {acceptHint ??
+                (folderOnly
+                  ? "허용: 폴더"
+                  : `허용 형식: ${acceptedExts.join(", ") || "모든 파일"}`)}
+            </p>
+          )}
           <UploadActions
             folderOnly={folderOnly}
             onPickFiles={openFilePicker}
             onPickFolder={openFolderPicker}
+            pickFolderLabel={pickFolderLabel}
           />
         </div>
       ) : (
@@ -224,6 +245,7 @@ export const UiFileUpload = ({
                 folderOnly={folderOnly}
                 onPickFiles={openFilePicker}
                 onPickFolder={openFolderPicker}
+                pickFolderLabel={pickFolderLabel}
                 size="sm"
               />
               <UiButton
@@ -267,23 +289,33 @@ const UploadActions = ({
   folderOnly,
   onPickFiles,
   onPickFolder,
+  pickFolderLabel,
   size = "default",
 }: {
   folderOnly: boolean
   onPickFiles: () => void
   onPickFolder: () => void
+  pickFolderLabel?: string
   size?: "default" | "sm"
-}) => (
-  <div className="flex items-center gap-2">
-    {!folderOnly && (
-      <UiButton type="button" variant="outline" size={size} onClick={onPickFiles}>
+}) => {
+  const folderLabel = pickFolderLabel ?? "폴더 업로드"
+  if (folderOnly) {
+    return (
+      <UiButton type="button" variant="secondary" size={size} onClick={onPickFolder}>
+        {folderLabel}
+      </UiButton>
+    )
+  }
+  return (
+    <div className="flex items-center gap-2">
+      <UiButton type="button" variant="secondary" size={size} onClick={onPickFiles}>
         <FileUp />
         파일 업로드
       </UiButton>
-    )}
-    <UiButton type="button" variant="outline" size={size} onClick={onPickFolder}>
-      <Folder />
-      폴더 업로드
-    </UiButton>
-  </div>
-)
+      <UiButton type="button" variant="secondary" size={size} onClick={onPickFolder}>
+        <Folder />
+        {folderLabel}
+      </UiButton>
+    </div>
+  )
+}
