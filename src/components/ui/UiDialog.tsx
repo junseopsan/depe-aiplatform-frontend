@@ -85,7 +85,7 @@ const UiDialogTitle = ({ className, ...props }: DialogPrimitive.Title.Props) => 
   <DialogPrimitive.Title
     data-slot="dialog-title"
     className={cn(
-      'min-w-0 flex-1 truncate pr-8 text-base font-semibold text-[var(--gray-800)]',
+      'min-w-0 flex-1 pr-8 text-base font-semibold break-words text-[var(--gray-800)]',
       className,
     )}
     {...props}

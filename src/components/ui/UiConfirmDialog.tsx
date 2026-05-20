@@ -42,7 +42,7 @@ export const UiConfirmDialog = ({
 
   return (
     <UiDialog open={open} onOpenChange={handleOpenChange}>
-      <UiDialogContent maxWidth="420px" showCloseButton={false}>
+      <UiDialogContent maxWidth="520px" showCloseButton={false}>
         <UiDialogHeader>
           <UiDialogTitle>{title}</UiDialogTitle>
         </UiDialogHeader>
