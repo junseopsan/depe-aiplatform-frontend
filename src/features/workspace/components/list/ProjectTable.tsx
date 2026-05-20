@@ -96,23 +96,26 @@ export const ProjectTable = ({ projects }: ProjectTableProps) => {
         const isDisabled = isClosed && p.itbCount === 0;
         const hasDocs = p.itbCount > 0;
         return (
-          <button
-            type="button"
-            disabled={isDisabled}
-            onClick={(e) => {
-              e.stopPropagation();
-              if (p.itbCount === 0) setUploadTarget(p);
-            }}
-            className={cn(
-              "inline-flex h-7 w-[120px] cursor-pointer items-center justify-center rounded-[4px] border text-xs whitespace-nowrap transition-colors",
-              hasDocs
-                ? "border-[var(--primary-200)] bg-[var(--primary-50)] font-semibold text-[var(--primary-700)] hover:border-[var(--primary-500)]"
-                : "border-[var(--gray-300)] bg-white font-medium text-[var(--gray-700)] hover:border-[var(--primary-500)] hover:bg-[var(--primary-50)] hover:text-[var(--primary-700)]",
-              isDisabled && "pointer-events-none opacity-40",
-            )}
+          <div
+            onClick={(e) => e.stopPropagation()}
+            onMouseDown={(e) => e.stopPropagation()}
+            className="flex justify-center"
           >
-            업로드 문서 {p.itbCount}개
-          </button>
+            <button
+              type="button"
+              disabled={isDisabled}
+              onClick={() => setUploadTarget(p)}
+              className={cn(
+                "inline-flex h-7 w-[120px] cursor-pointer items-center justify-center rounded-[4px] border text-xs whitespace-nowrap transition-colors",
+                hasDocs
+                  ? "border-[var(--primary-200)] bg-[var(--primary-50)] font-semibold text-[var(--primary-700)] hover:border-[var(--primary-500)]"
+                  : "border-[var(--gray-300)] bg-white font-medium text-[var(--gray-700)] hover:border-[var(--primary-500)] hover:bg-[var(--primary-50)] hover:text-[var(--primary-700)]",
+                isDisabled && "pointer-events-none opacity-40",
+              )}
+            >
+              업로드 문서 {p.itbCount}개
+            </button>
+          </div>
         );
       },
     };

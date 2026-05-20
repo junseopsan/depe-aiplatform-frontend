@@ -7,15 +7,11 @@ import type {
   ProjectStatus,
   ProjectType,
 } from '@/features/workspace/types/workspace.types'
-
-const MIN = {
-  contractNo: 10,
-  name: 5,
-  description: 10,
-} as const
-
-const lenError = (value: string, min: number, label: string) =>
-  value.length < min ? `${label}은(는) ${min}자 이상이어야 합니다` : undefined
+import {
+  validateContractNo,
+  validateProjectDescription,
+  validateProjectName,
+} from '@/features/workspace/utils/project-validation'
 
 export const useProjectEditForm = (project: Project) => {
   const [type, setType] = useState<ProjectType>(project.type)
@@ -31,13 +27,12 @@ export const useProjectEditForm = (project: Project) => {
   const [region, setRegion] = useState(project.region ?? '')
   const [location, setLocation] = useState(project.location ?? '')
 
-  const contractNoError = lenError(contractNo, MIN.contractNo, '계약번호')
-  const nameError = lenError(name, MIN.name, '프로젝트 이름')
-  const descriptionTooShort = description.length < MIN.description
+  const contractNoError = validateContractNo(contractNo)
+  const nameError = validateProjectName(name)
+  const descriptionError = validateProjectDescription(description)
 
   const isInvalid =
-    Boolean(contractNoError || nameError) ||
-    descriptionTooShort ||
+    Boolean(contractNoError || nameError || descriptionError) ||
     !startDate ||
     !endDate
 
@@ -85,6 +80,7 @@ export const useProjectEditForm = (project: Project) => {
     // errors (개별 메시지 — 표시 여부는 컴포넌트 판단)
     contractNoError,
     nameError,
+    descriptionError,
     // flags
     isInvalid,
     isDirty,

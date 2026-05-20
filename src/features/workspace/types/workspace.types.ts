@@ -1,7 +1,7 @@
 /* Copyright © Amazon.com and Affiliates: This deliverable is considered Developed Content as defined in the AWS Service Terms and the SOW between the parties dated 2026-04-20. */
 
 /** 프로젝트 구분 — 도메인 정본 영문 enum */
-export type ProjectType = "ESTIMATE" | "EXECUTION";
+export type ProjectType = "BIDDING" | "EXECUTION";
 
 /** 프로젝트 상태 — 도메인 정본 영문 enum */
 export type ProjectStatus =
