@@ -15,6 +15,6 @@ export const PROJECT_STATUS_BADGE: Record<ProjectStatus, BadgeDisplay> = {
 }
 
 export const PROJECT_TYPE_BADGE: Record<ProjectType, BadgeDisplay> = {
-  ESTIMATE: { label: '견적', tone: 'warning' },
+  BIDDING: { label: '견적', tone: 'warning' },
   EXECUTION: { label: '수행', tone: 'success' },
 }

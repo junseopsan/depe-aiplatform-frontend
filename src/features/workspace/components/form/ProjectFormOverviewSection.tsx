@@ -14,6 +14,7 @@ type ProjectFormOverviewSectionProps = {
   onClientChange: (value: string) => void
   onDescriptionChange: (value: string) => void
   nameError?: string
+  descriptionError?: string
 }
 
 export const ProjectFormOverviewSection = ({
@@ -24,6 +25,7 @@ export const ProjectFormOverviewSection = ({
   onClientChange,
   onDescriptionChange,
   nameError,
+  descriptionError,
 }: ProjectFormOverviewSectionProps) => (
   <ProjectFormSection index={2} title="프로젝트 개요">
     <div className="mb-4 grid grid-cols-2 gap-4">
@@ -43,7 +45,7 @@ export const ProjectFormOverviewSection = ({
       </UiFormField>
     </div>
     <div className="grid gap-4">
-      <UiFormField label="프로젝트 설명" required htmlFor="description">
+      <UiFormField label="프로젝트 설명" required htmlFor="description" error={descriptionError}>
         <UiTextarea
           id="description"
           rows={3}

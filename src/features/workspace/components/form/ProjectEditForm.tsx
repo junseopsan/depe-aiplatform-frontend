@@ -90,6 +90,7 @@ export const ProjectEditForm = ({ project }: ProjectEditFormProps) => {
             onClientChange={form.setClient}
             onDescriptionChange={form.setDescription}
             nameError={form.nameError}
+            descriptionError={form.descriptionError}
           />
           <ProjectFormPeriodSection
             startDate={form.startDate}

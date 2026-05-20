@@ -36,7 +36,7 @@ export const ProjectFormIdentitySection = ({
 }: ProjectFormIdentitySectionProps) => (
   <ProjectFormSection index={1} title="식별 및 분류">
     <div className="mb-4 grid gap-4">
-      <UiFormField label="프로젝트 구분">
+      <UiFormField label="프로젝트 구분" required>
         <UiSegmented
           name="type"
           options={PROJECT_TYPE_OPTIONS}

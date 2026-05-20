@@ -53,3 +53,47 @@ export const getProject = async (projectId: string | number): Promise<Project> =
   const raw = await apiFetch<ApiProject>(`/api/projects/${projectId}`)
   return toProject(raw)
 }
+
+export type CreateProjectInput = {
+  type: ProjectType
+  contractNo: string
+  name: string
+  description: string
+  startDate: string
+  endDate: string
+  budgetCode?: string
+  customer?: string
+  projectForm?: string
+  region?: string
+  location?: string
+}
+
+export type CreateProjectResponse = {
+  projectId: number
+  name: string
+  contractNumber: string
+}
+
+export const createProject = async (
+  input: CreateProjectInput,
+): Promise<CreateProjectResponse> => {
+  const body = {
+    contractNumber: input.contractNo,
+    name: input.name,
+    description: input.description,
+    projectPeriod: {
+      plannedStartDate: input.startDate,
+      plannedEndDate: input.endDate,
+    },
+    projectType: input.type,
+    projectCode: input.budgetCode || undefined,
+    customer: input.customer || undefined,
+    plantType: input.projectForm || undefined,
+    siteRegion: input.region || undefined,
+    siteLocation: input.location || undefined,
+  }
+  return apiFetch<CreateProjectResponse>('/api/projects', {
+    method: 'POST',
+    body: JSON.stringify(body),
+  })
+}
