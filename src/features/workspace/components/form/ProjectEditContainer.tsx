@@ -1,33 +1,18 @@
 /* Copyright © Amazon.com and Affiliates: This deliverable is considered Developed Content as defined in the AWS Service Terms and the SOW between the parties dated 2026-04-20. */
 'use client'
 
-import { useUserRole } from '@/lib/use-user-role'
-import type { Project } from '@/features/workspace/types/workspace.types'
 import { useProjectByContractNo } from '@/features/workspace/hooks/useProjectByContractNo'
+import { ProjectEditForm } from '@/features/workspace/components/form/ProjectEditForm'
 import { ProjectDetailBar } from '@/features/workspace/components/detail/ProjectDetailBar'
-import { ProjectDetailView } from '@/features/workspace/components/detail/ProjectDetailView'
-import { ProjectDetailSkeleton } from '@/features/workspace/components/detail/ProjectDetailSkeleton'
 import { ProjectDetailError } from '@/features/workspace/components/detail/ProjectDetailError'
 import { ProjectDetailNotFound } from '@/features/workspace/components/detail/ProjectDetailNotFound'
+import { ProjectDetailSkeleton } from '@/features/workspace/components/detail/ProjectDetailSkeleton'
 
-type ProjectDetailContainerProps = {
+type ProjectEditContainerProps = {
   contractNo: string
 }
 
-/**
- * 도메인 정본 가시성 규칙:
- * - archived 는 모두 숨김
- * - member: IN_PROGRESS 만
- * - admin: terminal(CLOSED/CANCELLED) 포함
- */
-const isVisible = (project: Project, role: 'admin' | 'member') => {
-  if (project.archivedAt) return false
-  if (role === 'admin') return true
-  return project.status === 'IN_PROGRESS'
-}
-
-export const ProjectDetailContainer = ({ contractNo }: ProjectDetailContainerProps) => {
-  const { role } = useUserRole()
+export const ProjectEditContainer = ({ contractNo }: ProjectEditContainerProps) => {
   const result = useProjectByContractNo(contractNo)
 
   if (result.status === 'loading') {
@@ -53,12 +38,5 @@ export const ProjectDetailContainer = ({ contractNo }: ProjectDetailContainerPro
 
   if (result.status === 'notfound') return <ProjectDetailNotFound />
 
-  if (!isVisible(result.project, role)) return <ProjectDetailNotFound />
-
-  return (
-    <div className="contents">
-      <ProjectDetailBar project={result.project} />
-      <ProjectDetailView project={result.project} />
-    </div>
-  )
+  return <ProjectEditForm project={result.project} />
 }

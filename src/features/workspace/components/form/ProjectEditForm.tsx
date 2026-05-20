@@ -1,50 +1,50 @@
 /* Copyright © Amazon.com and Affiliates: This deliverable is considered Developed Content as defined in the AWS Service Terms and the SOW between the parties dated 2026-04-20. */
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { UiButton } from '@/components/ui/UiButton'
-import { UiConfirmDialog } from '@/components/ui/UiConfirmDialog'
-import { useUserRole } from '@/lib/use-user-role'
-import type { Project } from '@/features/workspace/types/workspace.types'
-import { useProjectEditForm } from '@/features/workspace/hooks/useProjectEditForm'
-import { ProjectFormBar } from '@/features/workspace/components/form/ProjectFormBar'
-import { ProjectFormIdentitySection } from '@/features/workspace/components/form/ProjectFormIdentitySection'
-import { ProjectFormOverviewSection } from '@/features/workspace/components/form/ProjectFormOverviewSection'
-import { ProjectFormPeriodSection } from '@/features/workspace/components/form/ProjectFormPeriodSection'
-import { ProjectFormShapeLocationSection } from '@/features/workspace/components/form/ProjectFormShapeLocationSection'
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { UiButton } from "@/components/ui/UiButton";
+import { UiConfirmDialog } from "@/components/ui/UiConfirmDialog";
+import { useUserRole } from "@/lib/use-user-role";
+import type { Project } from "@/features/workspace/types/workspace.types";
+import { useProjectEditForm } from "@/features/workspace/hooks/useProjectEditForm";
+import { ProjectFormBar } from "@/features/workspace/components/form/ProjectFormBar";
+import { ProjectFormIdentitySection } from "@/features/workspace/components/form/ProjectFormIdentitySection";
+import { ProjectFormOverviewSection } from "@/features/workspace/components/form/ProjectFormOverviewSection";
+import { ProjectFormPeriodSection } from "@/features/workspace/components/form/ProjectFormPeriodSection";
+import { ProjectFormShapeLocationSection } from "@/features/workspace/components/form/ProjectFormShapeLocationSection";
 
 type ProjectEditFormProps = {
-  project: Project
-}
+  project: Project;
+};
 
 export const ProjectEditForm = ({ project }: ProjectEditFormProps) => {
-  const router = useRouter()
-  const { role } = useUserRole()
-  const form = useProjectEditForm(project)
-  const [cancelOpen, setCancelOpen] = useState(false)
-  const [deleteOpen, setDeleteOpen] = useState(false)
+  const router = useRouter();
+  const { role } = useUserRole();
+  const form = useProjectEditForm(project);
+  const [cancelOpen, setCancelOpen] = useState(false);
+  const [archiveOpen, setArchiveOpen] = useState(false);
 
-  const goToDetail = () => router.push(`/projects/${project.contractNo}`)
+  const goToDetail = () => router.push(`/projects/${project.contractNo}`);
 
   const handleCancel = () => {
     if (form.isDirty) {
-      setCancelOpen(true)
-      return
+      setCancelOpen(true);
+      return;
     }
-    goToDetail()
-  }
+    goToDetail();
+  };
 
   const handleSave = () => {
-    if (form.isInvalid) return
+    if (form.isInvalid) return;
     // TODO: 실제 저장 API 연동. 현재는 mock 환경이라 라우팅만.
-    goToDetail()
-  }
+    goToDetail();
+  };
 
-  const handleDeleteConfirm = () => {
-    // TODO: 실제 삭제 API 연동.
-    router.push('/projects')
-  }
+  const handleArchiveConfirm = () => {
+    // TODO: 실제 아카이브 API 연동.
+    router.push("/projects");
+  };
 
   return (
     <div className="contents">
@@ -52,9 +52,13 @@ export const ProjectEditForm = ({ project }: ProjectEditFormProps) => {
         breadcrumb={project.name}
         title="프로젝트 정보 수정"
         onDelete={
-          role === 'admin' ? (
-            <UiButton type="button" variant="ghost-danger" onClick={() => setDeleteOpen(true)}>
-              삭제
+          role === "admin" ? (
+            <UiButton
+              type="button"
+              variant="ghost-danger"
+              onClick={() => setArchiveOpen(true)}
+            >
+              아카이브
             </UiButton>
           ) : undefined
         }
@@ -64,7 +68,11 @@ export const ProjectEditForm = ({ project }: ProjectEditFormProps) => {
           </UiButton>
         }
         onSubmit={
-          <UiButton type="button" disabled={form.isInvalid} onClick={handleSave}>
+          <UiButton
+            type="button"
+            disabled={form.isInvalid}
+            onClick={handleSave}
+          >
             변경사항 저장
           </UiButton>
         }
@@ -118,12 +126,12 @@ export const ProjectEditForm = ({ project }: ProjectEditFormProps) => {
       />
 
       <UiConfirmDialog
-        open={deleteOpen}
-        onClose={() => setDeleteOpen(false)}
-        onConfirm={handleDeleteConfirm}
-        title={`'${project.name}' 프로젝트를 삭제하시겠습니까?`}
-        description={`관련된 모든 ITB 문서와 분석 결과가 함께 삭제되며, 되돌릴 수 없습니다.`}
+        open={archiveOpen}
+        onClose={() => setArchiveOpen(false)}
+        onConfirm={handleArchiveConfirm}
+        title={`'${project.name}' 프로젝트를 아카이브하시겠습니까?`}
+        description="아카이브한 프로젝트는 사용자가 확인할 수 없습니다. 관련된 모든 ITB 문서와 분석 결과는 유지됩니다."
       />
     </div>
-  )
-}
+  );
+};
