@@ -9,6 +9,7 @@ import type {
 } from '@/features/workspace/types/workspace.types'
 import {
   validateContractNo,
+  validateCustomer,
   validateProjectDescription,
   validateProjectName,
 } from '@/features/workspace/utils/project-validation'
@@ -30,9 +31,10 @@ export const useProjectEditForm = (project: Project) => {
   const contractNoError = validateContractNo(contractNo)
   const nameError = validateProjectName(name)
   const descriptionError = validateProjectDescription(description)
+  const customerError = validateCustomer(customer)
 
   const isInvalid =
-    Boolean(contractNoError || nameError || descriptionError) ||
+    Boolean(contractNoError || nameError || descriptionError || customerError) ||
     !startDate ||
     !endDate
 
@@ -81,6 +83,7 @@ export const useProjectEditForm = (project: Project) => {
     contractNoError,
     nameError,
     descriptionError,
+    customerError,
     // flags
     isInvalid,
     isDirty,

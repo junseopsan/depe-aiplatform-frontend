@@ -23,6 +23,9 @@ export const validateProjectName = (value: string) =>
 export const validateProjectDescription = (value: string) =>
   lenError(value, PROJECT_MIN.description, '프로젝트 설명')
 
+export const validateCustomer = (value: string) =>
+  value.trim().length === 0 ? '발주처를 입력해주세요' : undefined
+
 /**
  * 기간 검증 — 도메인 정본: "착수일이 완공일보다 빠르거나 같아야 한다".
  * 두 값 중 하나라도 비어 있으면 검증 보류 (필수값 검증은 별도).

@@ -6,6 +6,7 @@ import { formatYmd } from '@/lib/date'
 import type { ProjectType } from '@/features/workspace/types/workspace.types'
 import {
   validateContractNo,
+  validateCustomer,
   validateProjectDescription,
   validateProjectName,
   validateProjectPeriod,
@@ -39,10 +40,11 @@ export const useProjectCreateForm = () => {
   const contractNoLenError = validateContractNo(contractNo)
   const nameError = validateProjectName(name)
   const descriptionError = validateProjectDescription(description)
+  const customerError = validateCustomer(customer)
   const periodError = validateProjectPeriod(startDate, endDate)
 
   const isInvalid =
-    Boolean(contractNoLenError || nameError || descriptionError || periodError) ||
+    Boolean(contractNoLenError || nameError || descriptionError || customerError || periodError) ||
     !startDate ||
     !endDate
 
@@ -75,6 +77,7 @@ export const useProjectCreateForm = () => {
     contractNoLenError,
     nameError,
     descriptionError,
+    customerError,
     periodError,
     // flags
     isInvalid,

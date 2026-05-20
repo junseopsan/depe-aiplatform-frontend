@@ -15,6 +15,7 @@ type ProjectFormOverviewSectionProps = {
   onDescriptionChange: (value: string) => void
   nameError?: string
   descriptionError?: string
+  customerError?: string
 }
 
 export const ProjectFormOverviewSection = ({
@@ -26,6 +27,7 @@ export const ProjectFormOverviewSection = ({
   onDescriptionChange,
   nameError,
   descriptionError,
+  customerError,
 }: ProjectFormOverviewSectionProps) => (
   <ProjectFormSection index={2} title="프로젝트 개요">
     <div className="mb-4 grid grid-cols-2 gap-4">
@@ -36,7 +38,7 @@ export const ProjectFormOverviewSection = ({
           onChange={(e) => onNameChange(e.target.value)}
         />
       </UiFormField>
-      <UiFormField label="발주처" htmlFor="customer">
+      <UiFormField label="발주처" required htmlFor="customer" error={customerError}>
         <UiInput
           id="customer"
           value={customer}

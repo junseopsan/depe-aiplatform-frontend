@@ -121,6 +121,7 @@ export const ProjectCreateForm = () => {
             onDescriptionChange={form.setDescription}
             nameError={form.nameError}
             descriptionError={form.descriptionError}
+            customerError={form.customerError}
           />
           <ProjectFormPeriodSection
             startDate={form.startDate}
