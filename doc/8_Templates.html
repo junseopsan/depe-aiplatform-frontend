@@ -281,6 +281,17 @@
       pointer-events: none;
     }
 
+    .btn.btn-ghost-danger {
+      background: #fff;
+      border-color: var(--gray-300);
+      color: var(--error);
+    }
+
+    .btn.btn-ghost-danger:hover {
+      background: rgba(160, 69, 69, 0.05);
+      border-color: var(--error);
+    }
+
     /* Page content */
     .page-wrap {
       max-width: 1400px;
@@ -302,6 +313,430 @@
       margin-bottom: 24px;
     }
 
+    /* Sub-tabs (Templates 페이지 내 영역 전환) */
+    .sub-tabs {
+      display: flex;
+      gap: 4px;
+      border-bottom: 1px solid var(--gray-200);
+      margin-bottom: 20px;
+    }
+
+    .sub-tab {
+      height: 38px;
+      padding: 0 16px;
+      display: inline-flex;
+      align-items: center;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--gray-500);
+      border-bottom: 2px solid transparent;
+      cursor: pointer;
+      background: none;
+      transition: color .15s, border-color .15s;
+    }
+
+    .sub-tab:hover {
+      color: var(--gray-700);
+    }
+
+    .sub-tab.is-active {
+      color: var(--primary-500);
+      font-weight: 600;
+      border-bottom-color: var(--primary-500);
+    }
+
+    .sub-tab-panel {
+      display: none;
+    }
+
+    .sub-tab-panel.is-active {
+      display: block;
+    }
+
+    /* 영역별 우측 헤더 액션 */
+    .pane-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .pane-header-left .pane-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--gray-800);
+    }
+
+    .pane-header-left {
+      max-width: 720px;
+    }
+
+    .pane-header-left .pane-subtitle {
+      font-size: 12px;
+      color: var(--gray-500);
+      margin-top: 2px;
+      line-height: 1.5;
+    }
+
+    .pane-header-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+
+    /* Segmented toggle — 활성/삭제됨 */
+    .seg-toggle {
+      display: inline-flex;
+      background: #fff;
+      border-radius: 4px;
+    }
+
+    .seg-toggle-btn {
+      height: 36px;
+      padding: 0 14px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--gray-600);
+      background: #fff;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border: 1px solid var(--gray-300);
+      transition: background .15s, color .15s;
+    }
+
+    .seg-toggle-btn + .seg-toggle-btn {
+      border-left: none;
+    }
+
+    .seg-toggle-btn:first-child {
+      border-radius: 4px 0 0 4px;
+    }
+
+    .seg-toggle-btn:last-child {
+      border-radius: 0 4px 4px 0;
+    }
+
+    .seg-toggle-btn.is-active {
+      background: var(--primary-50);
+      color: var(--primary-700);
+      font-weight: 600;
+    }
+
+    .seg-toggle .seg-count {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      color: var(--gray-500);
+    }
+
+    .seg-toggle-btn.is-active .seg-count {
+      color: var(--primary-700);
+    }
+
+    /* 독소조항 규칙 테이블 — 인라인 편집 */
+    .rule-table {
+      width: 100%;
+      min-width: 1260px; /* minmax 합계 + 고정 컬럼 + gap + padding → 이 이하로는 가로 스크롤 */
+      background: #fff;
+      border: 1px solid var(--gray-200);
+      border-radius: 4px;
+    }
+
+    .rule-table-head,
+    .rule-row {
+      display: grid;
+      gap: 12px;
+      padding: 12px 16px;
+    }
+
+    /* 활성 탭: No · 검토부서 · 제목 · 키워드 · 원문 · 해석 · 위험 · 등록일 · 액션 */
+    .rule-table.is-active .rule-table-head,
+    .rule-table.is-active .rule-row {
+      grid-template-columns:
+        48px 140px 160px 140px
+        minmax(180px, 1.4fr)
+        minmax(150px, 1fr)
+        minmax(150px, 1fr)
+        80px 72px;
+    }
+
+    /* 삭제됨 탭: No · 검토부서 · 제목 · 키워드 · 원문 · 해석 · 위험 · 삭제일 */
+    .rule-table.is-deleted-view .rule-table-head,
+    .rule-table.is-deleted-view .rule-row {
+      grid-template-columns:
+        48px 140px 160px 140px
+        minmax(180px, 1.4fr)
+        minmax(150px, 1fr)
+        minmax(150px, 1fr)
+        80px;
+    }
+
+    .rule-table-head {
+      background: var(--gray-50);
+      border-bottom: 1px solid var(--gray-200);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--gray-600);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      align-items: center;
+    }
+
+    .rule-row {
+      border-bottom: 1px solid var(--gray-100);
+      align-items: flex-start;
+    }
+
+    .rule-row .row-no {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      color: var(--gray-500);
+      text-align: center;
+      padding-top: 10px;
+    }
+
+    .rule-row:last-child {
+      border-bottom: none;
+    }
+
+    /* status별 행 변형 */
+    .rule-row.is-deleted {
+      background: var(--gray-50);
+      color: var(--gray-400);
+    }
+
+    .rule-row.is-deleted .cell-readonly,
+    .rule-row.is-deleted .row-no,
+    .rule-row.is-deleted .kw-chip {
+      color: var(--gray-400);
+    }
+
+    .rule-row.is-deleted .kw-chip {
+      background: var(--gray-100);
+    }
+
+    /* readonly 셀 — input 대신 텍스트 표시 */
+    .rule-row .cell-readonly {
+      padding: 6px 4px;
+      font-size: 12px;
+      color: var(--gray-800);
+      line-height: 1.5;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .rule-row .cell-readonly.is-title {
+      font-weight: 500;
+    }
+
+    .rule-row .cell-readonly.is-empty {
+      color: var(--gray-400);
+      font-style: italic;
+    }
+
+    /* 삭제 메타 정보 */
+    .rule-row .row-meta {
+      grid-column: 2 / -1;
+      padding: 4px 4px 8px;
+      font-size: 11px;
+      color: var(--gray-400);
+      font-family: 'IBM Plex Mono', monospace;
+    }
+
+    .rule-row .cell-input,
+    .rule-row .cell-textarea {
+      width: 100%;
+      padding: 6px 8px;
+      border: 1px solid transparent;
+      border-radius: 3px;
+      font-family: inherit;
+      font-size: 12px;
+      color: var(--gray-800);
+      background: transparent;
+      outline: none;
+      transition: background .15s, border-color .15s;
+      line-height: 1.5;
+    }
+
+    .rule-row .cell-input:hover,
+    .rule-row .cell-textarea:hover {
+      background: var(--gray-50);
+    }
+
+    .rule-row .cell-input:focus,
+    .rule-row .cell-textarea:focus {
+      background: #fff;
+      border-color: var(--primary-500);
+    }
+
+    .rule-row .cell-textarea {
+      resize: vertical;
+      min-height: 56px;
+    }
+
+    /* chip 입력 셀 — 그리드 트랙 안에 chip wrap을 그대로 사용 */
+    .rule-row .cell-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      padding: 4px 4px;
+      border: 1px solid transparent;
+      border-radius: 3px;
+      min-height: 32px;
+      transition: background .15s, border-color .15s;
+      align-content: flex-start;
+      cursor: text;
+    }
+
+    .rule-row .cell-chips:hover {
+      background: var(--gray-50);
+    }
+
+    .rule-row .cell-chips.is-focus {
+      background: #fff;
+      border-color: var(--primary-500);
+    }
+
+    /* readonly chip 셀 — hover/focus 효과 제거, 다른 readonly 셀과 같은 padding */
+    .rule-row .cell-chips.is-readonly {
+      padding: 6px 4px;
+      min-height: 0;
+      cursor: default;
+    }
+
+    .rule-row .cell-chips.is-readonly:hover {
+      background: transparent;
+    }
+
+    .rule-row .cell-chips .kw-chip {
+      gap: 4px;
+      padding: 0 4px 0 8px;
+    }
+
+    .rule-row .cell-chips.is-readonly .kw-chip {
+      padding: 0 8px;
+    }
+
+    .rule-row .cell-chips .kw-chip .chip-x {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: none;
+      border: none;
+      color: var(--gray-500);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+    }
+
+    .rule-row .cell-chips .kw-chip .chip-x:hover {
+      background: var(--gray-300);
+      color: var(--gray-800);
+    }
+
+    .rule-row .cell-chips .chip-x svg {
+      width: 10px;
+      height: 10px;
+    }
+
+    .rule-row .cell-chips input.chip-typer {
+      flex: 1;
+      min-width: 60px;
+      height: 22px;
+      border: none;
+      outline: none;
+      font-size: 12px;
+      color: var(--gray-800);
+      background: transparent;
+      padding: 0 4px;
+    }
+
+    .rule-row .cell-chips input.chip-typer::placeholder {
+      color: var(--gray-400);
+      font-size: 11px;
+    }
+
+    .rule-row .row-action-cell {
+      align-self: flex-start;
+      justify-self: center;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      width: 100%;
+      padding-top: 4px;
+    }
+
+    .rule-row .row-action-cell .btn-sm {
+      width: 100%;
+    }
+
+    .rule-row .row-date {
+      align-self: flex-start;
+      padding-top: 10px;
+      font-size: 12px;
+      color: var(--gray-800);
+    }
+
+    .rule-row.is-deleted .row-date {
+      color: var(--gray-400);
+    }
+
+    .rule-row .row-delete {
+      align-self: center;
+      justify-self: center;
+    }
+
+    /* btn-sm 보조 — 인라인 행 끝 버튼 사이즈 */
+    .btn.btn-sm {
+      height: 30px;
+      padding: 0 10px;
+      font-size: 12px;
+      justify-content: center;
+    }
+
+    /* Keyword chips (3_Projects_ProjectName_ITB.html 의 .kw-chip 동일 스펙) */
+    .kw-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      align-content: flex-start;
+    }
+
+    .kw-chip {
+      display: inline-flex;
+      align-items: center;
+      height: 22px;
+      padding: 0 8px;
+      border-radius: 999px;
+      background: var(--gray-100);
+      color: var(--gray-700);
+      font-size: 11px;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    /* Empty state */
+    .pane-empty {
+      padding: 48px 16px;
+      text-align: center;
+      color: var(--gray-500);
+      font-size: 13px;
+      background: #fff;
+      border: 1px dashed var(--gray-300);
+      border-radius: 4px;
+    }
+
+    /* 테이블 헤더는 유지하고 본문만 비어있음 표시 */
+    .rule-empty-body {
+      padding: 48px 16px;
+      text-align: center;
+      color: var(--gray-500);
+      font-size: 13px;
+      background: #fff;
+    }
 
     /* Template 목록 (table) */
     .tpl-table {
@@ -807,11 +1242,72 @@
   <main class="page-wrap">
     <div class="page-header">
       <h1>Templates</h1>
-      <div class="page-subtitle">프로젝트가 참조하는 표준 템플릿을 관리합니다</div>
+      <div class="page-subtitle">ITB 분석·산출물 생성에 사용되는 규칙과 표준 템플릿을 관리합니다</div>
     </div>
 
-    <!-- 목록 -->
-    <div id="tpl-list"></div>
+    <!-- Sub-tabs -->
+    <div class="sub-tabs" role="tablist">
+      <button type="button" class="sub-tab is-active" role="tab" data-pane="poison">독소조항 규칙</button>
+      <button type="button" class="sub-tab" role="tab" data-pane="irs">IRS 규칙 (TBD)</button>
+      <button type="button" class="sub-tab" role="tab" data-pane="dc">Design Criteria 템플릿 (TBD)</button>
+      <button type="button" class="sub-tab" role="tab" data-pane="mps">MPS 템플릿 (TBD)</button>
+    </div>
+
+    <!-- Pane: 독소조항 규칙 -->
+    <section class="sub-tab-panel is-active" id="pane-poison">
+      <div class="pane-header">
+        <div class="pane-header-left">
+          <div class="pane-title">독소조항 규칙</div>
+          <div class="pane-subtitle">ITB 분석 시 자동으로 적용되는 독소조항 판단 규칙입니다. 기존 규칙은 수정할 수 없으며, 변경이 필요하면 삭제 후 새로 추가하세요.</div>
+        </div>
+        <div class="pane-header-right">
+          <div class="seg-toggle" id="rule-view-toggle" role="tablist" aria-label="규칙 보기">
+            <button type="button" class="seg-toggle-btn is-active" data-view="active" role="tab">활성 <span
+                class="seg-count" id="rule-count-active">0</span></button>
+            <button type="button" class="seg-toggle-btn" data-view="deleted" role="tab">삭제됨 <span class="seg-count"
+                id="rule-count-deleted">0</span></button>
+          </div>
+          <button type="button" class="btn btn-primary" id="btn-rule-add">
+            <i data-lucide="plus"></i>
+            규칙 추가
+          </button>
+        </div>
+      </div>
+      <div id="rule-list" style="overflow-x: auto;"></div>
+    </section>
+
+    <!-- Pane: IRS 규칙 -->
+    <section class="sub-tab-panel" id="pane-irs">
+      <div class="pane-header">
+        <div class="pane-header-left">
+          <div class="pane-title">IRS 규칙</div>
+          <div class="pane-subtitle">IRS(Information Request Sheet) 자동 생성에 사용되는 표준 템플릿입니다</div>
+        </div>
+      </div>
+      <div id="tpl-list-irs"></div>
+    </section>
+
+    <!-- Pane: Design Criteria 템플릿 -->
+    <section class="sub-tab-panel" id="pane-dc">
+      <div class="pane-header">
+        <div class="pane-header-left">
+          <div class="pane-title">Design Criteria 템플릿</div>
+          <div class="pane-subtitle">DC 자동 생성에 사용되는 표준 템플릿입니다</div>
+        </div>
+      </div>
+      <div id="tpl-list-dc"></div>
+    </section>
+
+    <!-- Pane: MPS 템플릿 -->
+    <section class="sub-tab-panel" id="pane-mps">
+      <div class="pane-header">
+        <div class="pane-header-left">
+          <div class="pane-title">MPS 템플릿</div>
+          <div class="pane-subtitle">MPS 자동 생성에 사용되는 표준 템플릿입니다</div>
+        </div>
+      </div>
+      <div id="tpl-list-mps"></div>
+    </section>
   </main>
 
   <!-- Modal: 새 버전 업로드 -->
@@ -854,6 +1350,23 @@
     <div class="drawer-body" id="drawer-body"></div>
   </aside>
 
+  <!-- Modal: 공용 확인 (저장/취소/삭제) -->
+  <div class="modal-backdrop" id="modal-confirm" aria-hidden="true">
+    <div class="modal-panel" role="dialog" aria-labelledby="confirm-title" style="max-width: 440px;">
+      <div class="modal-header">
+        <div class="modal-title" id="confirm-title">확인</div>
+        <button type="button" class="modal-close" data-confirm-close><i data-lucide="x"></i></button>
+      </div>
+      <div class="modal-body">
+        <p id="confirm-message" style="font-size: 13px; color: var(--gray-700); line-height: 1.6; margin: 0;"></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-confirm-cancel id="btn-confirm-cancel">취소</button>
+        <button type="button" class="btn btn-primary" id="btn-confirm-ok">확인</button>
+      </div>
+    </div>
+  </div>
+
   <div class="toast-container" id="toast-container"></div>
 
   <script>
@@ -895,22 +1408,71 @@
     let targetTemplateId = null;
     let pendingFile = null;
 
-    // ═══ List render ═══
-    const listEl = document.getElementById('tpl-list');
+    // ═══ 독소조항 규칙 mock ═══
+    // status: 'active' (저장됨, readonly) | 'draft' (신규 임시) | 'deleted' (soft delete, 조회만)
+    const POISON_RULES_SEED = [
+      {
+        id: 1, status: 'active',
+        depts: ['법무', '계약'],
+        title: '무한 책임 조항',
+        keywords: ['무한책임', '간접손해', '결과적 손해', 'Liability Cap 부재'],
+        original: 'Contractor shall be liable for any and all damages, including indirect, consequential, special, or punitive damages, without any limitation whatsoever.',
+        interpretation: '계약자에게 책임 한도(Liability Cap) 없이 간접·결과적·특수·징벌적 손해까지 모든 손해에 대해 무제한 배상 책임을 부과한다.',
+        risk: '예측 불가능한 손해까지 계약자가 모두 부담하므로 단일 사고로 회복 불가능한 재무 손실 가능.',
+        createdAt: '2025.11.10', createdBy: '관리자',
+      },
+      {
+        id: 2, status: 'active',
+        depts: ['계약'],
+        title: '발주처 편의 해지 + 무보상',
+        keywords: ['편의 해지', '무보상', '24시간 통지'],
+        original: 'Owner may, at its sole discretion and at any time, terminate this Contract upon 24 hours notice without any compensation to the Contractor.',
+        interpretation: '발주처가 사유 불문 24시간 통지로 계약을 해지할 수 있고, 계약자는 어떠한 보상도 받지 못한다.',
+        risk: '진행 중인 자재·인력 비용을 회수하지 못하고 손실 처리. 사실상 발주처 일방의 이익만 보호.',
+        createdAt: '2025.12.03', createdBy: '관리자',
+      },
+      {
+        id: 3, status: 'active',
+        depts: ['재무', '계약'],
+        title: '과도한 지연배상금 (LD)',
+        keywords: ['지연배상금', 'LD 과도', '30% 상한'],
+        original: 'Liquidated damages shall be 1.0% of the total contract price per day of delay, up to a maximum of 30% of the total contract price.',
+        interpretation: '지연 1일당 계약금액의 1.0%, 최대 30%까지 지연배상금을 부과하는 조항.',
+        risk: '업계 표준(0.1~0.5%/일, 5~10% 상한) 대비 매우 높음. 단기 지연에도 대규모 손실.',
+        createdAt: '2026.01.15', createdBy: '관리자',
+      },
+      {
+        id: 4, status: 'active',
+        depts: ['법무', '기술'],
+        title: 'IP 무상 이전 / 제3자 양도',
+        keywords: ['IP 무상이전', '특허권', '제3자 양도'],
+        original: 'All intellectual property rights, including patents and know-how, developed under this Contract shall be transferred to Owner free of charge with the right to assign to any third party.',
+        interpretation: '계약자가 본 계약에서 개발한 모든 IP(특허·노하우)를 무상으로 발주처에 이전하고, 발주처가 이를 제3자에게 자유롭게 양도할 수 있게 한다.',
+        risk: '계약자의 핵심 기술 자산 상실. 향후 유사 프로젝트 수행에 제약.',
+        createdAt: '2026.02.22', createdBy: '관리자',
+      },
+      {
+        id: 5, status: 'deleted',
+        depts: ['법무'],
+        title: '구버전: 일방적 클레임 포기',
+        keywords: ['클레임 포기', '구버전'],
+        original: 'Contractor waives any and all claims against Owner arising from any cause whatsoever.',
+        interpretation: '계약자가 사유를 불문하고 발주처에 대한 모든 청구권을 포기한다.',
+        risk: '발주처 귀책 사고에도 손해배상 청구 불가.',
+        createdAt: '2025.06.20', createdBy: '관리자',
+        deletedAt: '2026.04.05', deletedBy: '관리자',
+      },
+    ];
+    const POISON_RULES = JSON.parse(JSON.stringify(POISON_RULES_SEED));
+    let nextRuleId = POISON_RULES.length + 1;
+    let ruleViewMode = 'active'; // 'active' | 'deleted'
+
+    // ═══ List render — IRS / DC / MPS 각 패널에 한 줄씩 ═══
+    const TPL_PANE_BY_ID = { irs: 'tpl-list-irs', dc: 'tpl-list-dc', mps: 'tpl-list-mps' };
     const roleButtons = document.querySelectorAll('.role-toggle button');
 
-    function renderGrid() {
-      const rows = TEMPLATES.map(t => `
-          <div class="tpl-row">
-            <div class="tpl-row-name">${t.name}</div>
-            <div class="tpl-row-date mono">${t.filename}</div>
-            <div class="tpl-row-version">v${t.activeVersion}</div>
-            <div class="tpl-row-actions">
-              <button type="button" class="btn-sm btn-primary" data-action="upload" data-id="${t.id}">업로드</button>
-              <button type="button" class="btn-sm" data-action="download" data-id="${t.id}">다운로드</button>
-            </div>
-          </div>`).join('');
-      listEl.innerHTML = `
+    function renderTplRow(t) {
+      return `
         <div class="tpl-table">
           <div class="tpl-table-head">
             <div>문서 종류</div>
@@ -918,13 +1480,31 @@
             <div>버전</div>
             <div>액션</div>
           </div>
-          ${rows}
+          <div class="tpl-row">
+            <div class="tpl-row-name">${t.name}</div>
+            <div class="tpl-row-date mono">${t.filename}</div>
+            <div class="tpl-row-version">v${t.activeVersion}</div>
+            <div class="tpl-row-actions">
+              <button type="button" class="btn-sm btn-primary" data-action="upload" data-id="${t.id}">업로드</button>
+              <button type="button" class="btn-sm" data-action="download" data-id="${t.id}">다운로드</button>
+              <button type="button" class="btn-sm" data-action="history" data-id="${t.id}"><i data-lucide="history"></i> 이력</button>
+            </div>
+          </div>
         </div>`;
+    }
+
+    function renderGrid() {
+      for (const t of TEMPLATES) {
+        const paneId = TPL_PANE_BY_ID[t.id];
+        if (!paneId) continue;
+        const el = document.getElementById(paneId);
+        if (el) el.innerHTML = renderTplRow(t);
+      }
       if (window.lucide) lucide.createIcons();
     }
 
-    listEl.addEventListener('click', (e) => {
-      const btn = e.target.closest('[data-action]');
+    document.addEventListener('click', (e) => {
+      const btn = e.target.closest('.tpl-row [data-action]');
       if (!btn) return;
       const id = btn.dataset.id;
       const action = btn.dataset.action;
@@ -1097,6 +1677,396 @@
       }, duration);
     }
     window.__showToast = showToast;
+
+    // ═══ 공용 확인 모달 ═══
+    const modalConfirm = document.getElementById('modal-confirm');
+    const confirmTitleEl = document.getElementById('confirm-title');
+    const confirmMessageEl = document.getElementById('confirm-message');
+    const btnConfirmOk = document.getElementById('btn-confirm-ok');
+    const btnConfirmCancel = document.getElementById('btn-confirm-cancel');
+    let _confirmResolve = null;
+
+    function showConfirm({ title = '확인', message = '', okLabel = '확인', cancelLabel = '취소', okVariant = 'primary' } = {}) {
+      confirmTitleEl.textContent = title;
+      confirmMessageEl.innerHTML = message;
+      btnConfirmOk.textContent = okLabel;
+      btnConfirmCancel.textContent = cancelLabel;
+      btnConfirmOk.className = `btn btn-${okVariant}`;
+      modalConfirm.classList.add('is-open');
+      modalConfirm.setAttribute('aria-hidden', 'false');
+      // 포커스를 cancel에 둬서 실수 클릭 방지
+      setTimeout(() => btnConfirmCancel.focus(), 0);
+      return new Promise(res => { _confirmResolve = res; });
+    }
+    function closeConfirm(result) {
+      modalConfirm.classList.remove('is-open');
+      modalConfirm.setAttribute('aria-hidden', 'true');
+      const r = _confirmResolve;
+      _confirmResolve = null;
+      if (r) r(result);
+    }
+    btnConfirmOk.addEventListener('click', () => closeConfirm(true));
+    btnConfirmCancel.addEventListener('click', () => closeConfirm(false));
+    document.querySelectorAll('[data-confirm-close], [data-confirm-cancel]').forEach(b => {
+      if (b.id === 'btn-confirm-cancel') return;
+      b.addEventListener('click', () => closeConfirm(false));
+    });
+    modalConfirm.addEventListener('click', e => { if (e.target === modalConfirm) closeConfirm(false); });
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && modalConfirm.classList.contains('is-open')) closeConfirm(false);
+    });
+
+    // ═══ Sub-tabs (Templates 페이지 내 영역 전환) ═══
+    const subTabs = document.querySelectorAll('.sub-tab');
+    const subPanels = document.querySelectorAll('.sub-tab-panel');
+    subTabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        const target = tab.dataset.pane;
+        subTabs.forEach(t => t.classList.toggle('is-active', t === tab));
+        subPanels.forEach(p => p.classList.toggle('is-active', p.id === `pane-${target}`));
+      });
+    });
+
+    // ═══ 독소조항 규칙 — 인라인 편집 테이블 ═══
+    const ruleListEl = document.getElementById('rule-list');
+
+    function escapeAttr(s) {
+      return String(s ?? '').replace(/"/g, '&quot;');
+    }
+    function escapeHtml(s) {
+      return String(s ?? '').replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
+    }
+
+    // chip 셀 — draft 모드에서만 입력 가능
+    function chipsCellHtml(rule, field, placeholder, editable) {
+      const items = (rule[field] || []).map((v, i) =>
+        editable
+          ? `<span class="kw-chip" data-chip-idx="${i}">
+               ${escapeHtml(v)}
+               <button type="button" class="chip-x" data-rule-id="${rule.id}" data-field="${field}" data-idx="${i}" aria-label="제거"><i data-lucide="x"></i></button>
+             </span>`
+          : `<span class="kw-chip">${escapeHtml(v)}</span>`).join('');
+      const typer = editable
+        ? `<input type="text" class="chip-typer" data-rule-id="${rule.id}" data-field="${field}" placeholder="${escapeAttr(placeholder)}">`
+        : '';
+      const wrapCls = editable ? 'cell-chips' : 'cell-chips is-readonly';
+      return `<div class="${wrapCls}" data-rule-id="${rule.id}" data-field="${field}">
+                ${items}
+                ${typer}
+              </div>`;
+    }
+
+    // readonly 텍스트 셀
+    function readonlyCellHtml(value, kind) {
+      const cls = `cell-readonly${kind === 'title' ? ' is-title' : ''}${!value ? ' is-empty' : ''}`;
+      return `<div class="${cls}">${value ? escapeHtml(value) : '—'}</div>`;
+    }
+
+    function ruleRowHtml(r, displayNo) {
+      const isDraft = r.status === 'draft';
+      const isDeleted = r.status === 'deleted';
+      const rowCls = `rule-row${isDraft ? ' is-draft' : ''}${isDeleted ? ' is-deleted' : ''}`;
+
+      // 제목 / 원문 / 해석 / 위험 셀 — draft만 편집, 그 외 readonly
+      const titleCell = isDraft
+        ? `<input type="text" class="cell-input" data-rule-id="${r.id}" data-field="title"
+                  value="${escapeAttr(r.title)}" placeholder="제목">`
+        : readonlyCellHtml(r.title, 'title');
+      const originalCell = isDraft
+        ? `<textarea class="cell-textarea" data-rule-id="${r.id}" data-field="original"
+                     placeholder="원문">${escapeHtml(r.original)}</textarea>`
+        : readonlyCellHtml(r.original);
+      const interpCell = isDraft
+        ? `<textarea class="cell-textarea" data-rule-id="${r.id}" data-field="interpretation"
+                     placeholder="해석">${escapeHtml(r.interpretation)}</textarea>`
+        : readonlyCellHtml(r.interpretation);
+      const riskCell = isDraft
+        ? `<textarea class="cell-textarea" data-rule-id="${r.id}" data-field="risk"
+                     placeholder="핵심 위험">${escapeHtml(r.risk)}</textarea>`
+        : readonlyCellHtml(r.risk);
+
+      // 액션 (활성 탭에서만 표시)
+      let actionCell = '';
+      if (isDraft) {
+        actionCell = `<button type="button" class="btn btn-primary btn-sm row-action" data-save-id="${r.id}">저장</button>
+                      <button type="button" class="btn btn-secondary btn-sm row-action" data-cancel-id="${r.id}">취소</button>`;
+      } else if (r.status === 'active') {
+        actionCell = `<button type="button" class="btn btn-secondary btn-sm row-delete" data-delete-id="${r.id}">삭제</button>`;
+      }
+
+      // 날짜 컬럼 — 활성 탭은 등록일, 삭제됨 탭은 삭제일
+      const dateValue = isDeleted
+        ? (r.deletedAt || '—')
+        : (isDraft ? '—' : (r.createdAt || '—'));
+      const dateCell = `<div class="row-date mono">${escapeHtml(dateValue)}</div>`;
+
+      // 삭제됨 탭에서는 액션 컬럼 없음 → 9개 → 8개 트랙에 맞춤
+      const trailingCells = isDeleted
+        ? dateCell
+        : `${dateCell}<div class="row-action-cell">${actionCell}</div>`;
+
+      return `
+        <div class="${rowCls}" data-rule-id="${r.id}">
+          <div class="row-no mono">${displayNo}</div>
+          ${chipsCellHtml(r, 'depts', '검토부서 추가', isDraft)}
+          ${titleCell}
+          ${chipsCellHtml(r, 'keywords', '키워드 추가', isDraft)}
+          ${originalCell}
+          ${interpCell}
+          ${riskCell}
+          ${trailingCells}
+        </div>`;
+    }
+
+    function renderRules() {
+      // 카운트 갱신
+      const activeCount = POISON_RULES.filter(r => r.status === 'active' || r.status === 'draft').length;
+      const deletedCount = POISON_RULES.filter(r => r.status === 'deleted').length;
+      document.getElementById('rule-count-active').textContent = activeCount;
+      document.getElementById('rule-count-deleted').textContent = deletedCount;
+
+      // 토글 버튼 상태
+      document.querySelectorAll('#rule-view-toggle .seg-toggle-btn').forEach(b => {
+        b.classList.toggle('is-active', b.dataset.view === ruleViewMode);
+      });
+      // [규칙 추가] 버튼은 항상 노출 — 위치 일관성 + spatial memory 보존
+
+      // 표시할 규칙 필터
+      const visible = ruleViewMode === 'active'
+        ? POISON_RULES.filter(r => r.status === 'active' || r.status === 'draft')
+        : POISON_RULES.filter(r => r.status === 'deleted');
+
+      const isDeletedView = ruleViewMode === 'deleted';
+      const tableCls = isDeletedView ? 'rule-table is-deleted-view' : 'rule-table is-active';
+
+      const headHtml = isDeletedView
+        ? `<div class="rule-table-head">
+             <div>No.</div>
+             <div>검토부서</div>
+             <div>제목</div>
+             <div>키워드</div>
+             <div>원문</div>
+             <div>해석</div>
+             <div>핵심 위험</div>
+             <div>삭제일</div>
+           </div>`
+        : `<div class="rule-table-head">
+             <div>No.</div>
+             <div>검토부서</div>
+             <div>제목</div>
+             <div>키워드</div>
+             <div>원문</div>
+             <div>해석</div>
+             <div>핵심 위험</div>
+             <div>등록일</div>
+             <div>액션</div>
+           </div>`;
+
+      if (visible.length === 0) {
+        const msg = ruleViewMode === 'active'
+          ? '아직 등록된 독소조항 규칙이 없습니다. [규칙 추가] 버튼으로 추가하세요.'
+          : '삭제된 규칙이 없습니다.';
+        ruleListEl.innerHTML = `
+          <div class="${tableCls}">
+            ${headHtml}
+            <div class="rule-empty-body">${msg}</div>
+          </div>`;
+        return;
+      }
+      const rows = visible.map((r, i) => ruleRowHtml(r, i + 1)).join('');
+      ruleListEl.innerHTML = `
+        <div class="${tableCls}">
+          ${headHtml}
+          ${rows}
+        </div>`;
+      if (window.lucide) lucide.createIcons();
+    }
+
+    function findRule(id) { return POISON_RULES.find(r => r.id === Number(id)); }
+
+    // 텍스트 입력 (제목 / 원문 / 해석 / 위험)
+    ruleListEl.addEventListener('input', (e) => {
+      const t = e.target;
+      if (!t.matches('.cell-input, .cell-textarea')) return;
+      const r = findRule(t.dataset.ruleId);
+      if (!r) return;
+      r[t.dataset.field] = t.value;
+    });
+
+    // chip 추가 (Enter / 콤마 / blur)
+    function focusChipInput(ruleId, field) {
+      const next = ruleListEl.querySelector(
+        `input.chip-typer[data-rule-id="${ruleId}"][data-field="${field}"]`
+      );
+      if (next) next.focus();
+    }
+
+    function commitChip(input) {
+      const value = input.value.trim().replace(/,$/, '').trim();
+      if (!value) return;
+      const r = findRule(input.dataset.ruleId);
+      if (!r) return;
+      const field = input.dataset.field;
+      r[field] = r[field] || [];
+      if (!r[field].includes(value)) r[field].push(value);
+      input.value = '';
+      renderRules();
+      focusChipInput(r.id, field);
+    }
+    ruleListEl.addEventListener('keydown', (e) => {
+      const t = e.target;
+      if (!t.matches('.chip-typer')) return;
+      if (e.key === 'Enter' || e.key === ',') {
+        e.preventDefault();
+        commitChip(t);
+      } else if (e.key === 'Backspace' && !t.value) {
+        // 빈 상태에서 backspace → 마지막 칩 제거
+        const r = findRule(t.dataset.ruleId);
+        if (!r) return;
+        const field = t.dataset.field;
+        if ((r[field] || []).length > 0) {
+          r[field].pop();
+          renderRules();
+          focusChipInput(r.id, field);
+        }
+      }
+    });
+    ruleListEl.addEventListener('blur', (e) => {
+      const t = e.target;
+      if (t.matches && t.matches('.chip-typer')) commitChip(t);
+    }, true);
+    // chip 입력 영역 전체를 클릭하면 input에 포커스
+    ruleListEl.addEventListener('click', (e) => {
+      const cell = e.target.closest('.cell-chips');
+      if (cell && !e.target.closest('button, input')) {
+        const input = cell.querySelector('input.chip-typer');
+        if (input) input.focus();
+      }
+    });
+
+    // chip 제거
+    ruleListEl.addEventListener('click', (e) => {
+      const x = e.target.closest('.chip-x');
+      if (!x) return;
+      const r = findRule(x.dataset.ruleId);
+      if (!r) return;
+      const field = x.dataset.field;
+      const idx = Number(x.dataset.idx);
+      r[field].splice(idx, 1);
+      renderRules();
+      focusChipInput(r.id, field);
+    });
+
+    // 행 삭제 — soft delete (status='deleted' + meta)
+    ruleListEl.addEventListener('click', async (e) => {
+      const btn = e.target.closest('[data-delete-id]');
+      if (!btn) return;
+      const id = Number(btn.dataset.deleteId);
+      const r = findRule(id);
+      if (!r || r.status !== 'active') return;
+      const ok = await showConfirm({
+        title: '규칙을 삭제하시겠습니까?',
+        message: `<b>${escapeHtml(r.title || '제목 없음')}</b> 규칙을 삭제합니다.<br>삭제된 규칙은 <b>[삭제됨]</b> 탭에서 조회만 가능합니다.`,
+        okLabel: '삭제',
+        okVariant: 'ghost-danger',
+      });
+      if (!ok) return;
+      r.status = 'deleted';
+      r.deletedAt = new Date().toISOString().slice(0, 10).replace(/-/g, '.');
+      r.deletedBy = '관리자';
+      renderRules();
+      showToast(`규칙이 삭제되었습니다`);
+    });
+
+    // draft 저장 — status='active'로 전환 (확인 모달 없이 즉시 저장)
+    ruleListEl.addEventListener('click', (e) => {
+      const btn = e.target.closest('[data-save-id]');
+      if (!btn) return;
+      const id = Number(btn.dataset.saveId);
+      const r = findRule(id);
+      if (!r || r.status !== 'draft') return;
+      // 필수값 검증
+      if ((r.depts || []).length === 0 || !r.title.trim() ||
+        (r.keywords || []).length === 0 || !r.original.trim() ||
+        !r.interpretation.trim() || !r.risk.trim()) {
+        showToast('모든 항목을 입력해주세요');
+        return;
+      }
+      r.status = 'active';
+      r.createdAt = new Date().toISOString().slice(0, 10).replace(/-/g, '.');
+      r.createdBy = '관리자';
+      renderRules();
+      showToast('규칙이 저장되었습니다');
+    });
+
+    // draft 취소 — 배열에서 즉시 제거 (확인 모달 없음)
+    ruleListEl.addEventListener('click', (e) => {
+      const btn = e.target.closest('[data-cancel-id]');
+      if (!btn) return;
+      const id = Number(btn.dataset.cancelId);
+      const r = findRule(id);
+      if (!r || r.status !== 'draft') return;
+      const idx = POISON_RULES.findIndex(x => x.id === id);
+      POISON_RULES.splice(idx, 1);
+      renderRules();
+    });
+
+    // 세그먼트 토글 — 활성/삭제됨
+    document.getElementById('rule-view-toggle').addEventListener('click', (e) => {
+      const btn = e.target.closest('.seg-toggle-btn');
+      if (!btn) return;
+      ruleViewMode = btn.dataset.view;
+      renderRules();
+    });
+
+    // 규칙 추가 — draft 상태로 맨 아래 추가. [삭제됨] 보고 있었어도 자동으로 [활성] 전환
+    document.getElementById('btn-rule-add').addEventListener('click', () => {
+      if (ruleViewMode !== 'active') ruleViewMode = 'active';
+      const newRule = {
+        id: nextRuleId++,
+        status: 'draft',
+        depts: [], title: '', keywords: [],
+        original: '', interpretation: '', risk: '',
+      };
+      POISON_RULES.push(newRule);
+      renderRules();
+      setTimeout(() => {
+        const newRow = ruleListEl.querySelector(`.rule-row[data-rule-id="${newRule.id}"]`);
+        if (!newRow) return;
+        newRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        const firstInput = newRow.querySelector('input.chip-typer');
+        if (firstInput) firstInput.focus({ preventScroll: true });
+      }, 0);
+    });
+
+    // ═══ Query parameter 시연 케이스 ═══
+    // ?case=empty       → 모든 규칙 비움 (활성 0개)
+    // ?case=deleted     → 활성 0개 + 삭제됨만 보이기 (자동으로 [삭제됨] 탭 활성)
+    // ?case=draft       → 활성 + 새 draft 1개 자동 추가
+    // ?view=active|deleted → 진입 시 토글 상태 지정
+    (function applyQueryCase() {
+      const q = new URLSearchParams(location.hash.split('?')[1] || location.search.replace(/^\?/, ''));
+      const c = q.get('case');
+      const v = q.get('view');
+      if (c === 'empty') {
+        POISON_RULES.length = 0;
+      } else if (c === 'deleted') {
+        // 활성/draft 모두 제거 → 삭제된 것만 남김
+        for (let i = POISON_RULES.length - 1; i >= 0; i--) {
+          if (POISON_RULES[i].status !== 'deleted') POISON_RULES.splice(i, 1);
+        }
+        ruleViewMode = 'deleted';
+      } else if (c === 'draft') {
+        POISON_RULES.push({
+          id: nextRuleId++, status: 'draft',
+          depts: [], title: '', keywords: [],
+          original: '', interpretation: '', risk: '',
+        });
+      }
+      if (v === 'active' || v === 'deleted') ruleViewMode = v;
+    })();
+
+    renderRules();
 
     lucide.createIcons();
   </script>
